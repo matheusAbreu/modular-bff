@@ -11,6 +11,8 @@ val quarkusPluginVersion: String by project
 val quarkusPlatformGroupId: String by project
 val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
+val mockkVersion = "1.14.9"
+val quarkusJunitMockVersion = "3.1.0"
 
 plugins {
     kotlin("plugin.allopen") version "2.2.10"
@@ -28,8 +30,22 @@ dependencies {
     implementation("$quarkusPluginId:quarkus-rest")
     implementation("$quarkusPluginId:quarkus-kotlin")
     implementation("$quarkusPluginId:quarkus-arc")
-    testImplementation("$quarkusPluginId:quarkus-junit")
+
+    testImplementation("io.quarkus:quarkus-junit5")
+    testImplementation("io.quarkus:quarkus-junit-mockito")
+    testImplementation("io.quarkus:quarkus-jacoco")
     testImplementation("io.rest-assured:rest-assured")
+    testImplementation("io.rest-assured:kotlin-extensions")
+    testImplementation("io.mockk:mockk:${mockkVersion}")
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("io.quarkiverse.mockk:quarkus-junit5-mockk:${quarkusJunitMockVersion}")
+}
+
+allOpen {
+    annotation("jakarta.ws.rs.Path")
+    annotation("jakarta.enterprise.context.ApplicationScoped")
+    annotation("jakarta.persistence.Entity")
+    annotation("io.quarkus.test.junit.QuarkusTest")
 }
 
 group = "org.acme"
