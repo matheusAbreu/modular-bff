@@ -1,6 +1,6 @@
 DB_DSN=host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable
 _goose_ = goose -dir ./config/migrations postgres "$(DB_DSN)"
-__MIGRATION_NAME__ = "criacao_tabelas_status_produto"
+__MIGRATION_NAME__ = "criacao_pagamentos_entregas_itens"
 
 deps/install:
 	go install github.com/pressly/goose/v3/cmd/goose@latest
@@ -26,3 +26,13 @@ docker/up:
 
 docker/down:
 	docker compose --env-file .env --file ./config/docker/compose.yaml down
+
+deps/up: 
+	make docker/up 
+	sleep 5 
+	make db/migrate-up
+
+
+deps/down: docker/down
+
+deps/restart: deps/down deps/up

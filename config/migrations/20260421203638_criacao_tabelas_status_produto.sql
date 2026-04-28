@@ -12,7 +12,7 @@ CREATE TABLE clientes (
 );
 
 CREATE TABLE produtos (
-    SKU varchar PRIMARY KEY,
+    sku varchar PRIMARY KEY,
     nome varchar NOT NULL,
     descricao varchar NOT NULL,
     preco decimal NOT NULL,

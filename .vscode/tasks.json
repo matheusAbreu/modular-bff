@@ -4,7 +4,7 @@
         {
             "label": "quarkusDev",
             "type": "shell",
-            "command": "./gradlew quarkusDev ",
+            "command": "make dev",
             "isBackground": true,
             "problemMatcher": {
                 "pattern": [
