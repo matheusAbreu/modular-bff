@@ -53,8 +53,8 @@ CREATE TABLE itens_pedido (
 
 -- +goose Down
 -- +goose StatementBegin
+DROP TABLE itens_pedido;
 DROP TABLE entregas;
 DROP TABLE notas_fiscais;
 DROP TABLE pagamentos;
-DROP TABLE itens_pedido;
 -- +goose StatementEnd

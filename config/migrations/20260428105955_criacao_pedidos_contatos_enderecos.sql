@@ -62,9 +62,9 @@ CREATE TABLE imagens_produtos (
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE pedidos;
+DROP TABLE enderecos_pedidos;
 DROP TABLE contatos;
 DROP TABLE enderecos_clientes;
-DROP TABLE enderecos_pedidos;
 DROP TABLE imagens_produtos;
+DROP TABLE pedidos;
 -- +goose StatementEnd

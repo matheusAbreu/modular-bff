@@ -1,5 +1,4 @@
 name: modular-bff
-version: "0"
 
 services:
   postgres-db:
