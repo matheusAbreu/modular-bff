@@ -15,9 +15,9 @@ val mockkVersion = "1.14.9"
 val quarkusJunitMockVersion = "3.1.0"
 
 plugins {
-    kotlin("plugin.allopen") version "2.2.10"
-    kotlin("jvm") version "2.2.0"
-    id("io.quarkus") version "3.32.4"
+    kotlin("plugin.allopen") version "2.3.21"
+    kotlin("jvm") version "2.3.21"
+    id("io.quarkus") version "3.35.0"
 }
 
 
