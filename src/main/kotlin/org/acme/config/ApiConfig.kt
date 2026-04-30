@@ -9,4 +9,5 @@ import org.eclipse.microprofile.openapi.annotations.info.Info
     version = "1.0.0",
     description = "API focused on supporting the frontend x project",
     ))
+    
 class ApiConfig: Application()

@@ -21,6 +21,15 @@
                     "endsPattern": "^.*Listening for transport dt_socket at address: 5005.*"
                 }
             }
+        },
+        {
+            "label": "stopQuarkus",
+            "type": "shell",
+            "command": "lsof -ti:8081 | xargs kill -9 || true",
+            "presentation": {
+                "reveal": "silent",
+                "close": true
+            }
         }
     ]
 }
