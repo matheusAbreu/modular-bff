@@ -17,9 +17,9 @@ db/migrate-down:
 
 dev:
 ifeq ($(OS),Windows_NT)
-	gradlew.bat quarkusDev
+	gradlew.bat clean assemble quarkusDev
 else
-	./gradlew quarkusDev
+	./gradlew clean assemble quarkusDev
 endif
 
 docker/up:

@@ -13,13 +13,9 @@ class ConfigProvider {
     lateinit var apiAppActive: String
 
     
-    fun isApiWebActive(): Boolean {
-        return apiWebActive.toBoolean()
-    }
+    fun isApiWebActive() = apiWebActive.toBoolean()
 
-    fun isApiAppActive(): Boolean {
-        return apiAppActive.toBoolean()
-    }
+    fun isApiAppActive() = apiAppActive.toBoolean()
 
     
 }
