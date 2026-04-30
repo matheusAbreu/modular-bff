@@ -2,12 +2,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "java",
-            "name": "Debug Quarkus (Auto-Start)",
+            "type": "kotlin",
             "request": "attach",
+            "name": "Debug Quarkus",
             "hostName": "localhost",
             "port": 5005,
-            "preLaunchTask": "quarkusDev"
+            "preLaunchTask": "quarkusDev",
+            "postDebugTask": "stopQuarkus",
+            "projectRoot": "${workspaceFolder}",
+            "timeout": 30000
         }
     ]
 }
