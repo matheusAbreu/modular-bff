@@ -1,6 +1,7 @@
 DB_NAME=postgres
 DB_DSN=host=localhost port=5432 user=postgres password=postgres dbname=$(DB_NAME) sslmode=disable
-_goose_ = goose -dir ./config/migrations postgres "$(DB_DSN)"
+DOCKER_COMPOSE=docker compose --env-file .env --file ./config/docker/compose.yaml
+_goose_ = goose -dir ./config/database/migrations postgres "$(DB_DSN)"
 __MIGRATION_NAME__ = 
 
 deps/install:
@@ -15,6 +16,10 @@ db/migrate-up:
 db/migrate-down:
 	$(_goose_) down
 
+db/seed:
+	@echo "Populando a base de dados..."
+	$(DOCKER_COMPOSE) exec -T postgres-db psql -U postgres -d $(DB_NAME) < ./config/database/test-data/seed.sql
+
 dev:
 ifeq ($(OS),Windows_NT)
 	gradlew.bat clean assemble quarkusDev
@@ -23,19 +28,19 @@ else
 endif
 
 docker/up:
-	docker compose --env-file .env --file ./config/docker/compose.yaml up --build -d
+	$(DOCKER_COMPOSE) up --build -d
 
 docker/down:
-	docker compose --env-file .env --file ./config/docker/compose.yaml down
+	$(DOCKER_COMPOSE) down
 
 db/wait:
 	@echo "Aguardando $(DB_NAME) ficar pronto..."
-	@until docker compose --env-file .env --file ./config/docker/compose.yaml exec postgres-db pg_isready -U postgres > /dev/null 2>&1; do \
+	@until $(DOCKER_COMPOSE) exec postgres-db pg_isready -U postgres > /dev/null 2>&1; do \
 		sleep 1; \
 	done
 	@echo "$(DB_NAME) está pronto!"
 
-deps/up: docker/up db/wait db/migrate-up
+deps/up: docker/up db/wait db/migrate-up db/seed
 
 deps/down: docker/down
 
