@@ -40,8 +40,12 @@ db/wait:
 	done
 	@echo "$(DB_NAME) está pronto!"
 
-deps/up: docker/up db/wait db/migrate-up db/seed
+deps/up: docker/up db/wait db/migrate-up 
+
+deps/up/populated: deps/up db/seed
 
 deps/down: docker/down
 
 deps/restart: deps/down deps/up
+
+deps/restart/populated: deps/down deps/up/populated
