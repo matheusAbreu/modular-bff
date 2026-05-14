@@ -3,8 +3,8 @@
 CREATE TABLE clientes (
     id SERIAL PRIMARY KEY,
     nome varchar NOT NULL,
-    email varchar NOT NULL,
-    documento varchar NOT NULL,
+    email varchar NOT NULL UNIQUE,
+    documento varchar NOT NULL UNIQUE,
     tipo_documento varchar NOT NULL,
     data_nascimento timestamp NOT NULL,
     criado_em timestamp with time zone DEFAULT now(),
