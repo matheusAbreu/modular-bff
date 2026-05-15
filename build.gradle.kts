@@ -22,13 +22,15 @@ plugins {
 
 
 dependencies {
+    implementation(enforcedPlatform("$quarkusPlatformGroupId:$quarkusPlatformArtifactId:$quarkusPlatformVersion"))
     implementation("$quarkusPluginId:quarkus-smallrye-health")
     implementation("$quarkusPluginId:quarkus-smallrye-openapi")
-    implementation(enforcedPlatform("$quarkusPlatformGroupId:$quarkusPlatformArtifactId:$quarkusPlatformVersion"))
     implementation("$quarkusPluginId:quarkus-kotlin")
+    implementation("$quarkusPluginId:quarkus-jdbc-postgresql")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("$quarkusPluginId:quarkus-rest")
     implementation("$quarkusPluginId:quarkus-kotlin")
+    implementation("$quarkusPluginId:quarkus-hibernate-orm-panache-kotlin")
     implementation("$quarkusPluginId:quarkus-arc")
 
     testImplementation("io.quarkus:quarkus-junit5")
