@@ -1,10 +1,15 @@
 package org.acme.domain
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
+import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.time.LocalDateTime
 
@@ -13,18 +18,20 @@ import java.time.LocalDateTime
 class Delivery {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     var id: Long = 0
 
-    @Column(name = "pedido_id")
-    var orderId: Long = 0
+    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    var order: Order? = null
 
-    @Column(name = "endereco_id")
-    var addressId: Long = 0
+    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "delivery")
+    var addressId: OrderAddress? = null
 
-    @Column(name = "nota_danfe")
-    var fiscalNoteDanfe: String? = null
+    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "delivery")
+    var items: MutableSet<OrderItem> = mutableSetOf()
+
+    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "danfe")
+    var fiscalNoteDanfe: FiscalNote? = null
 
     @Column(name = "telefone_contato")
     var contactPhone: String? = null

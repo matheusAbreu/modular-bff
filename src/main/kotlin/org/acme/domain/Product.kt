@@ -1,8 +1,11 @@
 package org.acme.domain
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.LocalDateTime
 
@@ -12,7 +15,7 @@ class Product {
 
     @Id
     @Column(name = "sku")
-    var sku: String? = null
+    var sku: String = ""
 
     @Column(name = "nome")
     var name: String? = null
@@ -28,4 +31,7 @@ class Product {
 
     @Column(name = "atualizado_em")
     var updatedAt: LocalDateTime? = null
+
+    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "productSku")
+    var images: MutableSet<ProductImage> = mutableSetOf()
 }

@@ -5,7 +5,9 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.Id
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
+import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 
 @Entity
@@ -16,8 +18,8 @@ class Order {
     @Column(name = "id")
     var id: Long = 0
 
-    @Column(name= "cliente_id")
-    var clientId: Long = 0
+    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    var client: Customer? = null
 
     @Column(name = "status")
     var status: String? = null 
@@ -37,7 +39,9 @@ class Order {
     @Column(name = "atualizado_em")
     var updatedAt: java.time.LocalDateTime? = null
 
-//    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "order")
-//    var deliverys: MutableSet = HashSet()
+    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "order")
+    var deliverys: MutableSet<Delivery> = HashSet()
 
+    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "order")
+    var payments: MutableSet<Payment> = HashSet()
 }

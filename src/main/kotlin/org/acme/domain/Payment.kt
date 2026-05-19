@@ -13,7 +13,6 @@ import java.time.LocalDateTime
 class Payment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     var id: Long = 0
 
