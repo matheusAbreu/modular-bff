@@ -7,6 +7,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
+import jakarta.persistence.JoinColumn
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.time.LocalDateTime
@@ -20,8 +21,9 @@ class OrderItem {
     @Column(name = "id")
     var id: Long = 0
 
-//    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "Product.sku")
-//    var productSku: Product? = null
+    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @JoinColumn(name = "produto_sku")
+    var productSku: Product? = null
 
     @Column(name = "pedido_id")
     var orderId: Long = 0

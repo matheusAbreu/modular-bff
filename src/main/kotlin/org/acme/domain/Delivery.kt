@@ -27,14 +27,16 @@ class Delivery {
     @JoinColumn(name = "pedido_id")
     var order: Order? = null
 
-//    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "OrderAddress")
-//    var addressId: OrderAddress? = null
+    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @JoinColumn(name = "endereco_id")
+    var address: OrderAddress? = null
 
-//    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "OrderItem")
-//    var items: MutableSet<OrderItem> = mutableSetOf()
-//
-//    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "FiscalNote")
-//    var fiscalNoteDanfe: FiscalNote? = null
+    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "deliveryId")
+    var items: MutableSet<OrderItem> = mutableSetOf()
+
+    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @JoinColumn(name = "nota_danfe")
+    var fiscalNoteDanfe: FiscalNote? = null
 
     @Column(name = "telefone_contato")
     var contactPhone: String? = null

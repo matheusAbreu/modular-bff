@@ -7,6 +7,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
+import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.time.LocalDateTime
@@ -20,11 +21,9 @@ class CustomerAddress {
     @Column(name = "id")
     var id: Long = 0
 
-//    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
-//    var client: Customer? = null
-
-    @Column(name = "cliente_id")
-    var clientId: Long = 0
+    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @JoinColumn(name = "cliente_id")
+    var customer: Customer? = null
 
     @Column(name = "principal")
     var primary: Boolean = false

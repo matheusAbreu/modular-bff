@@ -18,10 +18,11 @@ class OrderRepositoryTest {
 
     @Test
     fun `should save and find an order`() {
+        val testId = (1..10000).random()
         val client = Customer(
-            name = "testUser",
-            email = "test@work.com",
-            document = "123.456.789",
+            name = "testUser${testId}",
+            email = "test${testId}@work.com",
+            document = "123.456.789-${testId}",
             documentType = "cpf",
             birthDate = LocalDateTime.now()
         )
@@ -30,7 +31,7 @@ class OrderRepositoryTest {
             total = 100.0,
             discount = 0.0,
             freight = 0.0,
-            client = client
+            customer = client
         ))
 
         assertNotEquals(order.id, 0)

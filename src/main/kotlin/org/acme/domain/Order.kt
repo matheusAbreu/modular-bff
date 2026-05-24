@@ -25,7 +25,7 @@ class Order {
 
     @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
     @JoinColumn(name = "cliente_id")
-    var client: Customer? = null
+    var customer: Customer? = null
 
     @Column(name = "status")
     var status: String? = null 
@@ -52,11 +52,12 @@ class Order {
     var payments: MutableSet<Payment> = HashSet()
 
     constructor()
-    constructor(status: String, total: Double, discount: Double, freight: Double, client: Customer) {
+
+    constructor(status: String, total: Double, discount: Double, freight: Double, customer: Customer) {
         this.status = status
         this.total = total
         this.discount = discount
         this.freight = freight
-        this.client = client
+        this.customer = customer
     }
 }

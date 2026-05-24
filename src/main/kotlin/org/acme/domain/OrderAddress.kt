@@ -1,10 +1,14 @@
 package org.acme.domain
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.time.LocalDateTime
 
@@ -17,11 +21,13 @@ class OrderAddress {
     @Column(name = "id")
     var id: Long = 0
 
-    @Column(name = "cliente_id")
-    var clientId: Long = 0
+    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @JoinColumn(name = "cliente_id")
+    var customer: Customer? = null
 
-    @Column(name = "pedido_id")
-    var orderId: Long = 0
+    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @JoinColumn(name = "pedido_id")
+    var order: Order? = null
 
     @Column(name = "cep")
     var zipCode: String? = null
