@@ -2,29 +2,30 @@ package org.acme.adapters.infrastructure.repository
 
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.persistence.NoResultException
+import jakarta.transaction.Transactional
 import org.acme.domain.Order
 
 @ApplicationScoped
 class OrderRepository: BaseRepository() {
 
-
-    fun findById(id: Long): Order? {
-        try {
-            return getEntityManager().find(Order::class.java, id)
-        }
-        catch (exception: NoResultException) {
-            return null
-        } 
-        catch (e: Exception) {
-            e.printStackTrace()
-            return null
-        }
+    companion object {
+            private const val SELECT_BY_ID = "SELECT o FROM Order o WHERE o.id = :orderId"
     }
+
+    fun findById(id: Long): Order? = try {
+            return getEntityManager()
+                .createQuery(SELECT_BY_ID)
+                .setParameter("orderId", id)
+                .singleResult as Order?
+        } catch (e: NoResultException) {
+            return null
+        }
+
     
     fun save(order: Order): Order {
-        getEntityManager().transaction.begin()
         val savedOrder = getEntityManager().merge(order)
-        getEntityManager().transaction.commit()
+        getEntityManager().flush()
+        
         return savedOrder
     }
 }

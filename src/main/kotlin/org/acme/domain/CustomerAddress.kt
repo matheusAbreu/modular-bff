@@ -16,11 +16,15 @@ import java.time.LocalDateTime
 class CustomerAddress {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     var id: Long = 0
 
-    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
-    var client: Customer? = null
+//    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+//    var client: Customer? = null
+
+    @Column(name = "cliente_id")
+    var clientId: Long = 0
 
     @Column(name = "principal")
     var primary: Boolean = false

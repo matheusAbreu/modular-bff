@@ -13,6 +13,7 @@ import java.time.LocalDateTime
 class ProductImage {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     var id: Long = 0
 

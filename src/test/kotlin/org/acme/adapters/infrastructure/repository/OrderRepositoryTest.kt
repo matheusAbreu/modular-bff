@@ -2,12 +2,14 @@ package org.acme.adapters.infrastructure.repository
 
 import io.quarkus.test.junit.QuarkusTest
 import jakarta.inject.Inject
+import jakarta.transaction.Transactional
 import org.acme.domain.Order
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 @QuarkusTest
+@Transactional
 class OrderRepositoryTest {
 
     @Inject
@@ -15,26 +17,28 @@ class OrderRepositoryTest {
 
     @Test
     fun `should save and find an order`() {
-        val order = Order().apply {
-            id = 1L
-            status = "PENDING"
-            total = 100.0
-            createdAt = LocalDateTime.now()
-        }
+        val order =  orderRepository.save(Order(
+            status = "PENDING",
+            total = 100.0,
+            discount = 0.0,
+            freight = 0.0,
+            clientId = 1
+        ))
+        
+        assertNotEquals(order.id, 0)
+        assertNotNull(order.createdAt)
+        assertNotNull(order.updatedAt)
 
-        val savedOrder = orderRepository.save(order)
-        assertNotNull(savedOrder)
-        assertEquals(1L, savedOrder.id)
 
-        val foundOrder = orderRepository.findById(1L)
+        val foundOrder = orderRepository.findById(order.id!!)!!
         assertNotNull(foundOrder)
-        assertEquals("PENDING", foundOrder?.status)
-        assertEquals(100.0, foundOrder?.total)
+        assertEquals("PENDING", foundOrder.status)
+        assertEquals(100.0, foundOrder.total)
     }
 
     @Test
     fun `should return null when order not found`() {
-        val foundOrder = orderRepository.findById(999L)
+        val foundOrder = orderRepository.findById(Long.MAX_VALUE)
         assertNull(foundOrder)
     }
 }

@@ -16,11 +16,12 @@ import java.time.LocalDateTime
 class OrderItem {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     var id: Long = 0
 
-    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "productSku")
-    var productSku: Product? = null
+//    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "Product.sku")
+//    var productSku: Product? = null
 
     @Column(name = "pedido_id")
     var orderId: Long = 0

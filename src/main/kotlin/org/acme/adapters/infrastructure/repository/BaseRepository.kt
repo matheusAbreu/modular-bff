@@ -4,14 +4,17 @@ import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import jakarta.persistence.EntityManager
 import jakarta.enterprise.inject.Instance
-import jakarta.persistence.PersistenceUnit
+import io.quarkus.hibernate.orm.PersistenceUnit
 
 @ApplicationScoped
 class BaseRepository {
 
     @Inject
-    @PersistenceUnit(name = "bff")
+    @PersistenceUnit("bff")
     protected lateinit var entityManager: Instance<EntityManager>
-    
-    fun getEntityManager() = entityManager.get()
+
+
+    fun getEntityManager() = if (entityManager.isResolvable)
+            entityManager.get() else
+        throw IllegalStateException("EntityManager is not resolvable")
 }

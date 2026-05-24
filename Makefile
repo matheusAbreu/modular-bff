@@ -2,50 +2,66 @@ DB_NAME=postgres
 DB_DSN=host=localhost port=5432 user=postgres password=postgres dbname=$(DB_NAME) sslmode=disable
 DOCKER_COMPOSE=docker compose --env-file .env --file ./config/docker/compose.yaml
 _goose_ = goose -dir ./config/database/migrations postgres "$(DB_DSN)"
-__MIGRATION_NAME__ = 
+__MIGRATION_NAME__ =
 
-deps/install:
+# Load envs from .env file if it exists
+-include .env
+export
+
+help:  ## Display this help
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make [target]\n\nTargets:\n"} /^[a-zA-Z_\/\-]+:.*##/ { printf "\033[36m%-20s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
+
+
+deps/install: ## Install required dependencies (goose)
 	go install github.com/pressly/goose/v3/cmd/goose@latest
 
-db/create-migration:
+db/create-migration: ## Create a new database migration file (pass __MIGRATION_NAME__=name)
 	$(_goose_) create $(__MIGRATION_NAME__) sql
 
-db/migrate-up:
+db/migrate-up: ## Apply all pending database migrations
 	$(_goose_) up
 
-db/migrate-down:
+db/migrate-down: ## Roll back the last database migration
 	$(_goose_) down
 
-db/seed:
+db/seed: ## Populate the database with initial/test data
 	@echo "Populando a base de dados..."
 	$(DOCKER_COMPOSE) exec -T postgres-db psql -U postgres -d $(DB_NAME) < ./config/database/test-data/seed.sql
 
-dev:
+dev: ## Start the application in Quarkus development mode
 ifeq ($(OS),Windows_NT)
 	gradlew.bat clean assemble quarkusDev
 else
 	./gradlew clean assemble quarkusDev
 endif
 
-docker/up:
+docker/up: ## Start infrastructure containers in detached mode
 	$(DOCKER_COMPOSE) up --build -d
 
-docker/down:
+docker/down: ## Stop and remove infrastructure containers
 	$(DOCKER_COMPOSE) down
 
-db/wait:
+db/wait: ## Wait for the database container to be ready
 	@echo "Aguardando $(DB_NAME) ficar pronto..."
 	@until $(DOCKER_COMPOSE) exec postgres-db pg_isready -U postgres > /dev/null 2>&1; do \
 		sleep 1; \
 	done
 	@echo "$(DB_NAME) está pronto!"
 
-deps/up: docker/up db/wait db/migrate-up 
 
-deps/up/populated: deps/up db/seed
+deps/up: docker/up db/wait db/migrate-up ## Start infrastructure, wait for DB, and run migrations
 
-deps/down: docker/down
+deps/up/populated: deps/up db/seed ## Start infrastructure with migrations and seeded data
 
-deps/restart: deps/down deps/up
+deps/down: docker/down ## Shut down all infrastructure
 
-deps/restart/populated: deps/down deps/up/populated
+deps/restart: deps/down deps/up ## Restart entire infrastructure (migrations applied)
+
+deps/restart/populated: deps/down deps/up/populated ## Restart entire infrastructure with seeded data
+
+test: deps/restart/populated ## Run all tests (restarts infrastructure first)
+ifeq ($(OS),Windows_NT)
+	gradlew.bat clean test
+else
+	./gradlew clean test
+endif

@@ -9,7 +9,6 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import sun.jvm.hotspot.debugger.Address
 import java.time.LocalDateTime
 
 @Entity
@@ -17,6 +16,7 @@ import java.time.LocalDateTime
 class Customer {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     var id: Long = 0
 
@@ -41,17 +41,17 @@ class Customer {
     @Column(name = "atualizado_em")
     var updatedAt: LocalDateTime? = null
 
-    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "customer")
-    var contacts: MutableSet<Contact> = mutableSetOf()
-
-    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "customer")
-    var addresses: MutableSet<CustomerAddress> = mutableSetOf()
-
-
-    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "customer")
-    fun getOrders():MutableSet<Order>{
-        val orders: MutableSet<Order> = mutableSetOf()
-
-        return orders
-    }
+//    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "Contact.client")
+//    var contacts: MutableSet<Contact> = mutableSetOf()
+//
+//    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "CustomerAddress.client")
+//    var addresses: MutableSet<CustomerAddress> = mutableSetOf()
+//
+//
+//    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "Order.client")
+//    fun getOrders():MutableSet<Order>{
+//        val orders: MutableSet<Order> = mutableSetOf()
+//
+//        return orders
+//    }
 }

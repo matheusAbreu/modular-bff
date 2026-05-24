@@ -18,20 +18,21 @@ import java.time.LocalDateTime
 class Delivery {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     var id: Long = 0
 
     @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
     var order: Order? = null
 
-    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "delivery")
-    var addressId: OrderAddress? = null
+//    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "OrderAddress")
+//    var addressId: OrderAddress? = null
 
-    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "delivery")
-    var items: MutableSet<OrderItem> = mutableSetOf()
-
-    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "danfe")
-    var fiscalNoteDanfe: FiscalNote? = null
+//    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "OrderItem")
+//    var items: MutableSet<OrderItem> = mutableSetOf()
+//
+//    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "FiscalNote")
+//    var fiscalNoteDanfe: FiscalNote? = null
 
     @Column(name = "telefone_contato")
     var contactPhone: String? = null

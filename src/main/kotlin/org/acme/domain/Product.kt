@@ -32,6 +32,6 @@ class Product {
     @Column(name = "atualizado_em")
     var updatedAt: LocalDateTime? = null
 
-    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "productSku")
-    var images: MutableSet<ProductImage> = mutableSetOf()
+//    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "productSku")
+//    var images: MutableSet<ProductImage> = mutableSetOf()
 }
