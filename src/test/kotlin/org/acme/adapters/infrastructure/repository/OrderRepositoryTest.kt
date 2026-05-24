@@ -3,6 +3,7 @@ package org.acme.adapters.infrastructure.repository
 import io.quarkus.test.junit.QuarkusTest
 import jakarta.inject.Inject
 import jakarta.transaction.Transactional
+import org.acme.domain.Customer
 import org.acme.domain.Order
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -17,14 +18,21 @@ class OrderRepositoryTest {
 
     @Test
     fun `should save and find an order`() {
+        val client = Customer(
+            name = "testUser",
+            email = "test@work.com",
+            document = "123.456.789",
+            documentType = "cpf",
+            birthDate = LocalDateTime.now()
+        )
         val order =  orderRepository.save(Order(
             status = "PENDING",
             total = 100.0,
             discount = 0.0,
             freight = 0.0,
-            clientId = 1
+            client = client
         ))
-        
+
         assertNotEquals(order.id, 0)
         assertNotNull(order.createdAt)
         assertNotNull(order.updatedAt)

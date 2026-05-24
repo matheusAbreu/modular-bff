@@ -7,6 +7,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
+import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
@@ -23,6 +24,7 @@ class Delivery {
     var id: Long = 0
 
     @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @JoinColumn(name = "pedido_id")
     var order: Order? = null
 
 //    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "OrderAddress")

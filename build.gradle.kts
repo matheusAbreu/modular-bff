@@ -32,7 +32,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("$quarkusPluginId:quarkus-rest")
     implementation("$quarkusPluginId:quarkus-kotlin")
-    implementation("$quarkusPluginId:quarkus-hibernate-orm-panache-kotlin")
+    implementation("$quarkusPluginId:quarkus-hibernate-orm")
     implementation("$quarkusPluginId:quarkus-arc")
 
     testImplementation("io.quarkus:quarkus-junit5")

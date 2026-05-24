@@ -12,8 +12,17 @@ help:  ## Display this help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make [target]\n\nTargets:\n"} /^[a-zA-Z_\/\-]+:.*##/ { printf "\033[36m%-20s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 
 
-deps/install: ## Install required dependencies (goose)
+deps/kotlin: ## Clean and refresh Kotlin/Gradle dependencies
+ifeq ($(OS),Windows_NT)
+	gradlew.bat clean build --status --refresh-dependencies
+else
+	./gradlew clean build --status --refresh-dependencies
+endif
+
+deps/go: ## Install required Go dependencies (goose)
 	go install github.com/pressly/goose/v3/cmd/goose@latest
+
+deps/install: deps/kotlin deps/go ## Install all project dependencies (Kotlin and Go)
 
 db/create-migration: ## Create a new database migration file (pass __MIGRATION_NAME__=name)
 	$(_goose_) create $(__MIGRATION_NAME__) sql
@@ -59,7 +68,7 @@ deps/restart: deps/down deps/up ## Restart entire infrastructure (migrations app
 
 deps/restart/populated: deps/down deps/up/populated ## Restart entire infrastructure with seeded data
 
-test: deps/restart/populated ## Run all tests (restarts infrastructure first)
+test: deps/restart ## Run all tests (restarts infrastructure first)
 ifeq ($(OS),Windows_NT)
 	gradlew.bat clean test
 else

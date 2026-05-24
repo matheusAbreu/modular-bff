@@ -36,10 +36,10 @@ class Customer {
     var birthDate: LocalDateTime? = null
 
     @Column(name = "criado_em")
-    var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime = LocalDateTime.now()
 
     @Column(name = "atualizado_em")
-    var updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDateTime = LocalDateTime.now()
 
 //    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "Contact.client")
 //    var contacts: MutableSet<Contact> = mutableSetOf()
@@ -54,4 +54,14 @@ class Customer {
 //
 //        return orders
 //    }
+
+    constructor()
+
+    constructor(name: String, document: String, documentType: String, email: String, birthDate: LocalDateTime) {
+        this.name = name
+        this.document = document
+        this.email = email
+        this.birthDate = birthDate
+        this.documentType = documentType
+    }
 }
