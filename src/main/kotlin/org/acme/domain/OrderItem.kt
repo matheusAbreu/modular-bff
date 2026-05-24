@@ -8,6 +8,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.time.LocalDateTime
@@ -21,15 +22,17 @@ class OrderItem {
     @Column(name = "id")
     var id: Long = 0
 
-    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
     @JoinColumn(name = "produto_sku")
-    var productSku: Product? = null
+    var product: Product? = null
 
-    @Column(name = "pedido_id")
-    var orderId: Long = 0
+    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @JoinColumn(name = "pedido_id")
+    var order: Order? = null
 
-    @Column(name = "entrega_id")
-    var deliveryId: Long = 0
+    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @JoinColumn(name = "entrega_id")
+    var delivery: Delivery? = null
 
     @Column(name = "quantidade")
     var quantity: Int = 0
@@ -39,10 +42,28 @@ class OrderItem {
 
     @Column(name = "valor_total")
     var totalPrice: Double = 0.0
-
+    
     @Column(name = "criado_em")
-    var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime = LocalDateTime.now()
 
     @Column(name = "atualizado_em")
-    var updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDateTime = LocalDateTime.now()
+
+    constructor()
+
+    constructor(
+        product: Product?,
+        order: Order?,
+        delivery: Delivery?,
+        quantity: Int,
+        unitPrice: Double,
+        totalPrice: Double
+    ) {
+        this.product = product
+        this.order = order
+        this.delivery = delivery
+        this.quantity = quantity
+        this.unitPrice = unitPrice
+        this.totalPrice = totalPrice
+    }
 }

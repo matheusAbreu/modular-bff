@@ -41,8 +41,26 @@ class Payment {
     var status: String? = null
 
     @Column(name = "criado_em")
-    var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime = LocalDateTime.now()
 
     @Column(name = "atualizado_em")
-    var updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDateTime = LocalDateTime.now()
+
+    constructor()
+
+    constructor(
+        order: Order?,
+        method: String?,
+        installments: Int,
+        installmentValue: Double,
+        totalValue: Double,
+        status: String?
+    ) {
+        this.order = order
+        this.method = method
+        this.installments = installments
+        this.installmentValue = installmentValue
+        this.totalValue = totalValue
+        this.status = status
+    }
 }

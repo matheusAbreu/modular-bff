@@ -46,10 +46,18 @@ class Order {
     var updatedAt: LocalDateTime = LocalDateTime.now()
 
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "order")
-    var deliverys: MutableSet<Delivery> = HashSet()
+    fun getDeliverys():MutableList<Delivery>{
+        val deliverys: MutableList<Delivery> = mutableListOf()
+
+        return deliverys
+    }
 
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "order")
-    var payments: MutableSet<Payment> = HashSet()
+    fun getPayments():MutableList<Payment>{
+        val payments: MutableList<Payment> = mutableListOf()
+
+        return payments
+    }
 
     constructor()
 

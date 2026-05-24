@@ -4,6 +4,8 @@ import jakarta.enterprise.context.ApplicationScoped
 import jakarta.persistence.NoResultException
 import jakarta.transaction.Transactional
 import org.acme.domain.Order
+import java.time.LocalDateTime
+
 
 @ApplicationScoped
 class OrderRepository: BaseRepository() {
@@ -23,6 +25,7 @@ class OrderRepository: BaseRepository() {
 
     
     fun save(order: Order): Order {
+        order.updatedAt = LocalDateTime.now()
         val savedOrder = getEntityManager().merge(order)
         getEntityManager().flush()
         

@@ -35,8 +35,17 @@ class Contact {
     var value: String? = null
 
     @Column(name = "criado_em")
-    var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime = LocalDateTime.now()
 
     @Column(name = "atualizado_em")
-    var updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDateTime = LocalDateTime.now()
+
+    constructor()
+
+    constructor(customer: Customer?, primary: Boolean, contactType: String?, value: String?) {
+        this.customer = customer
+        this.primary = primary
+        this.contactType = contactType
+        this.value = value
+    }
 }

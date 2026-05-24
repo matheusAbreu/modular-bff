@@ -31,9 +31,6 @@ class Delivery {
     @JoinColumn(name = "endereco_id")
     var address: OrderAddress? = null
 
-    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "deliveryId")
-    var items: MutableSet<OrderItem> = mutableSetOf()
-
     @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
     @JoinColumn(name = "nota_danfe")
     var fiscalNoteDanfe: FiscalNote? = null
@@ -51,8 +48,33 @@ class Delivery {
     var status: String? = null
 
     @Column(name = "criado_em")
-    var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime = LocalDateTime.now()
 
     @Column(name = "atualizado_em")
-    var updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDateTime = LocalDateTime.now()
+
+    constructor()
+
+    constructor(
+        order: Order?,
+        address: OrderAddress?,
+        contactPhone: String?,
+        contactName: String?,
+        freight: Double,
+        status: String?
+    ) {
+        this.order = order
+        this.address = address
+        this.contactPhone = contactPhone
+        this.contactName = contactName
+        this.freight = freight
+        this.status = status
+    }
+    
+    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "delivery")
+    fun getItems():MutableList<OrderItem>{
+        val items: MutableList<OrderItem> = mutableListOf()
+
+        return items
+    }
 }

@@ -25,10 +25,20 @@ class FiscalNote {
 
     @Column(name = "valor_em_nota")
     var valueInNote: Double = 0.0
-
+    
     @Column(name = "criado_em")
-    var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime = LocalDateTime.now()
 
     @Column(name = "atualizado_em")
-    var updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDateTime = LocalDateTime.now()
+
+    constructor()
+
+    constructor(danfe: String?, series: String?, key: String?, file: String?, valueInNote: Double) {
+        this.danfe = danfe
+        this.series = series
+        this.key = key
+        this.file = file
+        this.valueInNote = valueInNote
+    }
 }

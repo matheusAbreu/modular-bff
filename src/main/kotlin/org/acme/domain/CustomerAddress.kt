@@ -47,8 +47,30 @@ class CustomerAddress {
     var state: String? = null
 
     @Column(name = "criado_em")
-    var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime = LocalDateTime.now()
 
     @Column(name = "atualizado_em")
-    var updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDateTime = LocalDateTime.now()
+
+    constructor()
+
+    constructor(
+        customer: Customer?,
+        primary: Boolean,
+        zipCode: String?,
+        street: String?,
+        number: String?,
+        complement: String?,
+        city: String?,
+        state: String?
+    ) {
+        this.customer = customer
+        this.primary = primary
+        this.zipCode = zipCode
+        this.street = street
+        this.number = number
+        this.complement = complement
+        this.city = city
+        this.state = state
+    }
 }

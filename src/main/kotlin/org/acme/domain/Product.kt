@@ -27,11 +27,24 @@ class Product {
     var price: Double = 0.0
 
     @Column(name = "criado_em")
-    var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime = LocalDateTime.now()
 
     @Column(name = "atualizado_em")
-    var updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDateTime = LocalDateTime.now()
+
+    constructor()
+
+    constructor(sku: String, name: String?, description: String?, price: Double) {
+        this.sku = sku
+        this.name = name
+        this.description = description
+        this.price = price
+    }
 
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "product")
-    var images: MutableSet<ProductImage> = mutableSetOf()
+    fun getImages(): MutableList<ProductImage> {
+        val images: MutableList<ProductImage> = mutableListOf()
+
+        return images
+    }
 }

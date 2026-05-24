@@ -42,15 +42,22 @@ class Customer {
     var updatedAt: LocalDateTime = LocalDateTime.now()
 
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "customer")
-    var contacts: MutableSet<Contact> = mutableSetOf()
+    fun getContacts():MutableList<Contact>{
+        val contacts: MutableList<Contact> = mutableListOf()
+
+        return contacts
+    }
 
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "customer")
-    var addresses: MutableSet<CustomerAddress> = mutableSetOf()
+    fun getAddresses():MutableList<CustomerAddress>{
+        val addresses: MutableList<CustomerAddress> = mutableListOf()
 
+        return addresses
+    }
 
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "customer")
-    fun getOrders():MutableSet<Order>{
-        val orders: MutableSet<Order> = mutableSetOf()
+    fun getOrders():MutableList<Order>{
+        val orders: MutableList<Order> = mutableListOf()
 
         return orders
     }
