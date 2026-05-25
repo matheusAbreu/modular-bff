@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.time.LocalDateTime
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "itens_pedido")
@@ -22,15 +23,15 @@ class OrderItem {
     @Column(name = "id")
     var id: Long = 0
 
-    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [(CascadeType.PERSIST)], fetch = FetchType.EAGER)
     @JoinColumn(name = "produto_sku")
     var product: Product? = null
 
-    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [(CascadeType.PERSIST)], fetch = FetchType.EAGER)
     @JoinColumn(name = "pedido_id")
     var order: Order? = null
 
-    @ManyToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @ManyToOne(cascade = [(CascadeType.PERSIST)], fetch = FetchType.EAGER)
     @JoinColumn(name = "entrega_id")
     var delivery: Delivery? = null
 
@@ -38,10 +39,10 @@ class OrderItem {
     var quantity: Int = 0
 
     @Column(name = "valor_unitario")
-    var unitPrice: Double = 0.0
+    var unitPrice: BigDecimal = BigDecimal.ZERO
 
     @Column(name = "valor_total")
-    var totalPrice: Double = 0.0
+    var totalPrice: BigDecimal = BigDecimal.ZERO
     
     @Column(name = "criado_em")
     var createdAt: LocalDateTime = LocalDateTime.now()
@@ -56,8 +57,8 @@ class OrderItem {
         order: Order?,
         delivery: Delivery?,
         quantity: Int,
-        unitPrice: Double,
-        totalPrice: Double
+        unitPrice: BigDecimal,
+        totalPrice: BigDecimal
     ) {
         this.product = product
         this.order = order

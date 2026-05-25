@@ -7,6 +7,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity
@@ -24,7 +25,7 @@ class Product {
     var description: String? = null
 
     @Column(name = "preco")
-    var price: Double = 0.0
+    var price: BigDecimal = BigDecimal.ZERO
 
     @Column(name = "criado_em")
     var createdAt: LocalDateTime = LocalDateTime.now()
@@ -32,19 +33,15 @@ class Product {
     @Column(name = "atualizado_em")
     var updatedAt: LocalDateTime = LocalDateTime.now()
 
+    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "product")
+    val images: MutableList<ProductImage> = mutableListOf()
     constructor()
 
-    constructor(sku: String, name: String?, description: String?, price: Double) {
+    constructor(sku: String, name: String?, description: String?, price: BigDecimal) {
         this.sku = sku
         this.name = name
         this.description = description
         this.price = price
     }
 
-    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "product")
-    fun getImages(): MutableList<ProductImage> {
-        val images: MutableList<ProductImage> = mutableListOf()
-
-        return images
-    }
 }

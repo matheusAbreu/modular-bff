@@ -17,7 +17,7 @@ class DeliveryRepository: BaseRepository() {
         getEntityManager()
             .createQuery(SELECT_BY_ID)
             .setParameter("deliveryId", id)
-            .singleResult as Delivery?
+            .singleResult as Delivery
     } catch (e: NoResultException) {
         null
     }

@@ -17,7 +17,7 @@ class OrderAddressRepository: BaseRepository() {
         getEntityManager()
             .createQuery(SELECT_BY_ID)
             .setParameter("addressId", id)
-            .singleResult as OrderAddress?
+            .singleResult as OrderAddress
     } catch (e: NoResultException) {
         null
     }

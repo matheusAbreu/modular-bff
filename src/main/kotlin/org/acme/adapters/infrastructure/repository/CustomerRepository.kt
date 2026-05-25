@@ -16,7 +16,7 @@ class CustomerRepository: BaseRepository() {
         getEntityManager()
             .createQuery(SELECT_BY_ID)
             .setParameter("customerId", id)
-            .singleResult as Customer?
+            .singleResult as Customer
     } catch (e: NoResultException) {
         null
     }

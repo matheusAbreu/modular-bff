@@ -13,6 +13,7 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.time.LocalDateTime
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "entregas")
@@ -42,7 +43,7 @@ class Delivery {
     var contactName: String? = null
 
     @Column(name = "frete")
-    var freight: Double = 0.0
+    var freight: BigDecimal = BigDecimal.ZERO
 
     @Column(name = "status")
     var status: String? = null
@@ -53,6 +54,9 @@ class Delivery {
     @Column(name = "atualizado_em")
     var updatedAt: LocalDateTime = LocalDateTime.now()
 
+    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "delivery")
+    val items: MutableList<OrderItem> = mutableListOf()
+   
     constructor()
 
     constructor(
@@ -60,7 +64,7 @@ class Delivery {
         address: OrderAddress?,
         contactPhone: String?,
         contactName: String?,
-        freight: Double,
+        freight: BigDecimal,
         status: String?
     ) {
         this.order = order
@@ -71,10 +75,4 @@ class Delivery {
         this.status = status
     }
     
-    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "delivery")
-    fun getItems():MutableList<OrderItem>{
-        val items: MutableList<OrderItem> = mutableListOf()
-
-        return items
-    }
 }

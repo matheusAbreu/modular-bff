@@ -6,9 +6,12 @@ import jakarta.transaction.Transactional
 import org.acme.domain.Order
 import org.acme.domain.OrderItem
 import org.acme.domain.Product
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
+import java.math.BigDecimal
 
 @QuarkusTest
 @Transactional
@@ -31,13 +34,13 @@ class OrderItemRepositoryTest {
             this.sku = "OI-SKU-$testId"
             this.name = "Test Product for Item"
             this.description = "Test Description"
-            this.price = 10.0
+            this.price = BigDecimal.valueOf(10.0)
         }
         val savedProduct = productRepository.save(product)
 
         val order = Order().apply {
             this.status = "PENDING"
-            this.total = 10.0
+            this.total = BigDecimal.valueOf(10.0)
         }
         val savedOrder = orderRepository.save(order)
 
@@ -46,8 +49,8 @@ class OrderItemRepositoryTest {
             order = savedOrder,
             delivery = null,
             quantity = 1,
-            unitPrice = 10.0,
-            totalPrice = 10.0
+            unitPrice = BigDecimal.valueOf(10.0),
+            totalPrice = BigDecimal.valueOf(10.0)
         )
 
         val savedItem = orderItemRepository.save(item)

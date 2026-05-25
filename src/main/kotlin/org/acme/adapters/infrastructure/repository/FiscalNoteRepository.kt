@@ -17,7 +17,7 @@ class FiscalNoteRepository: BaseRepository() {
         getEntityManager()
             .createQuery(SELECT_BY_DANFE)
             .setParameter("danfe", danfe)
-            .singleResult as FiscalNote?
+            .singleResult as FiscalNote
     } catch (e: NoResultException) {
         null
     }

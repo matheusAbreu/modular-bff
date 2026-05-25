@@ -4,9 +4,11 @@ import io.quarkus.test.junit.QuarkusTest
 import jakarta.inject.Inject
 import jakarta.transaction.Transactional
 import org.acme.domain.FiscalNote
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import java.math.BigDecimal
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
 
 @QuarkusTest
 @Transactional
@@ -23,7 +25,7 @@ class FiscalNoteRepositoryTest {
             series = "SER-$testId",
             key = "KEY-$testId",
             file = "file-$testId.pdf",
-            valueInNote = 1500.00
+            valueInNote = BigDecimal.valueOf(1500.00)
         )
 
         val savedFiscalNote = fiscalNoteRepository.save(fiscalNote)

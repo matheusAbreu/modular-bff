@@ -4,9 +4,12 @@ import io.quarkus.test.junit.QuarkusTest
 import jakarta.inject.Inject
 import jakarta.transaction.Transactional
 import org.acme.domain.Payment
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import java.math.BigDecimal
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
 
 @QuarkusTest
 @Transactional
@@ -22,8 +25,8 @@ class PaymentRepositoryTest {
             order = null,
             method = "CREDIT_CARD",
             installments = 3,
-            installmentValue = 33.33,
-            totalValue = 100.0,
+            installmentValue = BigDecimal.valueOf(33.33),
+            totalValue = BigDecimal.valueOf(100.0),
             status = "APPROVED"
         )
 

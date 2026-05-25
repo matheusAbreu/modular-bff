@@ -5,7 +5,11 @@ import jakarta.inject.Inject
 import jakarta.transaction.Transactional
 import org.acme.domain.Product
 import org.acme.domain.ProductImage
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import java.math.BigDecimal
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
@@ -27,7 +31,7 @@ class ProductImageRepositoryTest {
             this.sku = "PI-SKU-$testId"
             this.name = "Test Product for Image"
             this.description = "Description"
-            this.price = 10.0
+            this.price = BigDecimal.valueOf(10.0)
             this.createdAt = LocalDateTime.now()
             this.updatedAt = LocalDateTime.now()
         }

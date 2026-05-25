@@ -16,7 +16,7 @@ class ProductImageRepository: BaseRepository() {
         getEntityManager()
             .createQuery(SELECT_BY_ID)
             .setParameter("imageId", id)
-            .singleResult as ProductImage?
+            .singleResult as ProductImage
     } catch (e: NoResultException) {
         null
     }

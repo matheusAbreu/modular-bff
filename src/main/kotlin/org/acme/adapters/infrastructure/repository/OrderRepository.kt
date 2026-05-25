@@ -18,7 +18,7 @@ class OrderRepository: BaseRepository() {
             return getEntityManager()
                 .createQuery(SELECT_BY_ID)
                 .setParameter("orderId", id)
-                .singleResult as Order?
+                .singleResult as Order
         } catch (e: NoResultException) {
             return null
         }

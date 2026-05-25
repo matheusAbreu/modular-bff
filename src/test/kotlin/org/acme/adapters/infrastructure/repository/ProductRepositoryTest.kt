@@ -4,9 +4,11 @@ import io.quarkus.test.junit.QuarkusTest
 import jakarta.inject.Inject
 import jakarta.transaction.Transactional
 import org.acme.domain.Product
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import java.math.BigDecimal
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
 
 @QuarkusTest
 @Transactional
@@ -22,7 +24,7 @@ class ProductRepositoryTest {
             sku = "SKU-$testId",
             name = "Test Product $testId",
             description = "Description for product $testId",
-            price = 99.99
+            price = BigDecimal.valueOf(99.99)
         )
 
         val savedProduct = productRepository.save(product)

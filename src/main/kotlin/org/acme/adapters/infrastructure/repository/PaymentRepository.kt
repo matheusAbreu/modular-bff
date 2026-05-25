@@ -16,7 +16,7 @@ class PaymentRepository: BaseRepository() {
         getEntityManager()
             .createQuery(SELECT_BY_ID)
             .setParameter("paymentId", id)
-            .singleResult as Payment?
+            .singleResult as Payment
     } catch (e: NoResultException) {
         null
     }

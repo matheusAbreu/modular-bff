@@ -13,6 +13,8 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.time.LocalDateTime
+import java.math.BigDecimal
+
 
 @Entity
 @Table(name = "pedidos")
@@ -31,13 +33,13 @@ class Order {
     var status: String? = null 
 
     @Column(name = "total")
-    var total: Double = 0.0
+    var total: BigDecimal = BigDecimal.ZERO
 
     @Column(name = "desconto")
-    var discount: Double = 0.0
+    var discount: BigDecimal = BigDecimal.ZERO
 
     @Column(name = "frete")
-    var freight: Double = 0.0
+    var freight: BigDecimal = BigDecimal.ZERO
 
     @Column(name = "criado_em")
     var createdAt: LocalDateTime = LocalDateTime.now()
@@ -46,22 +48,14 @@ class Order {
     var updatedAt: LocalDateTime = LocalDateTime.now()
 
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "order")
-    fun getDeliverys():MutableList<Delivery>{
-        val deliverys: MutableList<Delivery> = mutableListOf()
-
-        return deliverys
-    }
-
+    val deliverys: MutableList<Delivery> = mutableListOf()
+  
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "order")
-    fun getPayments():MutableList<Payment>{
-        val payments: MutableList<Payment> = mutableListOf()
-
-        return payments
-    }
+    val payments: MutableList<Payment> = mutableListOf()
 
     constructor()
 
-    constructor(status: String, total: Double, discount: Double, freight: Double, customer: Customer) {
+    constructor(status: String, total: BigDecimal, discount: BigDecimal, freight: BigDecimal, customer: Customer) {
         this.status = status
         this.total = total
         this.discount = discount

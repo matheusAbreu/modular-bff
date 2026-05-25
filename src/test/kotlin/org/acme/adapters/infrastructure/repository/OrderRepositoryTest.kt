@@ -5,7 +5,11 @@ import jakarta.inject.Inject
 import jakarta.transaction.Transactional
 import org.acme.domain.Customer
 import org.acme.domain.Order
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import java.math.BigDecimal
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
@@ -28,9 +32,9 @@ class OrderRepositoryTest {
         )
         val order =  orderRepository.save(Order(
             status = "PENDING",
-            total = 100.0,
-            discount = 0.0,
-            freight = 0.0,
+            total = BigDecimal.valueOf(100.0),
+            discount = BigDecimal.valueOf(0.0),
+            freight = BigDecimal.valueOf(0.0),
             customer = client
         ))
 

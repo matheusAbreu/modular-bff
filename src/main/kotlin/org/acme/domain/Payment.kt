@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.time.LocalDateTime
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "pagamentos")
@@ -32,10 +33,10 @@ class Payment {
     var installments: Int = 0
 
     @Column(name = "valor_parcela")
-    var installmentValue: Double = 0.0
+    var installmentValue: BigDecimal = BigDecimal.ZERO
 
     @Column(name = "valor_total")
-    var totalValue: Double = 0.0
+    var totalValue: BigDecimal = BigDecimal.ZERO
 
     @Column(name = "status")
     var status: String? = null
@@ -52,8 +53,8 @@ class Payment {
         order: Order?,
         method: String?,
         installments: Int,
-        installmentValue: Double,
-        totalValue: Double,
+        installmentValue: BigDecimal,
+        totalValue: BigDecimal,
         status: String?
     ) {
         this.order = order

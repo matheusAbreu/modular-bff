@@ -4,9 +4,12 @@ import io.quarkus.test.junit.QuarkusTest
 import jakarta.inject.Inject
 import jakarta.transaction.Transactional
 import org.acme.domain.Delivery
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import java.math.BigDecimal
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
 
 @QuarkusTest
 @Transactional
@@ -23,7 +26,7 @@ class DeliveryRepositoryTest {
             address = null,
             contactPhone = "12345678",
             contactName = "Contact $testId",
-            freight = 15.0,
+            freight = BigDecimal.valueOf(15.0),
             status = "PENDING"
         )
 

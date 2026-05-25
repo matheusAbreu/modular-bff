@@ -16,7 +16,7 @@ class ContactRepository: BaseRepository() {
         getEntityManager()
             .createQuery(SELECT_BY_ID)
             .setParameter("contactId", id)
-            .singleResult as Contact?
+            .singleResult as Contact
     } catch (e: NoResultException) {
         null
     }

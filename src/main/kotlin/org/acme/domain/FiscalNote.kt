@@ -5,6 +5,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.time.LocalDateTime
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "notas_fiscais")
@@ -24,7 +25,7 @@ class FiscalNote {
     var file: String? = null
 
     @Column(name = "valor_em_nota")
-    var valueInNote: Double = 0.0
+    var valueInNote: BigDecimal = BigDecimal.ZERO
     
     @Column(name = "criado_em")
     var createdAt: LocalDateTime = LocalDateTime.now()
@@ -34,7 +35,7 @@ class FiscalNote {
 
     constructor()
 
-    constructor(danfe: String?, series: String?, key: String?, file: String?, valueInNote: Double) {
+    constructor(danfe: String?, series: String?, key: String?, file: String?, valueInNote: BigDecimal) {
         this.danfe = danfe
         this.series = series
         this.key = key

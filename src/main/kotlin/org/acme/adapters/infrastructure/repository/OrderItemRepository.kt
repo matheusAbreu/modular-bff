@@ -17,7 +17,7 @@ class OrderItemRepository: BaseRepository() {
         getEntityManager()
             .createQuery(SELECT_BY_ID)
             .setParameter("itemId", id)
-            .singleResult as OrderItem?
+            .singleResult as OrderItem
     } catch (e: NoResultException) {
         null
     }

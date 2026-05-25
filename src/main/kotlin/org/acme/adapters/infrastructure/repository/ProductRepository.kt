@@ -17,7 +17,7 @@ class ProductRepository: BaseRepository() {
         getEntityManager()
             .createQuery(SELECT_BY_SKU)
             .setParameter("sku", sku)
-            .singleResult as Product?
+            .singleResult as Product
     } catch (e: NoResultException) {
         null
     }
