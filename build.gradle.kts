@@ -18,17 +18,21 @@ plugins {
     kotlin("plugin.allopen") version "2.3.21"
     kotlin("jvm") version "2.3.21"
     id("io.quarkus") version "3.35.2"
+    id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.8"
 }
 
 
 dependencies {
+    implementation(enforcedPlatform("$quarkusPlatformGroupId:$quarkusPlatformArtifactId:$quarkusPlatformVersion"))
     implementation("$quarkusPluginId:quarkus-smallrye-health")
     implementation("$quarkusPluginId:quarkus-smallrye-openapi")
-    implementation(enforcedPlatform("$quarkusPlatformGroupId:$quarkusPlatformArtifactId:$quarkusPlatformVersion"))
     implementation("$quarkusPluginId:quarkus-kotlin")
+    implementation("$quarkusPluginId:quarkus-jdbc-postgresql")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("$quarkusPluginId:quarkus-rest")
     implementation("$quarkusPluginId:quarkus-kotlin")
+    implementation("$quarkusPluginId:quarkus-hibernate-orm")
     implementation("$quarkusPluginId:quarkus-arc")
 
     testImplementation("io.quarkus:quarkus-junit5")

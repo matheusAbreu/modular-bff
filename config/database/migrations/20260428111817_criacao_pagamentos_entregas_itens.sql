@@ -38,7 +38,7 @@ CREATE TABLE entregas (
 
 CREATE TABLE itens_pedido (
     id SERIAL PRIMARY KEY,
-    produto_id varchar REFERENCES produtos(sku),
+    produto_sku varchar REFERENCES produtos(sku),
     pedido_id INTEGER REFERENCES pedidos(id),
     entrega_id INTEGER REFERENCES entregas(id),
     quantidade int,

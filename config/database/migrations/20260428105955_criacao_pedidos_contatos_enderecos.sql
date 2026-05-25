@@ -53,6 +53,7 @@ CREATE TABLE enderecos_pedidos (
 );
 
 CREATE TABLE imagens_produtos (
+    id SERIAL PRIMARY KEY,
 	produto_sku varchar REFERENCES produtos(sku),
 	base_64 varchar,
 	criado_em timestamp with time zone DEFAULT now(),

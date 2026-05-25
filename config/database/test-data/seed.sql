@@ -77,7 +77,7 @@ pag AS (
     INSERT INTO pagamentos (pedido_id, metodo, quantidade_parcelas, valor_parcela, valor_total, status)
     SELECT pedido_id, 'CARTAO_CREDITO', 1, total, total, 'PAGO' FROM ped
 )
-INSERT INTO itens_pedido (produto_id, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
+INSERT INTO itens_pedido (produto_sku, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
 SELECT 'SKU-001', pedido_id, entrega_id, 1, 2500.00, 2500.00 FROM ent
 UNION ALL
 SELECT 'SKU-005', pedido_id, entrega_id, 1, 250.00, 250.00 FROM ent;
@@ -98,7 +98,7 @@ ent AS (
     SELECT pedido_id, endereco_id, '11988887777', 'Carlos Alberto', 0.00, 'AGUARDANDO' FROM end_ped
     RETURNING id AS entrega_id, pedido_id
 )
-INSERT INTO itens_pedido (produto_id, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
+INSERT INTO itens_pedido (produto_sku, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
 SELECT 'SKU-004', pedido_id, entrega_id, 1, 450.00, 450.00 FROM ent;
 
 -- PEDIDO 3 - Ana Maria (Status: ENTREGUE -> Precisa NF e Pagamento)
@@ -127,7 +127,7 @@ pag AS (
     INSERT INTO pagamentos (pedido_id, metodo, quantidade_parcelas, valor_parcela, valor_total, status)
     SELECT pedido_id, 'PIX', 1, total, total, 'PAGO' FROM ped
 )
-INSERT INTO itens_pedido (produto_id, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
+INSERT INTO itens_pedido (produto_sku, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
 SELECT 'SKU-002', pedido_id, entrega_id, 1, 5500.00, 5500.00 FROM ent
 UNION ALL
 SELECT 'SKU-003', pedido_id, entrega_id, 1, 1800.00, 1800.00 FROM ent
@@ -150,7 +150,7 @@ ent AS (
     SELECT pedido_id, endereco_id, '21977776666', 'Ana Maria', 15.00, 'CANCELADO' FROM end_ped
     RETURNING id AS entrega_id, pedido_id
 )
-INSERT INTO itens_pedido (produto_id, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
+INSERT INTO itens_pedido (produto_sku, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
 SELECT 'SKU-005', pedido_id, entrega_id, 1, 250.00, 250.00 FROM ent;
 
 -- PEDIDO 5 - Roberto Fernandes (Status: ENVIADO -> Precisa NF e Pagamento)
@@ -179,7 +179,7 @@ pag AS (
     INSERT INTO pagamentos (pedido_id, metodo, quantidade_parcelas, valor_parcela, valor_total, status)
     SELECT pedido_id, 'BOLETO', 1, total, total, 'PAGO' FROM ped
 )
-INSERT INTO itens_pedido (produto_id, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
+INSERT INTO itens_pedido (produto_sku, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
 SELECT 'SKU-003', pedido_id, entrega_id, 1, 1800.00, 1800.00 FROM ent
 UNION ALL
 SELECT 'SKU-004', pedido_id, entrega_id, 1, 450.00, 450.00 FROM ent;
@@ -200,5 +200,5 @@ ent AS (
     SELECT pedido_id, endereco_id, '31966665555', 'Roberto Fernandes', 20.00, 'PENDENTE' FROM end_ped
     RETURNING id AS entrega_id, pedido_id
 )
-INSERT INTO itens_pedido (produto_id, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
+INSERT INTO itens_pedido (produto_sku, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
 SELECT 'SKU-003', pedido_id, entrega_id, 1, 1800.00, 1800.00 FROM ent;
