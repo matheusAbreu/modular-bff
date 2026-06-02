@@ -17,8 +17,9 @@ Para rodar o projeto localmente, você precisará das seguintes ferramentas:
 
 *   **Java 21:** JDK recomendado para compatibilidade com as configurações do Gradle.
 *   **Kotlin:** Linguagem principal do projeto.
+*   **Go (Golang):** Necessário para instalar e rodar a ferramenta Goose.
 *   **Docker & Docker Compose:** Necessário para subir o banco de dados PostgreSQL.
-*   **Goose:** Ferramenta de migração de banco de dados SQL.
+*   **Goose:** Ferramenta de migração de banco de dados SQL (instalada via Go).
 *   **GNU Make:** Para execução simplificada de tarefas via [Makefile](Makefile).
 *   **Gerenciador de Pacotes:** (Veja as instruções por SO abaixo).
 
@@ -31,7 +32,7 @@ Recomendo utilizar o **Chocolatey** como gerenciador de pacotes no Windows para 
 1. Instale o [Chocolatey](https://chocolatey.org/install).
 2. No PowerShell (como Admin), execute:
    ```powershell
-   choco install make goose openjdk21 docker-desktop
+   choco install make golang openjdk21 docker-desktop
    ```
 3. O `Makefile` do projeto detecta automaticamente o ambiente Windows e utilizará o `gradlew.bat`.
 
@@ -40,14 +41,14 @@ Utilize o **Homebrew** para configurar o ambiente:
 1. Instale o [Homebrew](https://brew.sh/).
 2. No terminal, execute:
    ```bash
-   brew install make goose openjdk@21 docker
+   brew install make golang openjdk@21 docker
    ```
 
 ### 🐧 Linux
 Utilize o gerenciador de pacotes da sua distribuição:
-*   **Ubuntu/Debian:** `sudo apt install make golang-migrate-goose openjdk-21-jdk docker-compose`
-*   **Fedora:** `sudo dnf install make goose java-21-openjdk docker-compose`
-*   **Arch Linux:** `sudo pacman -S make goose jdk21-openjdk docker-compose`
+*   **Ubuntu/Debian:** `sudo apt install make golang openjdk-21-jdk docker-compose`
+*   **Fedora:** `sudo dnf install make golang java-21-openjdk docker-compose`
+*   **Arch Linux:** `sudo pacman -S make go jdk21-openjdk docker-compose`
 
 ---
 
@@ -75,7 +76,10 @@ O projeto utiliza um [Makefile](Makefile) para padronizar as tarefas comuns:
 ### IntelliJ IDEA
 *   Recomenda-se o uso do plugin oficial do **Quarkus** para suporte a autocompletar e navegação.
 *   O suporte ao **Kotlin** e **Gradle** é nativo e altamente otimizado nesta IDE.
-* TODO - add print da config do quarkus no intellij
+*   Baixe os plugings do quarkus:
+   * ![imagem de plugin do quarkus](./docs/readme/quarkus-plugging.png)
+*   Configure o runner da seguinte forma: 
+   * ![imagem de config do runner](./docs/readme/runner-config.png)
 
 ---
 
