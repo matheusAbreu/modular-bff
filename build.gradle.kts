@@ -13,6 +13,8 @@ val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
 val mockkVersion = "1.14.9"
 val quarkusJunitMockVersion = "3.1.0"
+val quarkusRestVersion = "3.15.6.1"
+val jacksonModuleVersion = "2.18.2"
 
 plugins {
     kotlin("plugin.allopen") version "2.3.21"
@@ -30,10 +32,15 @@ dependencies {
     implementation("$quarkusPluginId:quarkus-kotlin")
     implementation("$quarkusPluginId:quarkus-jdbc-postgresql")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("$quarkusPluginId:quarkus-rest")
-    implementation("$quarkusPluginId:quarkus-kotlin")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonModuleVersion")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonModuleVersion")
+    implementation("com.fasterxml.jackson.core:jackson-core:$jacksonModuleVersion")
+    implementation("$quarkusPluginId:quarkus-rest:$quarkusRestVersion")
+    implementation("$quarkusPluginId:quarkus-rest-jackson:$quarkusRestVersion")
     implementation("$quarkusPluginId:quarkus-hibernate-orm")
     implementation("$quarkusPluginId:quarkus-arc")
+    implementation("$quarkusPluginId:quarkus-rest-client-reactive:$quarkusRestVersion")
+    implementation("$quarkusPluginId:quarkus-rest-client-reactive-jackson:$quarkusRestVersion")
 
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.quarkus:quarkus-junit-mockito")

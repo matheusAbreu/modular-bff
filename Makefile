@@ -9,7 +9,7 @@ __MIGRATION_NAME__ =
 export
 
 help:  ## Display this help
-	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make [target]\n\nTargets:\n"} /^[a-zA-Z_\/\-]+:.*##/ { printf "\033[36m%-20s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make [target]\n\nTargets:\n"} /^[a-zA-Z_\/\-]+:.*##/ { printf "\033[36m%-20s\033[0m \t%s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 
 
 deps/kotlin: ## Clean and refresh Kotlin/Gradle dependencies
@@ -36,6 +36,13 @@ db/migrate-down: ## Roll back the last database migration
 db/seed: ## Populate the database with initial/test data
 	@echo "Populando a base de dados..."
 	$(DOCKER_COMPOSE) exec -T postgres-db psql -U postgres -d $(DB_NAME) < ./config/database/test-data/seed.sql
+
+clean: ## Clean the project
+ifeq ($(OS),Windows_NT)
+	gradlew.bat clean
+else
+	./gradlew clean
+endif
 
 dev: ## Start the application in Quarkus development mode
 ifeq ($(OS),Windows_NT)
