@@ -58,7 +58,7 @@ allOpen {
     annotation("io.quarkus.test.junit.QuarkusTest")
 }
 
-group = "org.acme"
+group = "edu.uerj"
 version = "1.0.0-SNAPSHOT"
 
 java {
