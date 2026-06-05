@@ -14,7 +14,8 @@ val quarkusPlatformVersion: String by project
 val mockkVersion = "1.14.9"
 val quarkusJunitMockVersion = "3.1.0"
 val quarkusRestVersion = "3.15.6.1"
-val jacksonModuleVersion = "2.18.2"
+val jacksonModuleVersion = "3.1.0"
+val quarkusRestReactiveVersion = "3.15.6.1"
 
 plugins {
     kotlin("plugin.allopen") version "2.3.21"
@@ -33,10 +34,8 @@ dependencies {
     implementation("$quarkusPluginId:quarkus-jdbc-postgresql")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonModuleVersion")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonModuleVersion")
-    implementation("com.fasterxml.jackson.core:jackson-core:$jacksonModuleVersion")
-    implementation("$quarkusPluginId:quarkus-rest:$quarkusRestVersion")
-    implementation("$quarkusPluginId:quarkus-rest-jackson:$quarkusRestVersion")
+    implementation("$quarkusPluginId:quarkus-resteasy-reactive:$quarkusRestReactiveVersion")
+    implementation("$quarkusPluginId:quarkus-resteasy-reactive-jackson:$quarkusRestReactiveVersion")
     implementation("$quarkusPluginId:quarkus-hibernate-orm")
     implementation("$quarkusPluginId:quarkus-arc")
     implementation("$quarkusPluginId:quarkus-rest-client-reactive:$quarkusRestVersion")
