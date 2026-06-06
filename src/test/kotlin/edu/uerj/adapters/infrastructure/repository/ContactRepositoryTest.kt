@@ -1,10 +1,10 @@
 package edu.uerj.adapters.infrastructure.repository
 
+import edu.uerj.domain.Contact
+import edu.uerj.domain.Customer
 import io.quarkus.test.junit.QuarkusTest
 import jakarta.inject.Inject
 import jakarta.transaction.Transactional
-import edu.uerj.domain.Contact
-import edu.uerj.domain.Customer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -15,27 +15,28 @@ import java.time.LocalDateTime
 @QuarkusTest
 @Transactional
 class ContactRepositoryTest {
-
     @Inject
     lateinit var contactRepository: ContactRepository
 
     @Test
     fun `should save and find a contact`() {
         val testId = (1..10000).random()
-        val customer = Customer(
-            name = "Contact Owner $testId",
-            email = "owner$testId@example.com",
-            document = "DOC$testId",
-            documentType = "CPF",
-            birthDate = LocalDateTime.now().minusYears(30)
-        )
+        val customer =
+            Customer(
+                name = "Contact Owner $testId",
+                email = "owner$testId@example.com",
+                document = "DOC$testId",
+                documentType = "CPF",
+                birthDate = LocalDateTime.now().minusYears(30),
+            )
 
-        val contact = Contact(
-            customer = customer,
-            primary = true,
-            contactType = "EMAIL",
-            value = "test$testId@example.com"
-        )
+        val contact =
+            Contact(
+                customer = customer,
+                primary = true,
+                contactType = "EMAIL",
+                value = "test$testId@example.com",
+            )
 
         val savedContact = contactRepository.save(contact)
 

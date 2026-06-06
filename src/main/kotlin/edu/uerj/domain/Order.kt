@@ -10,16 +10,13 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
-import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
-import java.time.LocalDateTime
 import java.math.BigDecimal
-
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "pedidos")
 class Order {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -30,7 +27,7 @@ class Order {
     var customer: Customer? = null
 
     @Column(name = "status")
-    var status: String? = null 
+    var status: String? = null
 
     @Column(name = "total")
     var total: BigDecimal = BigDecimal.ZERO
@@ -49,7 +46,7 @@ class Order {
 
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "order")
     val deliverys: MutableList<Delivery> = mutableListOf()
-  
+
     @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, mappedBy = "order")
     val payments: MutableList<Payment> = mutableListOf()
 

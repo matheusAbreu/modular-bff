@@ -15,7 +15,6 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "imagens_produtos")
 class ProductImage {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

@@ -1,19 +1,18 @@
 package edu.uerj.services
 
-import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.test.InjectMock
-import jakarta.inject.Inject
 import edu.uerj.adapters.infrastructure.repository.OrderRepository
 import edu.uerj.domain.Order
+import io.quarkus.test.InjectMock
+import io.quarkus.test.junit.QuarkusTest
+import jakarta.inject.Inject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
 import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.Mockito.`when`
 
 @QuarkusTest
 class OrderServiceTest {
-
     @Inject
     lateinit var orderService: OrderService
 
@@ -24,7 +23,7 @@ class OrderServiceTest {
     fun `should return order when it exists`() {
         val order = Order()
         order.id = 1L
-        
+
         `when`(orderRepository.findById(1L)).thenReturn(order)
 
         val result = orderService.getOrder(1L)

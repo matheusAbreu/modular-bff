@@ -5,7 +5,6 @@ import edu.uerj.domain.Order
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-
 data class OrderDTO(
     var id: Long? = null,
     var customer: CustomerDTO? = null,
@@ -13,12 +12,10 @@ data class OrderDTO(
     var total: BigDecimal = BigDecimal.ZERO,
     var discount: BigDecimal = BigDecimal.ZERO,
     var freight: BigDecimal = BigDecimal.ZERO,
-
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    var createdAt: LocalDateTime ?= null,
-
+    var createdAt: LocalDateTime? = null,
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    var updatedAt: LocalDateTime ?= null
+    var updatedAt: LocalDateTime? = null,
 ) {
     constructor(order: Order) : this() {
         this.id = order.id
@@ -28,8 +25,8 @@ data class OrderDTO(
         this.freight = order.freight
         this.createdAt = order.createdAt
         this.updatedAt = order.updatedAt
-        
-        if (order.customer != null){
+
+        if (order.customer != null) {
             this.customer = CustomerDTO(order.customer!!)
         }
     }

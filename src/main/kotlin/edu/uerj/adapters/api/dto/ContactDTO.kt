@@ -12,9 +12,9 @@ data class ContactDTO(
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     var createdAt: LocalDateTime? = null,
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    var updatedAt: LocalDateTime? = null
-){
-    constructor(contact: Contact) : this(){
+    var updatedAt: LocalDateTime? = null,
+) {
+    constructor(contact: Contact) : this() {
         this.id = contact.id
         this.primary = contact.primary
         this.value = contact.value
@@ -24,4 +24,3 @@ data class ContactDTO(
         this.primary = contact.primary
     }
 }
-

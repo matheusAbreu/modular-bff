@@ -16,9 +16,9 @@ data class CustomerAddressDTO(
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     var createdAt: LocalDateTime? = null,
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    var updatedAt: LocalDateTime? = null
-){
-    constructor(address: CustomerAddress) : this(){
+    var updatedAt: LocalDateTime? = null,
+) {
+    constructor(address: CustomerAddress) : this() {
         this.id = address.id
         this.primary = address.primary
         this.zipCode = address.zipCode
@@ -28,6 +28,5 @@ data class CustomerAddressDTO(
         this.state = address.state
         this.createdAt = address.createdAt
         this.updatedAt = address.updatedAt
-
     }
 }

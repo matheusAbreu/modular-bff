@@ -1,11 +1,11 @@
 package edu.uerj.adapters.infrastructure.repository
 
-import io.quarkus.test.junit.QuarkusTest
-import jakarta.inject.Inject
-import jakarta.transaction.Transactional
 import edu.uerj.domain.Order
 import edu.uerj.domain.OrderItem
 import edu.uerj.domain.Product
+import io.quarkus.test.junit.QuarkusTest
+import jakarta.inject.Inject
+import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -16,7 +16,6 @@ import java.math.BigDecimal
 @QuarkusTest
 @Transactional
 class OrderItemRepositoryTest {
-
     @Inject
     lateinit var orderItemRepository: OrderItemRepository
 
@@ -29,29 +28,32 @@ class OrderItemRepositoryTest {
     @Test
     fun `should save and find an order item`() {
         val testId = (1..10000).random()
-        
-        val product = Product().apply {
-            this.sku = "OI-SKU-$testId"
-            this.name = "Test Product for Item"
-            this.description = "Test Description"
-            this.price = BigDecimal.valueOf(10.0)
-        }
+
+        val product =
+            Product().apply {
+                this.sku = "OI-SKU-$testId"
+                this.name = "Test Product for Item"
+                this.description = "Test Description"
+                this.price = BigDecimal.valueOf(10.0)
+            }
         val savedProduct = productRepository.save(product)
 
-        val order = Order().apply {
-            this.status = "PENDING"
-            this.total = BigDecimal.valueOf(10.0)
-        }
+        val order =
+            Order().apply {
+                this.status = "PENDING"
+                this.total = BigDecimal.valueOf(10.0)
+            }
         val savedOrder = orderRepository.save(order)
 
-        val item = OrderItem(
-            product = savedProduct,
-            order = savedOrder,
-            delivery = null,
-            quantity = 1,
-            unitPrice = BigDecimal.valueOf(10.0),
-            totalPrice = BigDecimal.valueOf(10.0)
-        )
+        val item =
+            OrderItem(
+                product = savedProduct,
+                order = savedOrder,
+                delivery = null,
+                quantity = 1,
+                unitPrice = BigDecimal.valueOf(10.0),
+                totalPrice = BigDecimal.valueOf(10.0),
+            )
 
         val savedItem = orderItemRepository.save(item)
 

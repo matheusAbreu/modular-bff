@@ -4,13 +4,12 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import java.time.LocalDateTime
 import java.math.BigDecimal
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "notas_fiscais")
 class FiscalNote {
-
     @Id
     @Column(name = "danfe")
     var danfe: String? = null
@@ -26,7 +25,7 @@ class FiscalNote {
 
     @Column(name = "valor_em_nota")
     var valueInNote: BigDecimal = BigDecimal.ZERO
-    
+
     @Column(name = "criado_em")
     var createdAt: LocalDateTime = LocalDateTime.now()
 

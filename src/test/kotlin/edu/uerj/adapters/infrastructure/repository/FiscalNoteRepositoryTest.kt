@@ -1,32 +1,32 @@
 package edu.uerj.adapters.infrastructure.repository
 
+import edu.uerj.domain.FiscalNote
 import io.quarkus.test.junit.QuarkusTest
 import jakarta.inject.Inject
 import jakarta.transaction.Transactional
-import edu.uerj.domain.FiscalNote
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
-import java.math.BigDecimal
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
 
 @QuarkusTest
 @Transactional
 class FiscalNoteRepositoryTest {
-
     @Inject
     lateinit var fiscalNoteRepository: FiscalNoteRepository
 
     @Test
     fun `should save and find a fiscal note`() {
         val testId = (1..10000).random()
-        val fiscalNote = FiscalNote(
-            danfe = "DANFE-$testId",
-            series = "SER-$testId",
-            key = "KEY-$testId",
-            file = "file-$testId.pdf",
-            valueInNote = BigDecimal.valueOf(1500.00)
-        )
+        val fiscalNote =
+            FiscalNote(
+                danfe = "DANFE-$testId",
+                series = "SER-$testId",
+                key = "KEY-$testId",
+                file = "file-$testId.pdf",
+                valueInNote = BigDecimal.valueOf(1500.00),
+            )
 
         val savedFiscalNote = fiscalNoteRepository.save(fiscalNote)
 

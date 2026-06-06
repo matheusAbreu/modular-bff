@@ -13,7 +13,6 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "produtos")
 class Product {
-
     @Id
     @Column(name = "sku")
     var sku: String = ""
@@ -43,5 +42,4 @@ class Product {
         this.description = description
         this.price = price
     }
-
 }

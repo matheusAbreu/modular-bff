@@ -7,16 +7,14 @@ import org.junit.jupiter.api.Test
 
 @QuarkusTest
 class ApplicationLivenessTest {
-
     @Test
     fun `it should check if liveness is ok`() {
-        RestAssured.given()
+        RestAssured
+            .given()
             .`when`()
-        .get("/health")
-        .then()
-        .statusCode(200)
-        .body("status", equalTo("UP"))
-
+            .get("/health")
+            .then()
+            .statusCode(200)
+            .body("status", equalTo("UP"))
     }
-
 }
