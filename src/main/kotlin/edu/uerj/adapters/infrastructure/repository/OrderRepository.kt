@@ -1,10 +1,8 @@
 package edu.uerj.adapters.infrastructure.repository
 
-import edu.uerj.adapters.api.dto.PaginatedResult
 import edu.uerj.domain.Order
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.persistence.NoResultException
-import java.sql.Date
 import java.time.LocalDateTime
 
 @ApplicationScoped
@@ -32,19 +30,18 @@ class OrderRepository : BaseRepository() {
     ): MutableList<Order> =
         try {
             return getEntityManager()
-                    .createQuery(ORDERNED_WITH_PAGINATION)
-                    .setParameter("limit", limit)
-                    .setParameter("offset", (offset * limit))
-                    .resultList as MutableList<Order>
-
+                .createQuery(ORDERNED_WITH_PAGINATION)
+                .setParameter("limit", limit)
+                .setParameter("offset", (offset * limit))
+                .resultList as MutableList<Order>
         } catch (e: NoResultException) {
             return mutableListOf()
         }
 
-    fun countOrders() = getEntityManager()
-        .createNativeQuery(NATIVE_ORDERS_COUNT)
-        .singleResult as Long
-
+    fun countOrders() =
+        getEntityManager()
+            .createNativeQuery(NATIVE_ORDERS_COUNT)
+            .singleResult as Long
 
     fun save(order: Order): Order {
         order.updatedAt = LocalDateTime.now()

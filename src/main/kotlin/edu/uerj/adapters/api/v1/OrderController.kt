@@ -16,7 +16,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Content
 import org.eclipse.microprofile.openapi.annotations.media.Schema
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
-import kotlin.reflect.KClass
 
 @Path("/v1/order")
 class OrderController
