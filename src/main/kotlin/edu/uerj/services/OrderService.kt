@@ -13,15 +13,15 @@ class OrderService
         private val orderRepository: OrderRepository,
     ) {
         companion object {
-            private val LIMIT_DEFAULT = 50
-            private val OFFSET_DEFAULT = 0
+            private val LIMIT_DEFAULT:Long = 50
+            private val OFFSET_DEFAULT:Long = 0
         }
 
         fun getOrder(orderId: Long): Order? = orderRepository.findById(orderId)
 
         fun listAll(
-            limit: Int,
-            offset: Int,
+            limit: Long,
+            offset: Long,
         ): PaginatedResult<Order> {
             var internalLimit = LIMIT_DEFAULT
             var internalOffset = OFFSET_DEFAULT
@@ -34,7 +34,11 @@ class OrderService
                 internalOffset = offset
             }
 
-            val paginatedOrders = orderRepository.listOrder(internalLimit, internalOffset)
-            return paginatedOrders
+            return PaginatedResult(
+                items = orderRepository.listOrder(internalLimit, internalOffset),
+                limit = limit,
+                total = orderRepository.countOrders()
+            )
+
         }
     }

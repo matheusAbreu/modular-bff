@@ -16,6 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Content
 import org.eclipse.microprofile.openapi.annotations.media.Schema
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
+import kotlin.reflect.KClass
 
 @Path("/v1/order")
 class OrderController
@@ -70,12 +71,12 @@ class OrderController
             value = [
                 APIResponse(
                     responseCode = "200",
-                    description = "returned find Order",
+                    description = "returned list Orders",
                     content = [Content(schema = Schema(implementation = PaginatedResult::class))],
                 ),
                 APIResponse(
                     responseCode = "400",
-                    description = "Error fetching order data",
+                    description = "Error list orders",
                     content = [Content(schema = Schema(implementation = PaginatedResult::class))],
                 ),
                 APIResponse(
@@ -88,8 +89,8 @@ class OrderController
         @GET
         @Produces(MediaType.APPLICATION_JSON)
         fun listOrders(
-            @QueryParam("limit") limit: Int,
-            @QueryParam("offset") offset: Int,
+            @QueryParam("limitPerPage") limit: Long,
+            @QueryParam("page") offset: Long = 0,
         ): Response {
             try {
                 val paginatedOrders = orderService.listAll(limit, offset)
@@ -102,10 +103,9 @@ class OrderController
                 }
 
                 val paginedResult =
-                    PaginatedResult<OrderDTO>(
+                    PaginatedResult(
                         items = paginatedOrders.items!!.map { OrderDTO(it) } as MutableList<OrderDTO>,
                         limit = paginatedOrders.limit,
-                        offset = paginatedOrders.offset,
                         total = paginatedOrders.total,
                     )
                 return Response

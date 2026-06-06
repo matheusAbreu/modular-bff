@@ -4,17 +4,16 @@ import edu.uerj.adapters.api.dto.PaginatedResult
 import edu.uerj.domain.Order
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.persistence.NoResultException
+import java.sql.Date
 import java.time.LocalDateTime
 
 @ApplicationScoped
 class OrderRepository : BaseRepository() {
     companion object {
-        private const val SELECT_BY_ID = "SELECT o FROM Order o WHERE o.id = :orderId"
-        private const val ORDERNED_WITH_PAGINATION =
-            "SELECT o, ROW_NUMBER() OVER (ORDER BY o.createdAt DESC) FROM Order o" +
-//                "COUNT(*) OVER() AS TotalCount, " +
-//                "ROW_NUMBER() OVER (ORDER BY a.created_at desc) AS RowNum" +
-                " ORDER BY o.createdAt DESC LIMIT :limit OFFSET :offset"
+        private const val NATIVE_ORDERS_COUNT = "SELECT COUNT(p.id) FROM Pedidos p"
+        private const val SELECT_BASE = "SELECT o FROM Order o"
+        private const val SELECT_BY_ID = "$SELECT_BASE WHERE o.id = :orderId"
+        private const val ORDERNED_WITH_PAGINATION = "$SELECT_BASE ORDER BY o.createdAt DESC LIMIT :limit OFFSET :offset"
     }
 
     fun findById(id: Long): Order? =
@@ -28,30 +27,24 @@ class OrderRepository : BaseRepository() {
         }
 
     fun listOrder(
-        limit: Int = 50,
-        offset: Int = 0,
-    ): PaginatedResult<Order> =
+        limit: Long = 50,
+        offset: Long = 0,
+    ): MutableList<Order> =
         try {
-            var limit = 0
-            var offset = 0
-            var convertedRows = mutableListOf<Order>()
-            var totalRowns = 0
-            val result =
-                getEntityManager()
+            return getEntityManager()
                     .createQuery(ORDERNED_WITH_PAGINATION)
                     .setParameter("limit", limit)
-                    .setParameter("offset", offset)
-                    .resultList
+                    .setParameter("offset", (offset * limit))
+                    .resultList as MutableList<Order>
 
-            return PaginatedResult(
-                items = result as MutableList<Order>,
-                limit = limit,
-                offset = offset,
-                total = result.count(),
-            )
         } catch (e: NoResultException) {
-            return PaginatedResult()
+            return mutableListOf()
         }
+
+    fun countOrders() = getEntityManager()
+        .createNativeQuery(NATIVE_ORDERS_COUNT)
+        .singleResult as Long
+
 
     fun save(order: Order): Order {
         order.updatedAt = LocalDateTime.now()
