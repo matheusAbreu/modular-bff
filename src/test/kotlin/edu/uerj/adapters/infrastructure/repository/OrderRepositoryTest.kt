@@ -46,7 +46,7 @@ class OrderRepositoryTest {
         val foundOrder = orderRepository.findById(order.id!!)!!
         assertNotNull(foundOrder)
         assertEquals("PENDING", foundOrder.status)
-        assertEquals(100.0, foundOrder.total)
+        assertEquals(0, BigDecimal.valueOf(100.0).compareTo(foundOrder.total))
     }
 
     @Test

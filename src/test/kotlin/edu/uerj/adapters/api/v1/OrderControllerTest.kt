@@ -1,0 +1,65 @@
+package edu.uerj.adapters.api.v1
+
+import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.InjectMock
+import io.restassured.RestAssured
+import edu.uerj.domain.Order
+import edu.uerj.services.OrderService
+import org.hamcrest.CoreMatchers.`is`
+import org.junit.jupiter.api.Test
+import org.mockito.Mockito.`when`
+import java.math.BigDecimal
+import java.time.LocalDateTime
+
+@QuarkusTest
+class OrderControllerTest {
+
+    @InjectMock
+    lateinit var orderService: OrderService
+
+    @Test
+    fun `should return 200 and order when found`() {
+        val order = Order().apply {
+            id = 1L
+            status = "PENDING"
+            total = BigDecimal.valueOf(100.0)
+            createdAt = LocalDateTime.now()
+            updatedAt = LocalDateTime.now()
+        }
+
+        `when`(orderService.getOrder(1L)).thenReturn(order)
+
+        RestAssured.given()
+            .`when`()
+            .get("/v1/order/1")
+            .then()
+            .statusCode(200)
+            .body("id", `is`(1))
+            .body("status", `is`("PENDING"))
+            .body("total", `is`(100.0f))
+    }
+
+    @Test
+    fun `should return 404 when order not found`() {
+        `when`(orderService.getOrder(999L)).thenReturn(null)
+
+        RestAssured.given()
+            .`when`()
+            .get("/v1/order/999")
+            .then()
+            .statusCode(404)
+            .body("message", `is`("Order with id 999 not found"))
+    }
+
+    @Test
+    fun `should return 500 when service throws exception`() {
+        `when`(orderService.getOrder(1L)).thenThrow(RuntimeException("Database error"))
+
+        RestAssured.given()
+            .`when`()
+            .get("/v1/order/1")
+            .then()
+            .statusCode(500)
+            .body("message", `is`("Database error"))
+    }
+}
