@@ -58,8 +58,10 @@ class OrderController
                         .entity(ErrorDTO("Order with id $orderId not found"))
                         .build()
 
-                val dto = OrderDTO(order)
-                return Response.status(Response.Status.OK).entity(dto).build()
+                return Response
+                    .status(Response.Status.OK)
+                    .entity(OrderDTO(order))
+                    .build()
             } catch (exception: Exception) {
                 return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -155,18 +157,17 @@ class OrderController
             @PathParam("deliveryId") deliveryId: Long,
             @PathParam("newStatus") status: OrderStatus): Response {
             try {
-                val order = orderService.updateStatus(orderId, deliveryId, status)
-                if (order == null) {
-                    return Response
-                        .status(Response.Status.NOT_FOUND)
-                        .entity(null)
-                        .build()
-                }
+                val order = orderService.updateStatus(orderId, deliveryId, status) ?:
+                        return Response
+                            .status(Response.Status.NOT_FOUND)
+                            .entity(null)
+                            .build()
 
                 return Response
                     .status(Response.Status.ACCEPTED)
                     .entity(OrderDTO(order))
                     .build()
+                
             } catch (exception: IllegalArgumentException) {
                 return Response
                     .status(Response.Status.BAD_REQUEST)
