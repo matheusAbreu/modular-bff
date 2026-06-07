@@ -123,7 +123,7 @@ class OrderController
             }
         }
 
-        @Path("/{orderId}/{deliveryId}/{newStatus}")
+        @Path("/{orderId}/delivery/{deliveryId}/{newStatus}")
         @APIResponses(
             value = [
                 APIResponse(
