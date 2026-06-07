@@ -9,8 +9,7 @@ enum class OrderStatus(val id: Long, val description: String){
     INVOICED(5, "Faturamento realizado"),
     SEPARATION_BEGINNING(6, "Separação iniciada"),
     SEPARATION_FINISHED(7, "Separação realizada"),
-    CANCELED(8, "Pedido Cancelado"),
-    DELIVERED(9, "Produto Entregue");
+    DELIVERED(8, "Produto Entregue");
     
     companion object {
         @JvmStatic
