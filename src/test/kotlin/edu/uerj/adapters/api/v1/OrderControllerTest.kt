@@ -70,16 +70,18 @@ class OrderControllerTest {
 
     @Test
     fun `should return 200 and list of orders`() {
-        val order = Order().apply {
-            id = 1L
-            status = "COMPLETED"
-            total = BigDecimal.TEN
-        }
-        val pagedResult = PaginatedResult(
-            items = mutableListOf(order),
-            limit = 10L,
-            total = 1L
-        )
+        val order =
+            Order().apply {
+                id = 1L
+                status = "COMPLETED"
+                total = BigDecimal.TEN
+            }
+        val pagedResult =
+            PaginatedResult(
+                items = mutableListOf(order),
+                limit = 10L,
+                total = 1L,
+            )
 
         `when`(orderService.listAll(10L, 0L)).thenReturn(pagedResult)
 
@@ -99,11 +101,12 @@ class OrderControllerTest {
 
     @Test
     fun `should return 400 when service returns null items`() {
-        val pagedResult = PaginatedResult<Order>(
-            items = null,
-            limit = 10L,
-            total = 0L
-        )
+        val pagedResult =
+            PaginatedResult<Order>(
+                items = null,
+                limit = 10L,
+                total = 0L,
+            )
 
         `when`(orderService.listAll(10L, 0L)).thenReturn(pagedResult)
 

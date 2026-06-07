@@ -71,7 +71,7 @@ class Order {
             }
         }
 
-        if (autoCheckStatus > OrderStatus.DELIVERED.id){
+        if (autoCheckStatus > OrderStatus.DELIVERED.id) {
             throw Exception("Error updating status in order with ${this.id}")
         }
         this.status = OrderStatus.getById(autoCheckStatus).description

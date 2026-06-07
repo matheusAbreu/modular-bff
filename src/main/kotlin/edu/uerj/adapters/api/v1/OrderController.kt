@@ -3,7 +3,6 @@ package edu.uerj.adapters.api.v1
 import edu.uerj.adapters.api.dto.ErrorDTO
 import edu.uerj.adapters.api.dto.OrderDTO
 import edu.uerj.adapters.api.dto.PaginatedResult
-import edu.uerj.domain.Order
 import edu.uerj.domain.enums.OrderStatus
 import edu.uerj.services.OrderService
 import jakarta.inject.Inject
@@ -69,7 +68,6 @@ class OrderController
                     .build()
             }
         }
-
 
         @Path("/list")
         @APIResponses(
@@ -155,10 +153,12 @@ class OrderController
         fun updateStatusOrder(
             @PathParam("orderId") orderId: Long,
             @PathParam("deliveryId") deliveryId: Long,
-            @PathParam("newStatus") status: OrderStatus): Response {
+            @PathParam("newStatus") status: OrderStatus,
+        ): Response {
             try {
-                val order = orderService.updateStatus(orderId, deliveryId, status) ?:
-                        return Response
+                val order =
+                    orderService.updateStatus(orderId, deliveryId, status)
+                        ?: return Response
                             .status(Response.Status.NOT_FOUND)
                             .entity(null)
                             .build()
@@ -167,7 +167,6 @@ class OrderController
                     .status(Response.Status.ACCEPTED)
                     .entity(OrderDTO(order))
                     .build()
-                
             } catch (exception: IllegalArgumentException) {
                 return Response
                     .status(Response.Status.BAD_REQUEST)
