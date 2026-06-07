@@ -1,22 +1,39 @@
 package edu.uerj.adapters.api.v1
 
+import edu.uerj.adapters.api.dto.ErrorDTO
 import edu.uerj.adapters.api.dto.PaginatedResult
+import edu.uerj.domain.Delivery
 import edu.uerj.domain.Order
+import edu.uerj.domain.enums.OrderStatus
 import edu.uerj.services.OrderService
+import io.mockk.clearAllMocks
+import io.mockk.mockk
 import io.quarkus.test.InjectMock
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.Matchers.hasSize
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mockito.`when`
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @QuarkusTest
 class OrderControllerTest {
-    @InjectMock
-    lateinit var orderService: OrderService
+
+    private lateinit var orderController: OrderController
+private lateinit var orderService: OrderService
+
+    @BeforeEach
+    fun setUp(){
+        clearAllMocks()
+        orderService  = mockk(relaxed = true)
+
+        orderController = OrderController(orderService)
+    }
 
     @Test
     fun `should return 200 and order when found`() {
@@ -133,5 +150,82 @@ class OrderControllerTest {
             .then()
             .statusCode(500)
             .body("message", `is`("List error"))
+    }
+
+    @Test
+    fun `should return 202 and updated order when status update is successful`() {
+        val order = Order().apply {
+            id = 1L
+            status = OrderStatus.PAID.description
+        }
+        val delivery = Delivery().apply {
+            id = 10L
+            status = OrderStatus.PAID.description
+        }
+        order.deliverys.add(delivery)
+
+        `when`(orderService.updateStatus(1L, 10L, OrderStatus.PAID)).thenReturn(order)
+
+        RestAssured
+            .given()
+            .pathParam("orderId", 1L)
+            .pathParam("deliveryId", 10L)
+            .pathParam("newStatus", OrderStatus.PAID.name)
+            .`when`()
+            .patch("/v1/order/{orderId}/delivery/{deliveryId}/{newStatus}")
+            .then()
+            .statusCode(202)
+            .body("id", `is`(1))
+            .body("status", `is`(OrderStatus.PAID.description))
+    }
+
+    @Test
+    fun `should return 404 when order or delivery not found during update`() {
+        `when`(orderService.updateStatus(anyLong(), anyLong(), any(OrderStatus::class.java))).thenReturn(null)
+
+        RestAssured
+            .given()
+            .pathParam("orderId", 999L)
+            .pathParam("deliveryId", 888L)
+            .pathParam("newStatus", OrderStatus.PAID.name)
+            .`when`()
+            .patch("/v1/order/{orderId}/delivery/{deliveryId}/{newStatus}")
+            .then()
+            .statusCode(404)
+    }
+
+    @Test
+    fun `should return 400 when service throws IllegalArgumentException`() {
+        val errorMessage = "Invalid status transition"
+        `when`(orderService.updateStatus(anyLong(), anyLong(), any(OrderStatus::class.java)))
+            .thenThrow(IllegalArgumentException(errorMessage))
+
+        RestAssured
+            .given()
+            .pathParam("orderId", 1L)
+            .pathParam("deliveryId", 10L)
+            .pathParam("newStatus", OrderStatus.NEW_ORDER.name)
+            .`when`()
+            .patch("/v1/order/{orderId}/delivery/{deliveryId}/{newStatus}")
+            .then()
+            .statusCode(400)
+            .body("message", `is`(errorMessage))
+    }
+
+    @Test
+    fun `should return 500 when updateStatus throws unexpected exception`() {
+        `when`(orderService.updateStatus(anyLong(), anyLong(), any(OrderStatus::class.java)))
+            .thenThrow(RuntimeException("Unexpected error"))
+
+        RestAssured
+            .given()
+            .pathParam("orderId", 1L)
+            .pathParam("deliveryId", 10L)
+            .pathParam("newStatus", OrderStatus.PAID.name)
+            .`when`()
+            .patch("/v1/order/{orderId}/delivery/{deliveryId}/{newStatus}")
+            .then()
+            .statusCode(500)
+            .body("message", `is`("Unexpected error"))
     }
 }
