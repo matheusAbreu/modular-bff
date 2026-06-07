@@ -1,5 +1,6 @@
 package edu.uerj.domain
 
+import edu.uerj.domain.enums.OrderStatus
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -27,7 +28,7 @@ class Order {
     var customer: Customer? = null
 
     @Column(name = "status")
-    var status: String? = null
+    var status: String = OrderStatus.NEW_ORDER.description
 
     @Column(name = "total")
     var total: BigDecimal = BigDecimal.ZERO

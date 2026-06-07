@@ -3,9 +3,12 @@ package edu.uerj.services
 import edu.uerj.adapters.api.dto.PaginatedResult
 import edu.uerj.adapters.infrastructure.repository.OrderRepository
 import edu.uerj.domain.Order
+import edu.uerj.domain.enums.OrderStatus
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
+import jakarta.transaction.Transactional
 
+@Transactional
 @ApplicationScoped
 class OrderService
     @Inject
@@ -39,5 +42,20 @@ class OrderService
                 limit = limit,
                 total = orderRepository.countOrders(),
             )
+        }
+
+        fun updateStatus(orderId: Long, status: OrderStatus): Order? {
+            var internalOrder = orderRepository.findById(orderId)
+            if (internalOrder == null) {
+                return null
+            }
+            val orderCurrentStatus = OrderStatus.getByDescription(internalOrder.status)
+            if (orderCurrentStatus.id < status.id) {
+                internalOrder.status = status.description
+                return orderRepository.save(internalOrder)
+            }
+
+            throw IllegalArgumentException("Order with id '${internalOrder.id}' cannot be updated to status '${status.description}' " +
+                    "because it is already in status '${orderCurrentStatus.description}'.")
         }
     }
