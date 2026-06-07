@@ -16,6 +16,8 @@ data class OrderDTO(
     var createdAt: LocalDateTime? = null,
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     var updatedAt: LocalDateTime? = null,
+    var deliverys: List<DeliveryDTO>? = null,
+    var payments: List<PaymentDTO>? = null,
 ) {
     constructor(order: Order) : this() {
         this.id = order.id
@@ -28,6 +30,14 @@ data class OrderDTO(
 
         if (order.customer != null) {
             this.customer = CustomerDTO(order.customer!!)
+        }
+
+        if (order.deliverys.isNotEmpty()) {
+            this.deliverys = order.deliverys.map { DeliveryDTO(it) }
+        }
+
+        if (order.payments.isNotEmpty()) {
+            this.payments = order.payments.map { PaymentDTO(it) }
         }
     }
 }

@@ -14,8 +14,12 @@ enum class OrderStatus(val id: Long, val description: String){
     
     companion object {
         @JvmStatic
-        fun getByDescription(description: String): OrderStatus =
+        fun getByDescription(description: String) =
             entries.firstOrNull { it.description.equals(description, ignoreCase = true) }
                 ?: throw IllegalArgumentException("No OrderStatus enumeration constant with a description '$description'")
+
+        @JvmStatic
+        fun getById(id: Long) = entries.firstOrNull { it.id == id }
+            ?: throw IllegalArgumentException("No OrderStatus enumeration constant with a id '$id'")
     }
 }

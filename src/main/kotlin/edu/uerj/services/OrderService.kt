@@ -44,18 +44,19 @@ class OrderService
             )
         }
 
-        fun updateStatus(orderId: Long, status: OrderStatus): Order? {
-            var internalOrder = orderRepository.findById(orderId)
-            if (internalOrder == null) {
-                return null
-            }
-            val orderCurrentStatus = OrderStatus.getByDescription(internalOrder.status)
+        fun updateStatus(orderId: Long, deliveryId: Long, status: OrderStatus): Order? {
+            val internalOrder = orderRepository.findById(orderId) ?: return null
+            val deliveryTarget = internalOrder.deliverys.firstOrNull { it.id == deliveryId } ?: return null
+
+            val orderCurrentStatus = OrderStatus.getByDescription(deliveryTarget.status)
             if (orderCurrentStatus.id < status.id) {
-                internalOrder.status = status.description
+                deliveryTarget.status = status.description
+                internalOrder.checkOrderStatus()
                 return orderRepository.save(internalOrder)
             }
 
-            throw IllegalArgumentException("Order with id '${internalOrder.id}' cannot be updated to status '${status.description}' " +
+            throw IllegalArgumentException("Delivery with id '${deliveryTarget.id}' in Order with id ${internalOrder.id}" +
+                    " cannot be updated to status '${status.description}' " +
                     "because it is already in status '${orderCurrentStatus.description}'.")
         }
     }

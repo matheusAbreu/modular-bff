@@ -123,7 +123,7 @@ class OrderController
             }
         }
 
-        @Path("/{orderId}/{newStatus}")
+        @Path("/{orderId}/{deliveryId}/{newStatus}")
         @APIResponses(
             value = [
                 APIResponse(
@@ -138,7 +138,7 @@ class OrderController
                 ),
                 APIResponse(
                     responseCode = "404",
-                    description = "Not found order",
+                    description = "Not found order or delivery",
                     content = [Content(schema = Schema(implementation = ErrorDTO::class))],
                 ),
                 APIResponse(
@@ -152,9 +152,10 @@ class OrderController
         @Produces(MediaType.APPLICATION_JSON)
         fun updateStatusOrder(
             @PathParam("orderId") orderId: Long,
+            @PathParam("deliveryId") deliveryId: Long,
             @PathParam("newStatus") status: OrderStatus): Response {
             try {
-                val order = orderService.updateStatus(orderId, status)
+                val order = orderService.updateStatus(orderId, deliveryId, status)
                 if (order == null) {
                     return Response
                         .status(Response.Status.NOT_FOUND)

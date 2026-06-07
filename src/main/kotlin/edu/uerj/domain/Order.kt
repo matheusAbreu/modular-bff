@@ -60,4 +60,20 @@ class Order {
         this.freight = freight
         this.customer = customer
     }
+
+    fun checkOrderStatus() {
+        var autoCheckStatus = Long.MAX_VALUE
+
+        this.deliverys.forEach {
+            val deliveryStatus = OrderStatus.getByDescription(it.status)
+            if (deliveryStatus.id < autoCheckStatus) {
+                autoCheckStatus = deliveryStatus.id
+            }
+        }
+
+        if (autoCheckStatus > OrderStatus.DELIVERED.id){
+            throw Exception("Error updating status in order with ${this.id}")
+        }
+        this.status = OrderStatus.getById(autoCheckStatus).description
+    }
 }

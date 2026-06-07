@@ -1,5 +1,6 @@
 package edu.uerj.domain
 
+import edu.uerj.domain.enums.OrderStatus
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -45,7 +46,7 @@ class Delivery {
     var freight: BigDecimal = BigDecimal.ZERO
 
     @Column(name = "status")
-    var status: String? = null
+    var status: String = OrderStatus.NEW_ORDER.description
 
     @Column(name = "criado_em")
     var createdAt: LocalDateTime = LocalDateTime.now()
@@ -64,7 +65,7 @@ class Delivery {
         contactPhone: String?,
         contactName: String?,
         freight: BigDecimal,
-        status: String?,
+        status: String,
     ) {
         this.order = order
         this.address = address
