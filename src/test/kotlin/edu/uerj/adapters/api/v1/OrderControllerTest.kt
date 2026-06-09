@@ -1,6 +1,5 @@
 package edu.uerj.adapters.api.v1
 
-import edu.uerj.adapters.api.dto.ErrorDTO
 import edu.uerj.adapters.api.dto.common.PaginatedResult
 import edu.uerj.domain.Delivery
 import edu.uerj.domain.Order
@@ -8,7 +7,6 @@ import edu.uerj.domain.enums.OrderStatus
 import edu.uerj.services.OrderService
 import io.mockk.clearAllMocks
 import io.mockk.mockk
-import io.quarkus.test.InjectMock
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import org.hamcrest.CoreMatchers.`is`
@@ -23,14 +21,13 @@ import java.time.LocalDateTime
 
 @QuarkusTest
 class OrderControllerTest {
-
     private lateinit var orderController: OrderController
-private lateinit var orderService: OrderService
+    private lateinit var orderService: OrderService
 
     @BeforeEach
-    fun setUp(){
+    fun setUp() {
         clearAllMocks()
-        orderService  = mockk(relaxed = true)
+        orderService = mockk(relaxed = true)
 
         orderController = OrderController(orderService)
     }
@@ -154,14 +151,16 @@ private lateinit var orderService: OrderService
 
     @Test
     fun `should return 202 and updated order when status update is successful`() {
-        val order = Order().apply {
-            id = 1L
-            status = OrderStatus.PAID.description
-        }
-        val delivery = Delivery().apply {
-            id = 10L
-            status = OrderStatus.PAID.description
-        }
+        val order =
+            Order().apply {
+                id = 1L
+                status = OrderStatus.PAID.description
+            }
+        val delivery =
+            Delivery().apply {
+                id = 10L
+                status = OrderStatus.PAID.description
+            }
         order.deliverys.add(delivery)
 
         `when`(orderService.updateStatus(1L, 10L, OrderStatus.PAID)).thenReturn(order)

@@ -1,21 +1,21 @@
 package edu.uerj.adapters.api.v1
 
 import edu.uerj.adapters.api.dto.ErrorDTO
-import edu.uerj.adapters.api.dto.order.OrderCompleteDTO
 import edu.uerj.adapters.api.dto.common.PaginatedResult
 import edu.uerj.adapters.api.dto.order.NewOrderDTO
+import edu.uerj.adapters.api.dto.order.OrderCompleteDTO
 import edu.uerj.domain.enums.OrderStatus
 import edu.uerj.services.OrderService
 import jakarta.inject.Inject
 import jakarta.ws.rs.Consumes
+import jakarta.ws.rs.DefaultValue
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.PATCH
+import jakarta.ws.rs.POST
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.PathParam
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.QueryParam
-import jakarta.ws.rs.DefaultValue
-import jakarta.ws.rs.POST
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import org.eclipse.microprofile.openapi.annotations.media.Content
@@ -209,9 +209,7 @@ class OrderController
         @POST
         @Consumes(MediaType.APPLICATION_JSON)
         @Produces(MediaType.APPLICATION_JSON)
-    fun createOrder(
-           newOrder: NewOrderDTO,
-        ): Response {
+        fun createOrder(newOrder: NewOrderDTO): Response {
             try {
                 if (newOrder.items.isEmpty()) {
                     return Response
@@ -231,7 +229,7 @@ class OrderController
                     .status(Response.Status.CREATED)
                     .entity(OrderCompleteDTO(createdOrder))
                     .build()
-            } catch (exception: IllegalArgumentException){
+            } catch (exception: IllegalArgumentException) {
                 return Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity(ErrorDTO(exception.message))
@@ -243,5 +241,4 @@ class OrderController
                     .build()
             }
         }
-
     }

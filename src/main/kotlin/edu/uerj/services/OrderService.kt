@@ -76,60 +76,65 @@ class OrderService
             )
         }
 
-        fun createOrder(
-            newOrder: NewOrderDTO,
-        ): Order {
+        fun createOrder(newOrder: NewOrderDTO): Order {
             var totalValue = BigDecimal.ZERO
-            val customer = customerRepository.findById(newOrder.customerId)
-                ?: throw IllegalArgumentException("Customer with id ${newOrder.customerId} not found.")
+            val customer =
+                customerRepository.findById(newOrder.customerId)
+                    ?: throw IllegalArgumentException("Customer with id ${newOrder.customerId} not found.")
 
-            val address = customer.addresses.firstOrNull { it.id == newOrder.addressId }
-                ?: throw IllegalArgumentException("Customer with id ${newOrder.addressId} not found.")
+            val address =
+                customer.addresses.firstOrNull { it.id == newOrder.addressId }
+                    ?: throw IllegalArgumentException("Customer with id ${newOrder.addressId} not found.")
 
             val contact = customer.contacts.firstOrNull { it.id == newOrder.contactId }
 
-            val order = Order(
-                OrderStatus.NEW_ORDER.description,
-                BigDecimal.ZERO,
-                BigDecimal.ZERO,
-                BigDecimal.ZERO,
-                customer
-            )
-
-            val orderAddress = OrderAddress(
-                customer,
-                order,
-                address.zipCode,
-                address.street,
-                address.number,
-                address.complement,
-                address.city,
-                address.state,
-            )
-
-            val items = newOrder.items.map {
-                val product = productRepository.findBySku(it.productSku)
-                    ?: throw IllegalArgumentException("Product with sku ${it.productSku} not found.")
-
-                OrderItem(
-                    product,
-                    order,
-                    null,
-                    it.quantity,
-                    it.unitPrice,
-                    BigDecimal(it.quantity) * it.unitPrice
+            val order =
+                Order(
+                    OrderStatus.NEW_ORDER.description,
+                    BigDecimal.ZERO,
+                    BigDecimal.ZERO,
+                    BigDecimal.ZERO,
+                    customer,
                 )
-            }
+
+            val orderAddress =
+                OrderAddress(
+                    customer,
+                    order,
+                    address.zipCode,
+                    address.street,
+                    address.number,
+                    address.complement,
+                    address.city,
+                    address.state,
+                )
+
+            val items =
+                newOrder.items.map {
+                    val product =
+                        productRepository.findBySku(it.productSku)
+                            ?: throw IllegalArgumentException("Product with sku ${it.productSku} not found.")
+
+                    OrderItem(
+                        product,
+                        order,
+                        null,
+                        it.quantity,
+                        it.unitPrice,
+                        BigDecimal(it.quantity) * it.unitPrice,
+                    )
+                }
 
             items.chunked(5).forEach { itemsToDelivery ->
-                val delivery = Delivery(
-                    order,
-                    orderAddress,
-                    contact?.value,
-                    customer.name,
-                    (1..100).random().toBigDecimal(),
-                    OrderStatus.NEW_ORDER.description,
-                )
+                val delivery =
+                    Delivery(
+                        order,
+                        orderAddress,
+                        contact?.value,
+                        customer.name,
+                        (1..100).random().toBigDecimal(),
+                        OrderStatus.NEW_ORDER.description,
+                    )
 
                 itemsToDelivery.forEach {
                     it.delivery = delivery
@@ -144,16 +149,18 @@ class OrderService
                 order.discount += it.discount
                 order.total += totalMethodValue
 
-                order.addPayment(Payment(
-                    order,
-                    it.method,
-                    it.installments,
-                    it.installmentValue,
-                    totalMethodValue,
-                    OrderStatus.WAITING_PAYMENT.description,
-                ))
+                order.addPayment(
+                    Payment(
+                        order,
+                        it.method,
+                        it.installments,
+                        it.installmentValue,
+                        totalMethodValue,
+                        OrderStatus.WAITING_PAYMENT.description,
+                    ),
+                )
             }
-            
+
             return orderRepository.save(order)
         }
     }
