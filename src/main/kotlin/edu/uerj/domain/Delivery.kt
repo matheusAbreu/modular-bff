@@ -74,4 +74,8 @@ class Delivery {
         this.freight = freight
         this.status = status
     }
+
+    fun addItem(item: OrderItem) {
+        items.add(item)
+    }
 }

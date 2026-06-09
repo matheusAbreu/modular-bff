@@ -1,6 +1,7 @@
-package edu.uerj.adapters.api.dto
+package edu.uerj.adapters.api.dto.item
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import edu.uerj.adapters.api.dto.ProductDTO
 import edu.uerj.domain.OrderItem
 import java.math.BigDecimal
 import java.time.LocalDateTime

@@ -1,7 +1,7 @@
 package edu.uerj.adapters.api.v1
 
 import edu.uerj.adapters.api.dto.ErrorDTO
-import edu.uerj.adapters.api.dto.PaginatedResult
+import edu.uerj.adapters.api.dto.common.PaginatedResult
 import edu.uerj.domain.Delivery
 import edu.uerj.domain.Order
 import edu.uerj.domain.enums.OrderStatus

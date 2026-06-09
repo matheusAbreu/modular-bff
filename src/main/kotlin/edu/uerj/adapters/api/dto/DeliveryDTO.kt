@@ -1,6 +1,7 @@
 package edu.uerj.adapters.api.dto
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import edu.uerj.adapters.api.dto.item.OrderItemDTO
 import edu.uerj.domain.Delivery
 import java.math.BigDecimal
 import java.time.LocalDateTime

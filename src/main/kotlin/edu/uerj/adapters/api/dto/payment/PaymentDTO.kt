@@ -1,4 +1,4 @@
-package edu.uerj.adapters.api.dto
+package edu.uerj.adapters.api.dto.payment
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import edu.uerj.domain.Payment
