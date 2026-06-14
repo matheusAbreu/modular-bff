@@ -81,3 +81,17 @@ ifeq ($(OS),Windows_NT)
 else
 	./gradlew clean test
 endif
+
+lint: ## Run all lint
+ifeq ($(OS),Windows_NT)
+	gradlew.bat ktlintCheck
+else
+	./gradlew ktlintCheck
+endif
+
+detekt: ## Run Detekt static code analysis
+ifeq ($(OS),Windows_NT)
+	gradlew.bat detekt 
+else
+	./gradlew detekt 
+endif

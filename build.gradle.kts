@@ -1,5 +1,7 @@
+import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 repositories {
     mavenCentral()
@@ -25,7 +27,6 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
 }
 
-
 dependencies {
     implementation(enforcedPlatform("$quarkusPlatformGroupId:$quarkusPlatformArtifactId:$quarkusPlatformVersion"))
     implementation("$quarkusPluginId:quarkus-smallrye-health")
@@ -46,9 +47,9 @@ dependencies {
     testImplementation("io.quarkus:quarkus-jacoco")
     testImplementation("io.rest-assured:rest-assured")
     testImplementation("io.rest-assured:kotlin-extensions")
-    testImplementation("io.mockk:mockk:${mockkVersion}")
+    testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("io.quarkiverse.mockk:quarkus-junit5-mockk:${quarkusJunitMockVersion}")
+    testImplementation("io.quarkiverse.mockk:quarkus-junit5-mockk:$quarkusJunitMockVersion")
 }
 
 allOpen {
@@ -67,11 +68,30 @@ java {
 }
 
 tasks {
-     withType<KotlinCompile> {
+    withType<KotlinCompile> {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
+            jvmTarget.set(JvmTarget.JVM_25)
             javaParameters = true
             freeCompilerArgs.add("-Xjsr305=strict")
+        }
+    }
+
+    configure<KtlintExtension> {
+        enableExperimentalRules.set(true)
+    }
+
+    detekt {
+        config.setFrom("config/detekt/detekt.yaml")
+        buildUponDefaultConfig = true
+    }
+
+    withType<Detekt>().configureEach {
+        reports {
+            html.required.set(true)
+            xml.required.set(true)
+            txt.required.set(true)
+            sarif.required.set(false)
+            md.required.set(false)
         }
     }
 }

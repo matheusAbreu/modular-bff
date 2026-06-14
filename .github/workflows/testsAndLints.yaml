@@ -1,0 +1,98 @@
+name: Test Lint
+
+on:
+  pull_request:
+    branches: "*"
+  push:
+    branches: [main]
+
+jobs:
+
+  lint: 
+    name: Run Linters
+    runs-on: 21-alpine-jdk
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+          cache: 'gradle'
+
+      - name: Run Ktlint
+        run: make lint
+
+      - name: Run Detekt
+        run: make detekt
+
+  test:
+    name: Run Tests and Linters
+    runs-on: 21-alpine-jdk
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+          cache: 'gradle'
+      - name: Up dependencies for running tests
+        run: make test
+
+      # - name: Run JaCoCo Test Coverage and Verification
+      #   run: ./gradlew clean test jacocoTestCoverageVerification
+
+      # - name: Generate JaCoCo Badge
+      #   id: jacoco
+      #   uses: cicirello/jacoco-badge-generator@d02d8c919bc1b7edf463021758308d94a3e764bb
+      #   with:
+      #     generate-branches-badge: true
+      #     generate-coverage-badge: true
+      #     jacoco-csv-file: build/reports/jacoco/test/jacocoTestReport.csv
+      #     badges-directory: .github/badges-report
+
+      # - name: Log coverage percentage
+      #   run: |
+      #     echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
+      #     echo "branch coverage = ${{ steps.jacoco.outputs.branches }}"
+
+      # - name: Jacoco Report to PR
+      #   uses: madrapps/jacoco-report@fd4800e8a81e21bdf373438e5918b975df041d15
+      #   with:
+      #     paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     min-coverage-overall: 76
+      #     min-coverage-changed-files: 80
+
+      # - name: Upload JaCoCo coverage report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: jacoco-report
+      #     path: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
+
+  build:
+    name: Build app
+    runs-on: 21-alpine-jdk
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+          cache: 'gradle'
+
+      - name: Build app
+        run: make build
