@@ -1,18 +1,26 @@
 package edu.uerj.adapters.api.v1
 
 import edu.uerj.adapters.api.dto.common.PaginatedResult
+import edu.uerj.adapters.api.dto.order.OrderCompleteDTO
+import edu.uerj.builder.DeliveryBuilder
+import edu.uerj.builder.OrderBuilder
 import edu.uerj.domain.Delivery
 import edu.uerj.domain.Order
 import edu.uerj.domain.enums.OrderStatus
 import edu.uerj.services.OrderService
 import io.mockk.clearAllMocks
+import io.mockk.every
 import io.mockk.mockk
+import io.quarkiverse.test.junit.mockk.InjectMock
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mockito.`when`
@@ -21,62 +29,48 @@ import java.time.LocalDateTime
 
 @QuarkusTest
 class OrderControllerTest {
-    private lateinit var orderController: OrderController
-    private lateinit var orderService: OrderService
-
-    @BeforeEach
-    fun setUp() {
-        clearAllMocks()
-        orderService = mockk(relaxed = true)
-
-        orderController = OrderController(orderService)
-    }
+    @InjectMock
+    private var orderService: OrderService = mockk(relaxed = true)
 
     @Test
     fun `should return 200 and order when found`() {
-        val order =
-            Order().apply {
-                id = 1L
-                status = "PENDING"
-                total = BigDecimal.valueOf(100.0)
-                createdAt = LocalDateTime.now()
-                updatedAt = LocalDateTime.now()
-            }
+        val order = OrderBuilder().build()
 
-        `when`(orderService.getOrder(1L)).thenReturn(order)
+        every { orderService.getOrder(order.id!!) } returns order
 
         RestAssured
             .given()
             .`when`()
-            .get("/v1/order/1")
+            .get("/v1/order/${order.id}")
             .then()
             .statusCode(200)
-            .body("id", `is`(1))
-            .body("status", `is`("PENDING"))
-            .body("total", `is`(100.0f))
+            .body("id", `is`(order.id!!.toInt()))
+            .body("status", `is`(order.status))
     }
 
     @Test
     fun `should return 404 when order not found`() {
-        `when`(orderService.getOrder(999L)).thenReturn(null)
+        val randomValue = (0..10000).random()
+        every { orderService.getOrder(any()) } returns null
 
         RestAssured
             .given()
             .`when`()
-            .get("/v1/order/999")
+            .get("/v1/order/$randomValue")
             .then()
             .statusCode(404)
-            .body("message", `is`("Order with id 999 not found"))
+            .body("message", `is`("Order with id $randomValue not found"))
     }
 
     @Test
     fun `should return 500 when service throws exception`() {
-        `when`(orderService.getOrder(1L)).thenThrow(RuntimeException("Database error"))
+        val randomValue = (0..10000).random()
+        every { orderService.getOrder(any()) } throws RuntimeException("Database error")
 
         RestAssured
             .given()
             .`when`()
-            .get("/v1/order/1")
+            .get("/v1/order/$randomValue")
             .then()
             .statusCode(500)
             .body("message", `is`("Database error"))
@@ -84,33 +78,28 @@ class OrderControllerTest {
 
     @Test
     fun `should return 200 and list of orders`() {
-        val order =
-            Order().apply {
-                id = 1L
-                status = "COMPLETED"
-                total = BigDecimal.TEN
-            }
+        val limitValue = (0..100).random()
+        val order = OrderBuilder().build()
         val pagedResult =
             PaginatedResult(
                 items = mutableListOf(order),
-                limit = 10L,
-                total = 1L,
+                limit = limitValue.toLong(),
+                total = 100L,
             )
 
-        `when`(orderService.listAll(10L, 0L)).thenReturn(pagedResult)
+        every { orderService.listAll(any(), any()) } returns pagedResult
 
         RestAssured
             .given()
-            .queryParam("limitPerPage", 10)
+            .queryParam("limitPerPage", limitValue)
             .queryParam("page", 0)
             .`when`()
             .get("/v1/order/list")
             .then()
             .statusCode(200)
             .body("items", hasSize<Any>(1))
-            .body("items[0].id", `is`(1))
-            .body("items[0].status", `is`("COMPLETED"))
-            .body("total", `is`(1))
+            .body("limit",`is`(limitValue))
+            .body("quantityInPage", `is`(1))
     }
 
     @Test
@@ -122,7 +111,7 @@ class OrderControllerTest {
                 total = 0L,
             )
 
-        `when`(orderService.listAll(10L, 0L)).thenReturn(pagedResult)
+        every { orderService.listAll(any(), any()) } returns pagedResult
 
         RestAssured
             .given()
@@ -136,7 +125,7 @@ class OrderControllerTest {
 
     @Test
     fun `should return 500 when listAll throws exception`() {
-        `when`(orderService.listAll(10L, 0L)).thenThrow(RuntimeException("List error"))
+        every { orderService.listAll(any(), any()) } throws RuntimeException("List error")
 
         RestAssured
             .given()
@@ -149,38 +138,42 @@ class OrderControllerTest {
             .body("message", `is`("List error"))
     }
 
-    @Test
-    fun `should return 202 and updated order when status update is successful`() {
-        val order =
-            Order().apply {
-                id = 1L
-                status = OrderStatus.PAID.description
-            }
-        val delivery =
-            Delivery().apply {
-                id = 10L
-                status = OrderStatus.PAID.description
-            }
-        order.deliverys.add(delivery)
+    @ParameterizedTest
+    @EnumSource(OrderStatus::class)
+    fun `should return 202 and updated order when status update is successful`(status: OrderStatus) {
+        val deliveryId = (1..100).random().toLong()
+        val orderId = (0..100).random().toLong()
+        val delivery = DeliveryBuilder(
+            id = deliveryId,
+            status = status.description
+        ).build()
+        val order = OrderBuilder(
+            id = orderId,
+            status = status.description,
+            deliverys = mutableListOf(delivery),
+        ).build()
 
-        `when`(orderService.updateStatus(1L, 10L, OrderStatus.PAID)).thenReturn(order)
+
+        every { orderService.updateStatus(orderId, deliveryId, status) } returns order
 
         RestAssured
             .given()
-            .pathParam("orderId", 1L)
-            .pathParam("deliveryId", 10L)
-            .pathParam("newStatus", OrderStatus.PAID.name)
+            .pathParam("orderId", orderId)
+            .pathParam("deliveryId", deliveryId)
+            .pathParam("newStatus", status)
             .`when`()
             .patch("/v1/order/{orderId}/delivery/{deliveryId}/{newStatus}")
             .then()
             .statusCode(202)
-            .body("id", `is`(1))
-            .body("status", `is`(OrderStatus.PAID.description))
+            .body("id", `is`(orderId.toInt()))
+            .body("status", `is`(status.description))
+            .body("deliverys[0].id", `is`(delivery.id.toInt()))
+            .body("deliverys[0].status", `is`(status.description))
     }
 
     @Test
     fun `should return 404 when order or delivery not found during update`() {
-        `when`(orderService.updateStatus(anyLong(), anyLong(), any(OrderStatus::class.java))).thenReturn(null)
+        every { orderService.updateStatus(any(), any(), any()) } returns null
 
         RestAssured
             .given()
@@ -196,8 +189,7 @@ class OrderControllerTest {
     @Test
     fun `should return 400 when service throws IllegalArgumentException`() {
         val errorMessage = "Invalid status transition"
-        `when`(orderService.updateStatus(anyLong(), anyLong(), any(OrderStatus::class.java)))
-            .thenThrow(IllegalArgumentException(errorMessage))
+        every { orderService.updateStatus(any(), any(), any()) } throws IllegalArgumentException(errorMessage)
 
         RestAssured
             .given()
@@ -213,8 +205,7 @@ class OrderControllerTest {
 
     @Test
     fun `should return 500 when updateStatus throws unexpected exception`() {
-        `when`(orderService.updateStatus(anyLong(), anyLong(), any(OrderStatus::class.java)))
-            .thenThrow(RuntimeException("Unexpected error"))
+        every { orderService.updateStatus(any(), any(), any()) } throws RuntimeException("Unexpected error")
 
         RestAssured
             .given()

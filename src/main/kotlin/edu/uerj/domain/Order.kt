@@ -76,12 +76,4 @@ class Order {
         }
         this.status = OrderStatus.getById(autoCheckStatus).description
     }
-
-    fun addDelivery(delivery: Delivery) {
-        this.deliverys.add(delivery)
-    }
-
-    fun addPayment(payment: Payment) {
-        this.payments.add(payment)
-    }
 }

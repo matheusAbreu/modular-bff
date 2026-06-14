@@ -141,7 +141,7 @@ class OrderService
                     delivery.addItem(it)
                 }
 
-                order.addDelivery(delivery)
+                order.deliverys.add(delivery)
             }
 
             newOrder.paymentMethods.forEach {
@@ -149,7 +149,7 @@ class OrderService
                 order.discount += it.discount
                 order.total += totalMethodValue
 
-                order.addPayment(
+                order.payments.add(
                     Payment(
                         order,
                         it.method,
