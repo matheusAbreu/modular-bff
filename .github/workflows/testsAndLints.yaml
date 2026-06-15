@@ -55,7 +55,7 @@ jobs:
         run: make deps/kotlin
 
       - name: Running tests
-        run: make test
+        run: make ci/test
 
       # - name: Run JaCoCo Test Coverage and Verification
       #   run: ./gradlew clean test jacocoTestCoverageVerification

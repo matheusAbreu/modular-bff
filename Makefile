@@ -82,6 +82,13 @@ else
 	./gradlew clean test
 endif
 
+ci/test: deps/up ## Run all tests in CI environment 
+ifeq ($(OS),Windows_NT)
+	gradlew.bat clean test
+else
+	./gradlew clean test
+endif
+
 lint: ## Run all lint
 ifeq ($(OS),Windows_NT)
 	gradlew.bat ktlintCheck
