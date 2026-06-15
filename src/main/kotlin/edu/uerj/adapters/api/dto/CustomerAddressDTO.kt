@@ -24,7 +24,8 @@ data class CustomerAddressDTO(
         this.zipCode = address.zipCode
         this.street = address.street
         this.number = address.number
-        this.city = address.complement
+        this.complement = address.complement
+        this.city = address.city
         this.state = address.state
         this.createdAt = address.createdAt
         this.updatedAt = address.updatedAt

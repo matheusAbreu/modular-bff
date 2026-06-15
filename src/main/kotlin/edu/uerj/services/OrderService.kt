@@ -28,8 +28,8 @@ class OrderService
         companion object {
             private const val LIMIT_DEFAULT: Long = 50
             private const val OFFSET_DEFAULT: Long = 0
-            private const val MINIMAL_QUANTITY_PER_PAGE: Int = 1
-            private const val MAXIMAL_QUANTITY_PER_PAGE: Int = 500
+            private const val MINIMAL_QUANTITY_PER_PAGE: Long = 1
+            private const val MAXIMAL_QUANTITY_PER_PAGE: Long = 500
         }
 
         fun getOrder(orderId: Long): Order? = orderRepository.findById(orderId)
@@ -41,7 +41,7 @@ class OrderService
             var internalLimit = LIMIT_DEFAULT
             var internalOffset = OFFSET_DEFAULT
 
-            if (limit > MINIMAL_QUANTITY_PER_PAGE || limit < MAXIMAL_QUANTITY_PER_PAGE) {
+            if (limit in MINIMAL_QUANTITY_PER_PAGE..MAXIMAL_QUANTITY_PER_PAGE) {
                 internalLimit = limit
             }
 
@@ -86,9 +86,14 @@ class OrderService
 
             val address =
                 customer.addresses.firstOrNull { it.id == newOrder.addressId }
-                    ?: throw IllegalArgumentException("Customer with id ${newOrder.addressId} not found.")
+                    ?: throw IllegalArgumentException(
+                        "Address with id ${newOrder.addressId} not found for customer ${newOrder.customerId}.",
+                    )
 
-            val contact = customer.contacts.firstOrNull { it.id == newOrder.contactId }
+            val contact =
+                customer.contacts.firstOrNull { it.id == newOrder.contactId } ?: throw IllegalArgumentException(
+                    "Contact with id ${newOrder.contactId} not found for customer ${newOrder.customerId}.",
+                )
 
             val order =
                 Order(
@@ -117,13 +122,17 @@ class OrderService
                         productRepository.findBySku(it.productSku)
                             ?: throw IllegalArgumentException("Product with sku ${it.productSku} not found.")
 
+                    check(
+                        it.unitPrice == product.price,
+                    ) { "The price of the product with SKU '${product.sku}' does not match the price in the database." }
+
                     OrderItem(
                         product,
                         order,
                         null,
                         it.quantity,
-                        it.unitPrice,
-                        BigDecimal(it.quantity) * it.unitPrice,
+                        product.price,
+                        BigDecimal(it.quantity) * product.price,
                     )
                 }
 

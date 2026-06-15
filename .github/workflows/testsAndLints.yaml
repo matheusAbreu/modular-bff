@@ -1,8 +1,8 @@
 name: Test Lint
 
 on:
-  # pull_request:
-  #   branches: "*"
+  pull_request:
+    branches: "*"
   push:
     branches: [main]
 
@@ -10,7 +10,7 @@ jobs:
 
   lint: 
     name: Run Linters
-    runs-on: amazoncorretto:21-alpine-jdk
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
@@ -33,7 +33,7 @@ jobs:
 
   test:
     name: Run Tests
-    runs-on: amazoncorretto:21-alpine-jdk
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
@@ -83,7 +83,7 @@ jobs:
 
   build:
     name: Build app
-    runs-on: amazoncorretto:21-alpine-jdk
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 

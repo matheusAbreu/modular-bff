@@ -65,6 +65,11 @@ class OrderController
                     .status(Response.Status.OK)
                     .entity(OrderCompleteDTO(order))
                     .build()
+            } catch (exception: NumberFormatException) {
+                return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(ErrorDTO("Invalid orderId '$orderId'"))
+                    .build()
             } catch (exception: Exception) {
                 return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -120,6 +125,11 @@ class OrderController
                 return Response
                     .status(Response.Status.OK)
                     .entity(paginedResult)
+                    .build()
+            } catch (exception: NumberFormatException) {
+                return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(ErrorDTO("Invalid limit or offset"))
                     .build()
             } catch (exception: Exception) {
                 return Response
@@ -177,6 +187,11 @@ class OrderController
                 return Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity(ErrorDTO(exception.message))
+                    .build()
+            } catch (exception: NumberFormatException) {
+                return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(ErrorDTO("Invalid orderId or deliveryId"))
                     .build()
             } catch (exception: Exception) {
                 return Response
