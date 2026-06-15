@@ -10,7 +10,7 @@ jobs:
 
   lint: 
     name: Run Linters
-    runs-on: 21-alpine-jdk
+    runs-on: amazoncorretto:21-alpine-jdk
     permissions:
       contents: write
       pull-requests: write
@@ -33,7 +33,7 @@ jobs:
 
   test:
     name: Run Tests and Linters
-    runs-on: 21-alpine-jdk
+    runs-on: amazoncorretto:21-alpine-jdk
     permissions:
       contents: write
       pull-requests: write
@@ -83,7 +83,7 @@ jobs:
 
   build:
     name: Build app
-    runs-on: 21-alpine-jdk
+    runs-on: amazoncorretto:21-alpine-jdk
     steps:
       - uses: actions/checkout@v4
 

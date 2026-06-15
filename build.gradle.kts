@@ -70,7 +70,7 @@ java {
 tasks {
     withType<KotlinCompile> {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_25)
+            jvmTarget.set(JvmTarget.JVM_21)
             javaParameters = true
             freeCompilerArgs.add("-Xjsr305=strict")
         }
