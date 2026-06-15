@@ -26,8 +26,10 @@ class OrderService
         private val productRepository: ProductRepository,
     ) {
         companion object {
-            private val LIMIT_DEFAULT: Long = 50
-            private val OFFSET_DEFAULT: Long = 0
+            private const val LIMIT_DEFAULT: Long = 50
+            private const val OFFSET_DEFAULT: Long = 0
+            private const val MINIMAL_QUANTITY_PER_PAGE: Int = 1
+            private const val MAXIMAL_QUANTITY_PER_PAGE: Int = 500
         }
 
         fun getOrder(orderId: Long): Order? = orderRepository.findById(orderId)
@@ -39,7 +41,7 @@ class OrderService
             var internalLimit = LIMIT_DEFAULT
             var internalOffset = OFFSET_DEFAULT
 
-            if (limit > 1 || limit < 500) {
+            if (limit > MINIMAL_QUANTITY_PER_PAGE || limit < MAXIMAL_QUANTITY_PER_PAGE) {
                 internalLimit = limit
             }
 
@@ -76,8 +78,8 @@ class OrderService
             )
         }
 
+        @Suppress("MagicNumber")
         fun createOrder(newOrder: NewOrderDTO): Order {
-            var totalValue = BigDecimal.ZERO
             val customer =
                 customerRepository.findById(newOrder.customerId)
                     ?: throw IllegalArgumentException("Customer with id ${newOrder.customerId} not found.")

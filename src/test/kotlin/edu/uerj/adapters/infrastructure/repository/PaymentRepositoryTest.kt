@@ -19,7 +19,6 @@ class PaymentRepositoryTest {
 
     @Test
     fun `should save and find a payment`() {
-        val testId = (1..10000).random()
         val payment =
             Payment(
                 order = null,

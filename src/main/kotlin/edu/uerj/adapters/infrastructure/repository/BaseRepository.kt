@@ -10,12 +10,12 @@ import jakarta.persistence.EntityManager
 class BaseRepository {
     @Inject
     @PersistenceUnit("bff")
-    protected lateinit var entityManager: Instance<EntityManager>
+    private lateinit var entityManager: Instance<EntityManager>
 
-    fun getEntityManager() =
+    fun getEntityManager(): EntityManager {
         if (entityManager.isResolvable) {
-            entityManager.get()
-        } else {
-            throw IllegalStateException("EntityManager is not resolvable")
+            return entityManager.get()
         }
+        error("EntityManager is not resolvable")
+    }
 }
