@@ -48,6 +48,9 @@ jobs:
           distribution: 'adopt'
           cache: 'gradle'
 
+      - name: Set up Docker Engine
+        uses: docker/setup-docker-action@v5
+
       - name: Up dependencies
         run: make deps/kotlin
 
