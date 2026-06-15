@@ -48,11 +48,16 @@ jobs:
           distribution: 'adopt'
           cache: 'gradle'
 
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26'
+
       - name: Set up Docker Engine
         uses: docker/setup-docker-action@v5
 
       - name: Up dependencies
-        run: make deps/kotlin
+        run: make deps/install
 
       - name: Running tests
         run: |
