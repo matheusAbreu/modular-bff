@@ -1,0 +1,65 @@
+name: Test Lint
+
+on:
+  pull_request:
+    branches: "*"
+  push:
+    branches: [main]
+
+jobs:
+
+  lint: 
+    name: Run Linters
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+          cache: 'gradle'
+
+      - name: Run Ktlint
+        run: make lint
+
+      - name: Run Detekt
+        run: make detekt
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+          cache: 'gradle'
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26'
+
+      - name: Set up Docker Engine
+        uses: docker/setup-docker-action@v5
+
+      - name: Up dependencies
+        run: make deps/install
+
+      - name: Running tests
+        run: |
+          touch .env
+          make ci/test

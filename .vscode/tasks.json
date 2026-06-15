@@ -25,7 +25,7 @@
         {
             "label": "stopQuarkus",
             "type": "shell",
-            "command": "lsof -ti:8081 | xargs kill -9 || true",
+            "command": "lsof -ti:9000 | xargs kill -9 || true",
             "presentation": {
                 "reveal": "silent",
                 "close": true
