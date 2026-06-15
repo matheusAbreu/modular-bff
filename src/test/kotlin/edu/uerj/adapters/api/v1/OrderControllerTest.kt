@@ -1,14 +1,11 @@
 package edu.uerj.adapters.api.v1
 
 import edu.uerj.adapters.api.dto.common.PaginatedResult
-import edu.uerj.adapters.api.dto.order.OrderCompleteDTO
 import edu.uerj.builder.DeliveryBuilder
 import edu.uerj.builder.OrderBuilder
-import edu.uerj.domain.Delivery
 import edu.uerj.domain.Order
 import edu.uerj.domain.enums.OrderStatus
 import edu.uerj.services.OrderService
-import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.quarkiverse.test.junit.mockk.InjectMock
@@ -16,16 +13,9 @@ import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.Matchers.hasSize
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
-import org.junit.jupiter.params.provider.MethodSource
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.Mockito.`when`
-import java.math.BigDecimal
-import java.time.LocalDateTime
 
 @QuarkusTest
 class OrderControllerTest {
@@ -98,7 +88,7 @@ class OrderControllerTest {
             .then()
             .statusCode(200)
             .body("items", hasSize<Any>(1))
-            .body("limit",`is`(limitValue))
+            .body("limit", `is`(limitValue))
             .body("quantityInPage", `is`(1))
     }
 
@@ -143,16 +133,17 @@ class OrderControllerTest {
     fun `should return 202 and updated order when status update is successful`(status: OrderStatus) {
         val deliveryId = (1..100).random().toLong()
         val orderId = (0..100).random().toLong()
-        val delivery = DeliveryBuilder(
-            id = deliveryId,
-            status = status.description
-        ).build()
-        val order = OrderBuilder(
-            id = orderId,
-            status = status.description,
-            deliverys = mutableListOf(delivery),
-        ).build()
-
+        val delivery =
+            DeliveryBuilder(
+                id = deliveryId,
+                status = status.description,
+            ).build()
+        val order =
+            OrderBuilder(
+                id = orderId,
+                status = status.description,
+                deliverys = mutableListOf(delivery),
+            ).build()
 
         every { orderService.updateStatus(orderId, deliveryId, status) } returns order
 

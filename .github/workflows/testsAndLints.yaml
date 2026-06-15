@@ -1,8 +1,8 @@
 name: Test Lint
 
 on:
-  pull_request:
-    branches: "*"
+  # pull_request:
+  #   branches: "*"
   push:
     branches: [main]
 
@@ -32,7 +32,7 @@ jobs:
         run: make detekt
 
   test:
-    name: Run Tests and Linters
+    name: Run Tests
     runs-on: amazoncorretto:21-alpine-jdk
     permissions:
       contents: write

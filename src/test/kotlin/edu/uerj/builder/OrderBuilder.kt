@@ -8,31 +8,34 @@ import edu.uerj.domain.enums.OrderStatus
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-class OrderBuilder (
+class OrderBuilder(
     var id: Long? = (1..100).random().toLong(),
     var customer: Customer? = null,
     var status: String = OrderStatus.getById((0..8).random().toLong()).description,
-    var total: BigDecimal = (1..100)
-        .random().toBigDecimal()
-        .add(
-            (1..100).random().div(100).toBigDecimal()
-        ),
-    var discount: BigDecimal = (1..100)
-        .random().toBigDecimal()
-        .add(
-            (1..100).random().div(100).toBigDecimal()
-        ),
-    var freight: BigDecimal = (1..100)
-        .random().toBigDecimal()
-        .add(
-            (1..100).random().div(100).toBigDecimal()
-        ),
+    var total: BigDecimal =
+        (1..100)
+            .random()
+            .toBigDecimal()
+            .add(
+                (1..100).random().div(100).toBigDecimal(),
+            ),
+    var discount: BigDecimal =
+        (1..100)
+            .random()
+            .toBigDecimal()
+            .add(
+                (1..100).random().div(100).toBigDecimal(),
+            ),
+    var freight: BigDecimal =
+        (1..100)
+            .random()
+            .toBigDecimal()
+            .add(
+                (1..100).random().div(100).toBigDecimal(),
+            ),
     var createdAt: LocalDateTime = LocalDateTime.now(),
-
     var updatedAt: LocalDateTime = LocalDateTime.now(),
-
     val deliverys: MutableList<Delivery> = mutableListOf(),
-
     val payments: MutableList<Payment> = mutableListOf(),
 ) {
     fun build(): Order {

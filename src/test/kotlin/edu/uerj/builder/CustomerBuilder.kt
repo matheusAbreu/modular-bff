@@ -15,8 +15,8 @@ class CustomerBuilder(
     var birthDate: LocalDateTime? = LocalDateTime.now().minusYears(20),
     var createdAt: LocalDateTime = LocalDateTime.now(),
     var updatedAt: LocalDateTime = LocalDateTime.now(),
-    val contacts: MutableList<Contact> = mutableListOf(),
-    val addresses: MutableList<CustomerAddress> = mutableListOf(),
+    val contacts: MutableList<Contact> = mutableListOf(ContactBuilder().build()),
+    val addresses: MutableList<CustomerAddress> = mutableListOf(CustomerAddressBuilder().build()),
     val orders: MutableList<Order> = mutableListOf(),
 ) {
     fun build(): Customer {
@@ -35,4 +35,3 @@ class CustomerBuilder(
         return customer
     }
 }
-
