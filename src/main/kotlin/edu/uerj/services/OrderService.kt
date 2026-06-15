@@ -141,7 +141,7 @@ class OrderService
                     Delivery(
                         order,
                         orderAddress,
-                        contact?.value,
+                        contact.value,
                         customer.name,
                         (1..100).random().toBigDecimal(),
                         OrderStatus.NEW_ORDER.description,

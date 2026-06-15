@@ -123,7 +123,7 @@ class OrderServiceTest {
         val customer = CustomerBuilder(id = 1L).build()
         val address = customer.addresses.first()
         val contact = customer.contacts.first()
-        val product = ProductBuilder(sku = "PROD1").build()
+        val product = ProductBuilder(sku = "PROD1", price = BigDecimal.TEN).build()
 
         val newOrderDTO =
             NewOrderDTO(
