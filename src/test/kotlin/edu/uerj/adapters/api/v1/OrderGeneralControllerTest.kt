@@ -18,7 +18,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 
 @QuarkusTest
-class OrderControllerTest {
+class OrderGeneralControllerTest {
     @InjectMock
     private var orderService: OrderService = mockk(relaxed = true)
 
