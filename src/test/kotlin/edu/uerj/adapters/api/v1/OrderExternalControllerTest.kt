@@ -2,17 +2,20 @@ package edu.uerj.adapters.api.v1
 
 import edu.uerj.builder.NewOrderDTOBuilder
 import edu.uerj.builder.OrderBuilder
+import edu.uerj.config.ProviderToTests
 import edu.uerj.services.OrderService
 import io.mockk.every
 import io.mockk.mockk
 import io.quarkiverse.test.junit.mockk.InjectMock
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.junit.TestProfile
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.jupiter.api.Test
 
 @QuarkusTest
+@TestProfile(ProviderToTests::class)
 class OrderExternalControllerTest {
     @InjectMock
     private var orderService: OrderService = mockk(relaxed = true)

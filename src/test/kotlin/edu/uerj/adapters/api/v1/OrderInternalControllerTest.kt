@@ -2,7 +2,7 @@ package edu.uerj.adapters.api.v1
 
 import edu.uerj.builder.DeliveryBuilder
 import edu.uerj.builder.OrderBuilder
-import edu.uerj.config.ConfigProviderInternalMode
+import edu.uerj.config.ProviderToTests
 import edu.uerj.domain.enums.OrderStatus
 import edu.uerj.services.OrderService
 import io.mockk.every
@@ -17,7 +17,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 
 @QuarkusTest
-@TestProfile(ConfigProviderInternalMode::class)
+@TestProfile(ProviderToTests::class)
 class OrderInternalControllerTest {
     @InjectMock
     private var orderService: OrderService = mockk(relaxed = true)
