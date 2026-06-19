@@ -2,7 +2,7 @@ package edu.uerj.services
 
 import edu.uerj.adapters.api.dto.item.ItemInNewOrderDTO
 import edu.uerj.adapters.api.dto.order.NewOrderDTO
-import edu.uerj.adapters.api.dto.payment.PaymentInNewOrder
+import edu.uerj.adapters.api.dto.payment.PaymentInNewOrderDTO
 import edu.uerj.adapters.infrastructure.repository.CustomerRepository
 import edu.uerj.adapters.infrastructure.repository.OrderRepository
 import edu.uerj.adapters.infrastructure.repository.ProductRepository
@@ -136,7 +136,7 @@ class OrderServiceTest {
                     ),
                 paymentMethods =
                     listOf(
-                        PaymentInNewOrder(
+                        PaymentInNewOrderDTO(
                             "CREDIT_CARD",
                             1,
                             BigDecimal.valueOf(20),
