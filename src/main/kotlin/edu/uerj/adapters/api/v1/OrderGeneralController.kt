@@ -2,16 +2,11 @@ package edu.uerj.adapters.api.v1
 
 import edu.uerj.adapters.api.dto.ErrorDTO
 import edu.uerj.adapters.api.dto.common.PaginatedResult
-import edu.uerj.adapters.api.dto.order.NewOrderDTO
 import edu.uerj.adapters.api.dto.order.OrderCompleteDTO
-import edu.uerj.domain.enums.OrderStatus
 import edu.uerj.services.OrderService
 import jakarta.inject.Inject
-import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.DefaultValue
 import jakarta.ws.rs.GET
-import jakarta.ws.rs.PATCH
-import jakarta.ws.rs.POST
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.PathParam
 import jakarta.ws.rs.Produces
@@ -138,5 +133,4 @@ class OrderGeneralController
                     .build()
             }
         }
-
     }

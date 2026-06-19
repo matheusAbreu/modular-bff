@@ -22,7 +22,6 @@ class OrderInternalControllerTest {
     @InjectMock
     private var orderService: OrderService = mockk(relaxed = true)
 
-
     @ParameterizedTest
     @EnumSource(OrderStatus::class)
     fun `should return 202 and updated order when status update is successful`(status: OrderStatus) {

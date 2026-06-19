@@ -40,9 +40,10 @@ class OrderExternalControllerTest {
 
     @Test
     fun `should return 400 when items are empty`() {
-        val newOrder = NewOrderDTOBuilder()
-            .withItems()
-            .build()
+        val newOrder =
+            NewOrderDTOBuilder()
+                .withItems()
+                .build()
 
         RestAssured
             .given()
@@ -57,9 +58,10 @@ class OrderExternalControllerTest {
 
     @Test
     fun `should return 400 when payment methods are empty`() {
-        val newOrder = NewOrderDTOBuilder()
-            .withPaymentMethods()
-            .build()
+        val newOrder =
+            NewOrderDTOBuilder()
+                .withPaymentMethods()
+                .build()
 
         RestAssured
             .given()

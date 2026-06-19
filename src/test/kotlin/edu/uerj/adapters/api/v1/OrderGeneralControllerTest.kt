@@ -1,10 +1,8 @@
 package edu.uerj.adapters.api.v1
 
 import edu.uerj.adapters.api.dto.common.PaginatedResult
-import edu.uerj.builder.DeliveryBuilder
 import edu.uerj.builder.OrderBuilder
 import edu.uerj.domain.Order
-import edu.uerj.domain.enums.OrderStatus
 import edu.uerj.services.OrderService
 import io.mockk.every
 import io.mockk.mockk
@@ -14,8 +12,6 @@ import io.restassured.RestAssured
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.EnumSource
 
 @QuarkusTest
 class OrderGeneralControllerTest {
