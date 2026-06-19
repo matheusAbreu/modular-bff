@@ -18,7 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 
 @Path("/v1/order")
-@IfBuildProperty(name = "modular-bff.api.mode", stringValue = "internal")
+@IfBuildProperty(name = "modular-bff.api.mode.internal.enable", stringValue = "true")
 class OrderInternalController
 @Inject
 constructor(

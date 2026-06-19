@@ -21,7 +21,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 
 @Path("/v1/order")
-@IfBuildProperty(name = "modular-bff.api.mode", stringValue = "external")
+@IfBuildProperty(name = "modular-bff.api.mode.external.enable", stringValue = "true")
 class OrderExternalController @Inject
 constructor(
     private val orderService: OrderService,
