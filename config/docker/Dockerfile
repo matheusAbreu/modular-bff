@@ -21,7 +21,6 @@ COPY --from=builder /build-dir/build/quarkus-app/*.jar /deployments/
 COPY --from=builder /build-dir/build/quarkus-app/app/ /deployments/app/
 COPY --from=builder /build-dir/build/quarkus-app/quarkus/ /deployments/quarkus/
 
-EXPOSE 8080
 EXPOSE 9000
 
 RUN addgroup -S bff-group && \

@@ -3,6 +3,8 @@ DB_DSN=host=localhost port=5432 user=postgres password=postgres dbname=$(DB_NAME
 DOCKER_COMPOSE=docker compose --env-file .env --file ./config/docker/compose.yaml
 _goose_ = goose -dir ./config/database/migrations postgres "$(DB_DSN)"
 __MIGRATION_NAME__ =
+DOCKER_TAG=bff
+DOCKER_APP_VERSION=latest
 
 # Load envs from .env file if it exists
 -include .env
@@ -72,7 +74,10 @@ else
 endif
 
 container/build: ## Build the application in a Docker container	
-	docker build -t bff:latest --no-cache -f ./config/docker/Dockerfile .
+	docker build -t $(DOCKER_TAG):$(DOCKER_APP_VERSION) --no-cache -f ./config/docker/Dockerfile .
+
+container/run:  ## Run the application in a Docker container
+	docker run  --name=$(DOCKER_TAG) --env-file=.env --network=host $(DOCKER_TAG):$(DOCKER_APP_VERSION)
 
 deps/up: docker/up db/wait db/migrate-up ## Start infrastructure, wait for DB, and run migrations
 
