@@ -63,3 +63,19 @@ jobs:
         run: |
           touch .env
           make ci/test
+
+  build:
+    name: Build app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+          cache: 'gradle'
+
+      - name: Build app
+        run: make build

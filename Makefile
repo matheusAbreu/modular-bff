@@ -64,6 +64,15 @@ db/wait: ## Wait for the database container to be ready
 	done
 	@echo "$(DB_NAME) está pronto!"
 
+build: deps/kotlin ## Build the application 
+ifeq ($(OS),Windows_NT)
+	gradlew.bat clean quarkusBuild -xtest
+else
+	./gradlew clean quarkusBuild -xtest
+endif
+
+container/build: ## Build the application in a Docker container	
+	docker build -t bff:latest --no-cache -f ./config/docker/Dockerfile .
 
 deps/up: docker/up db/wait db/migrate-up ## Start infrastructure, wait for DB, and run migrations
 
