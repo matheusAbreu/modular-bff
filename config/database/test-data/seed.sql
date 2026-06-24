@@ -2,7 +2,7 @@
 -- 3 Clientes, cada um com 1 endereço, 2 pedidos e 2-5 contatos.
 -- Cada pedido com 1 a 3 itens (produtos não repetidos no mesmo pedido).
 -- Cada item associado a um pacote de entrega (entregas).
--- Pagamentos e Notas Fiscais para pedidos ENTREGUE, PROCESSANDO ou ENVIADO.
+-- Pagamentos e Notas Fiscais para pedidos PAID, INVOICE_BEGINNING ou INVOICED.
 
 -- Limpar dados existentes para evitar conflitos de FK (Opcional)
 -- TRUNCATE TABLE itens_pedido, entregas, pagamentos, enderecos_pedidos, enderecos_clientes, contatos, pedidos, produtos, clientes, notas_fiscais CASCADE;
@@ -51,10 +51,10 @@ SELECT id, true, '30140-001', 'Praça da Liberdade', 'S/N', NULL, 'Belo Horizont
 
 -- 5. Inserir Pedidos, Endereços de Entrega, Notas Fiscais, Pacotes de Entrega, Pagamentos e Itens
 
--- PEDIDO 1 - Carlos Alberto (Status: PROCESSANDO -> Precisa NF e Pagamento)
+-- PEDIDO 1 - Carlos Alberto (Status: PAID -> Precisa NF e Pagamento)
 WITH ped AS (
     INSERT INTO pedidos (cliente_id, status, total, desconto, frete) 
-    SELECT id, 'PROCESSANDO', 2750.00, 0.00, 250.00 FROM clientes WHERE email = 'carlos.alberto@email.com'
+    SELECT id, 'PAID', 2750.00, 0.00, 250.00 FROM clientes WHERE email = 'carlos.alberto@email.com'
     RETURNING id AS pedido_id, cliente_id, total
 ),
 end_ped AS (
@@ -69,7 +69,7 @@ nf AS (
 ),
 ent AS (
     INSERT INTO entregas (pedido_id, endereco_id, nota_danfe, telefone_contato, nome_contato, frete, status)
-    SELECT ep.pedido_id, ep.endereco_id, nf.danfe, '11988887777', 'Carlos Alberto', 250.00, 'PENDENTE' 
+    SELECT ep.pedido_id, ep.endereco_id, nf.danfe, '11988887777', 'Carlos Alberto', 250.00, 'PAID' 
     FROM end_ped ep, nf
     RETURNING id AS entrega_id, pedido_id
 ),
@@ -82,10 +82,10 @@ SELECT 'SKU-001', pedido_id, entrega_id, 1, 2500.00, 2500.00 FROM ent
 UNION ALL
 SELECT 'SKU-005', pedido_id, entrega_id, 1, 250.00, 250.00 FROM ent;
 
--- PEDIDO 2 - Carlos Alberto (Status: AGUARDANDO_PAGAMENTO -> Sem NF/Pagamento obrigatório)
+-- PEDIDO 2 - Carlos Alberto (Status: WAITING_PAYMENT -> Sem NF/Pagamento obrigatório)
 WITH ped AS (
     INSERT INTO pedidos (cliente_id, status, total, desconto, frete) 
-    SELECT id, 'AGUARDANDO_PAGAMENTO', 450.00, 0.00, 0.00 FROM clientes WHERE email = 'carlos.alberto@email.com'
+    SELECT id, 'WAITING_PAYMENT', 450.00, 0.00, 0.00 FROM clientes WHERE email = 'carlos.alberto@email.com'
     RETURNING id AS pedido_id, cliente_id
 ),
 end_ped AS (
@@ -95,16 +95,16 @@ end_ped AS (
 ),
 ent AS (
     INSERT INTO entregas (pedido_id, endereco_id, telefone_contato, nome_contato, frete, status)
-    SELECT pedido_id, endereco_id, '11988887777', 'Carlos Alberto', 0.00, 'AGUARDANDO' FROM end_ped
+    SELECT pedido_id, endereco_id, '11988887777', 'Carlos Alberto', 0.00, 'WAITING_PAYMENT' FROM end_ped
     RETURNING id AS entrega_id, pedido_id
 )
 INSERT INTO itens_pedido (produto_sku, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
 SELECT 'SKU-004', pedido_id, entrega_id, 1, 450.00, 450.00 FROM ent;
 
--- PEDIDO 3 - Ana Maria (Status: ENTREGUE -> Precisa NF e Pagamento)
+-- PEDIDO 3 - Ana Maria (Status: INVOICED -> Precisa NF e Pagamento)
 WITH ped AS (
     INSERT INTO pedidos (cliente_id, status, total, desconto, frete) 
-    SELECT id, 'ENTREGUE', 7300.00, 100.00, 50.00 FROM clientes WHERE email = 'ana.maria@email.com'
+    SELECT id, 'INVOICED', 7300.00, 100.00, 50.00 FROM clientes WHERE email = 'ana.maria@email.com'
     RETURNING id AS pedido_id, cliente_id, total
 ),
 end_ped AS (
@@ -119,7 +119,7 @@ nf AS (
 ),
 ent AS (
     INSERT INTO entregas (pedido_id, endereco_id, nota_danfe, telefone_contato, nome_contato, frete, status)
-    SELECT ep.pedido_id, ep.endereco_id, nf.danfe, '21977776666', 'Ana Maria', 50.00, 'ENTREGUE' 
+    SELECT ep.pedido_id, ep.endereco_id, nf.danfe, '21977776666', 'Ana Maria', 50.00, 'INVOICED' 
     FROM end_ped ep, nf
     RETURNING id AS entrega_id, pedido_id
 ),
@@ -134,10 +134,10 @@ SELECT 'SKU-003', pedido_id, entrega_id, 1, 1800.00, 1800.00 FROM ent
 UNION ALL
 SELECT 'SKU-004', pedido_id, entrega_id, 1, 450.00, 450.00 FROM ent;
 
--- PEDIDO 4 - Ana Maria (Status: CANCELADO)
+-- PEDIDO 4 - Ana Maria (Status: UNDER_FRAUD_ANALYSIS)
 WITH ped AS (
     INSERT INTO pedidos (cliente_id, status, total, desconto, frete) 
-    SELECT id, 'CANCELADO', 250.00, 0.00, 15.00 FROM clientes WHERE email = 'ana.maria@email.com'
+    SELECT id, 'UNDER_FRAUD_ANALYSIS', 250.00, 0.00, 15.00 FROM clientes WHERE email = 'ana.maria@email.com'
     RETURNING id AS pedido_id, cliente_id
 ),
 end_ped AS (
@@ -147,16 +147,16 @@ end_ped AS (
 ),
 ent AS (
     INSERT INTO entregas (pedido_id, endereco_id, telefone_contato, nome_contato, frete, status)
-    SELECT pedido_id, endereco_id, '21977776666', 'Ana Maria', 15.00, 'CANCELADO' FROM end_ped
+    SELECT pedido_id, endereco_id, '21977776666', 'Ana Maria', 15.00, 'UNDER_FRAUD_ANALYSIS' FROM end_ped
     RETURNING id AS entrega_id, pedido_id
 )
 INSERT INTO itens_pedido (produto_sku, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
 SELECT 'SKU-005', pedido_id, entrega_id, 1, 250.00, 250.00 FROM ent;
 
--- PEDIDO 5 - Roberto Fernandes (Status: ENVIADO -> Precisa NF e Pagamento)
+-- PEDIDO 5 - Roberto Fernandes (Status: INVOICE_BEGINNING -> Precisa NF e Pagamento)
 WITH ped AS (
     INSERT INTO pedidos (cliente_id, status, total, desconto, frete) 
-    SELECT id, 'ENVIADO', 2250.00, 0.00, 0.00 FROM clientes WHERE email = 'roberto.f@email.com'
+    SELECT id, 'INVOICE_BEGINNING', 2250.00, 0.00, 0.00 FROM clientes WHERE email = 'roberto.f@email.com'
     RETURNING id AS pedido_id, cliente_id, total
 ),
 end_ped AS (
@@ -171,7 +171,7 @@ nf AS (
 ),
 ent AS (
     INSERT INTO entregas (pedido_id, endereco_id, nota_danfe, telefone_contato, nome_contato, frete, status)
-    SELECT ep.pedido_id, ep.endereco_id, nf.danfe, '31966665555', 'Roberto Fernandes', 0.00, 'EM_TRANSITO' 
+    SELECT ep.pedido_id, ep.endereco_id, nf.danfe, '31966665555', 'Roberto Fernandes', 0.00, 'INVOICE_BEGINNING' 
     FROM end_ped ep, nf
     RETURNING id AS entrega_id, pedido_id
 ),
@@ -184,10 +184,10 @@ SELECT 'SKU-003', pedido_id, entrega_id, 1, 1800.00, 1800.00 FROM ent
 UNION ALL
 SELECT 'SKU-004', pedido_id, entrega_id, 1, 450.00, 450.00 FROM ent;
 
--- PEDIDO 6 - Roberto Fernandes (Status: ABERTO)
+-- PEDIDO 6 - Roberto Fernandes (Status: NEW_ORDER)
 WITH ped AS (
     INSERT INTO pedidos (cliente_id, status, total, desconto, frete) 
-    SELECT id, 'ABERTO', 1800.00, 50.00, 20.00 FROM clientes WHERE email = 'roberto.f@email.com'
+    SELECT id, 'NEW_ORDER', 1800.00, 50.00, 20.00 FROM clientes WHERE email = 'roberto.f@email.com'
     RETURNING id AS pedido_id, cliente_id
 ),
 end_ped AS (
@@ -197,7 +197,7 @@ end_ped AS (
 ),
 ent AS (
     INSERT INTO entregas (pedido_id, endereco_id, telefone_contato, nome_contato, frete, status)
-    SELECT pedido_id, endereco_id, '31966665555', 'Roberto Fernandes', 20.00, 'PENDENTE' FROM end_ped
+    SELECT pedido_id, endereco_id, '31966665555', 'Roberto Fernandes', 20.00, 'NEW_ORDER' FROM end_ped
     RETURNING id AS entrega_id, pedido_id
 )
 INSERT INTO itens_pedido (produto_sku, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
