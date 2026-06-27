@@ -3,6 +3,8 @@ DB_DSN=host=localhost port=5432 user=postgres password=postgres dbname=$(DB_NAME
 DOCKER_COMPOSE=docker compose --env-file .env --file ./config/docker/compose.yaml
 _goose_ = goose -dir ./config/database/migrations postgres "$(DB_DSN)"
 __MIGRATION_NAME__ =
+DOCKER_TAG=bff
+DOCKER_APP_VERSION=latest
 
 # Load envs from .env file if it exists
 -include .env
@@ -64,6 +66,58 @@ db/wait: ## Wait for the database container to be ready
 	done
 	@echo "$(DB_NAME) está pronto!"
 
+build: deps/kotlin ## Build the application 
+ifeq ($(OS),Windows_NT)
+	gradlew.bat clean quarkusBuild -xtest
+else
+	./gradlew clean quarkusBuild -xtest
+endif
+
+container/build: ## Build the application in a Docker container	
+	docker build \
+	--build-arg BFF_API_EXTERNAL_ACTIVE=true \
+	--build-arg BFF_API_INTERNAL_ACTIVE=true \
+	-t $(DOCKER_TAG):$(DOCKER_APP_VERSION) \
+	--no-cache -f ./config/docker/Dockerfile .
+
+container/build/external: ## Build the application in a Docker container	
+	docker build \
+	--build-arg BFF_API_EXTERNAL_ACTIVE=true \
+	-t $(DOCKER_TAG)-external:$(DOCKER_APP_VERSION) \
+	--no-cache -f ./config/docker/Dockerfile .
+
+container/build/internal: ## Build the application in a Docker container	
+	docker build \
+	--build-arg BFF_API_INTERNAL_ACTIVE=true \
+	-t $(DOCKER_TAG)-internal:$(DOCKER_APP_VERSION) \
+	--no-cache -f ./config/docker/Dockerfile .
+
+container/run:  ## Run the application in a Docker container in default mode
+	docker run  --name=$(DOCKER_TAG) \
+	-e API_PORT=9000 \
+	-e POSTGRES_URL="jdbc:postgresql://postgres-db:5432/postgres" \
+	--network=modular-bff_default \
+	-p 9000:9000 $(DOCKER_TAG):$(DOCKER_APP_VERSION)
+
+container/run/external:  ## Run the application in a Docker container in external mode
+	docker run  --name=$(DOCKER_TAG)-external \
+	-e API_PORT=9000 \
+	-e POSTGRES_URL="jdbc:postgresql://postgres-db:5432/postgres" \
+	--network=modular-bff_default \
+	-p 9001:9000 $(DOCKER_TAG)-external:$(DOCKER_APP_VERSION)
+
+container/run/internal:  ## Run the application in a Docker container in internal mode
+	docker run  --name=$(DOCKER_TAG)-internal \
+	-e API_PORT=9000 \
+	-e POSTGRES_URL="jdbc:postgresql://postgres-db:5432/postgres" \
+	--network=modular-bff_default \
+	-p 9002:9000 $(DOCKER_TAG)-internal:$(DOCKER_APP_VERSION)
+
+app/build/run/default: container/build container/run ## Build and run the application in a Docker container in default mode
+
+app/build/run/external: container/build/external container/run/external ## Build and run the application in a Docker container in external mode
+
+app/build/run/internal: container/build/internal container/run/internal ## Build and run the application in a Docker container in internal mode
 
 deps/up: docker/up db/wait db/migrate-up ## Start infrastructure, wait for DB, and run migrations
 
