@@ -1,5 +1,8 @@
 FROM gradle:9.2-jdk21-ubi-minimal AS builder
 
+ARG BFF_API_EXTERNAL_ACTIVE
+ARG BFF_API_INTERNAL_ACTIVE
+
 USER root
 
 WORKDIR /build-dir
