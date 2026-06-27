@@ -1,11 +1,5 @@
 -- Script para popular o banco de dados conforme especificações:
 -- 3 Clientes, cada um com 1 endereço, 2 pedidos e 2-5 contatos.
--- Cada pedido com 1 a 3 itens (produtos não repetidos no mesmo pedido).
--- Cada item associado a um pacote de entrega (entregas).
--- Pagamentos e Notas Fiscais para pedidos PAID, INVOICE_BEGINNING ou INVOICED.
-
--- Limpar dados existentes para evitar conflitos de FK (Opcional)
--- TRUNCATE TABLE itens_pedido, entregas, pagamentos, enderecos_pedidos, enderecos_clientes, contatos, pedidos, produtos, clientes, notas_fiscais CASCADE;
 
 -- 1. Inserir Produtos (Skus únicos)
 INSERT INTO produtos (sku, nome, descricao, preco) VALUES
@@ -51,7 +45,7 @@ SELECT id, true, '30140-001', 'Praça da Liberdade', 'S/N', NULL, 'Belo Horizont
 
 -- 5. Inserir Pedidos, Endereços de Entrega, Notas Fiscais, Pacotes de Entrega, Pagamentos e Itens
 
--- PEDIDO 1 - Carlos Alberto (Status: PAID -> Precisa NF e Pagamento)
+-- PEDIDO 1
 WITH ped AS (
     INSERT INTO pedidos (cliente_id, status, total, desconto, frete) 
     SELECT id, 'PAID', 2750.00, 0.00, 250.00 FROM clientes WHERE email = 'carlos.alberto@email.com'
@@ -82,7 +76,7 @@ SELECT 'SKU-001', pedido_id, entrega_id, 1, 2500.00, 2500.00 FROM ent
 UNION ALL
 SELECT 'SKU-005', pedido_id, entrega_id, 1, 250.00, 250.00 FROM ent;
 
--- PEDIDO 2 - Carlos Alberto (Status: WAITING_PAYMENT -> Sem NF/Pagamento obrigatório)
+-- PEDIDO 2
 WITH ped AS (
     INSERT INTO pedidos (cliente_id, status, total, desconto, frete) 
     SELECT id, 'WAITING_PAYMENT', 450.00, 0.00, 0.00 FROM clientes WHERE email = 'carlos.alberto@email.com'
@@ -101,7 +95,7 @@ ent AS (
 INSERT INTO itens_pedido (produto_sku, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
 SELECT 'SKU-004', pedido_id, entrega_id, 1, 450.00, 450.00 FROM ent;
 
--- PEDIDO 3 - Ana Maria (Status: INVOICED -> Precisa NF e Pagamento)
+-- PEDIDO 3
 WITH ped AS (
     INSERT INTO pedidos (cliente_id, status, total, desconto, frete) 
     SELECT id, 'INVOICED', 7300.00, 100.00, 50.00 FROM clientes WHERE email = 'ana.maria@email.com'
@@ -134,7 +128,7 @@ SELECT 'SKU-003', pedido_id, entrega_id, 1, 1800.00, 1800.00 FROM ent
 UNION ALL
 SELECT 'SKU-004', pedido_id, entrega_id, 1, 450.00, 450.00 FROM ent;
 
--- PEDIDO 4 - Ana Maria (Status: UNDER_FRAUD_ANALYSIS)
+-- PEDIDO 4
 WITH ped AS (
     INSERT INTO pedidos (cliente_id, status, total, desconto, frete) 
     SELECT id, 'UNDER_FRAUD_ANALYSIS', 250.00, 0.00, 15.00 FROM clientes WHERE email = 'ana.maria@email.com'
@@ -153,7 +147,7 @@ ent AS (
 INSERT INTO itens_pedido (produto_sku, pedido_id, entrega_id, quantidade, valor_unitario, valor_total) 
 SELECT 'SKU-005', pedido_id, entrega_id, 1, 250.00, 250.00 FROM ent;
 
--- PEDIDO 5 - Roberto Fernandes (Status: INVOICE_BEGINNING -> Precisa NF e Pagamento)
+-- PEDIDO 5
 WITH ped AS (
     INSERT INTO pedidos (cliente_id, status, total, desconto, frete) 
     SELECT id, 'INVOICE_BEGINNING', 2250.00, 0.00, 0.00 FROM clientes WHERE email = 'roberto.f@email.com'
@@ -184,7 +178,7 @@ SELECT 'SKU-003', pedido_id, entrega_id, 1, 1800.00, 1800.00 FROM ent
 UNION ALL
 SELECT 'SKU-004', pedido_id, entrega_id, 1, 450.00, 450.00 FROM ent;
 
--- PEDIDO 6 - Roberto Fernandes (Status: NEW_ORDER)
+-- PEDIDO 6
 WITH ped AS (
     INSERT INTO pedidos (cliente_id, status, total, desconto, frete) 
     SELECT id, 'NEW_ORDER', 1800.00, 50.00, 20.00 FROM clientes WHERE email = 'roberto.f@email.com'

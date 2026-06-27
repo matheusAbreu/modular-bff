@@ -18,16 +18,17 @@ Para rodar o projeto localmente, você precisará das seguintes ferramentas:
 *   **Java 21:** JDK recomendado para compatibilidade com as configurações do Gradle.
 *   **Kotlin:** Linguagem principal do projeto.
 *   **Go (Golang):** Necessário para instalar e rodar a ferramenta Goose.
-*   **Docker & Docker Compose:** Necessário para subir o banco de dados PostgreSQL.
-*   **Goose:** Ferramenta de migração de banco de dados SQL (instalada via Go).
+*   **Docker & Docker Compose:** Necessário para subir o banco de dados PostgreSQL em container.
+*   **Goose:** Ferramenta de migração de banco de dados SQL (instalada via Go; Comando presente no makefile do projeto).
 *   **GNU Make:** Para execução simplificada de tarefas via [Makefile](Makefile).
 *   **Gerenciador de Pacotes:** (Veja as instruções por SO abaixo).
+*   **PostgreSQL** _(opcional)_**:** Durante o desenvolvimento do projeto, o banco de dados foi executado via container Docker (gerenciado pelo `make docker/up`). A instalação nativa é opcional e só necessária caso prefira rodar o PostgreSQL diretamente na máquina.
 
 ---
 
 ## 💻 Configuração por Sistema Operacional (Nativa)
 
-### 🪟 Windows (Nativo)
+### 🪟 Windows 
 Recomendo utilizar o **Chocolatey** como gerenciador de pacotes no Windows para instalar as ferramentas:
 1. Instale o [Chocolatey](https://chocolatey.org/install).
 2. No PowerShell (como Admin), execute:
@@ -54,16 +55,61 @@ Utilize o gerenciador de pacotes da sua distribuição:
 
 ## 🚀 Comandos Principais (Makefile)
 
-O projeto utiliza um [Makefile](Makefile) para padronizar as tarefas comuns:
+O projeto utiliza um [Makefile](Makefile) para padronizar as tarefas comuns.
+
+### Dependências
 
 | Comando | Descrição |
 | :--- | :--- |
 | `make deps/install` | Instala as dependências do Kotlin (Gradle) e a ferramenta Goose. |
 | `make deps/up` | Sobe o Docker, aguarda o DB e aplica as migrações. |
-| `make deps/up/populated` | Sobe a infra e popula o banco com dados de teste (`seed.sql`). |
-| `make dev` | Inicia o Quarkus em modo de desenvolvimento (Live Coding). |
-| `make test` | Reinicia a infraestrutura e executa todos os testes automatizados. |
+| `make deps/up/populated` | Sobe a infra e popula o banco com dados de teste ([seed.sql](config/database/test-data/seed.sql)). |
 | `make deps/down` | Encerra e remove os containers da infraestrutura. |
+| `make deps/restart` | Reinicia toda a infraestrutura (com migrações aplicadas). |
+| `make deps/restart/populated` | Reinicia toda a infraestrutura com dados de [seed](config/database/test-data/seed.sql). |
+
+### Desenvolvimento
+
+| Comando | Descrição |
+| :--- | :--- |
+| `make dev` | Inicia o Quarkus em modo de desenvolvimento (Live Coding). |
+| `make build` | Compila e empacota a aplicação via Gradle. |
+| `make test` | Reinicia a infraestrutura e executa todos os testes automatizados. |
+| `make lint` | Executa o KtLint para verificar o estilo do código. |
+| `make detekt` | Executa o Detekt para análise estática do código. |
+
+### Docker — Infraestrutura
+
+| Comando | Descrição |
+| :--- | :--- |
+| `make docker/up` | Sobe os containers de infraestrutura (banco de dados, etc.) em modo detached. |
+| `make docker/down` | Para e remove os containers de infraestrutura. |
+
+### Docker — Build da Aplicação
+
+A aplicação suporta três modos de build, controlados via `--build-arg`:
+
+| Comando | Descrição |
+| :--- | :--- |
+| `make container/build` | Build da imagem Docker no modo padrão (external + internal ativos). |
+| `make container/build/external` | Build da imagem Docker somente com a API externa ativa. |
+| `make container/build/internal` | Build da imagem Docker somente com a API interna ativa. |
+
+### Docker — Execução da Aplicação
+
+| Comando | Descrição | Porta |
+| :--- | :--- | :--- |
+| `make container/run` | Executa o container no modo padrão. | `9000` |
+| `make container/run/external` | Executa o container no modo externo. | `9001` |
+| `make container/run/internal` | Executa o container no modo interno. | `9002` |
+
+### Docker — Build + Execução (Atalhos)
+
+| Comando | Descrição |
+| :--- | :--- |
+| `make app/build/run/default` | Faz o build e executa a aplicação no modo padrão. |
+| `make app/build/run/external` | Faz o build e executa a aplicação no modo externo. |
+| `make app/build/run/internal` | Faz o build e executa a aplicação no modo interno. |
 
 ---
 
