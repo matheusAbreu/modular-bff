@@ -1,0 +1,167 @@
+# Roadmap dos Capítulos do TCC — Próximos Passos
+
+> **Objetivo deste documento:** mapear os capítulos ainda ausentes na proposta (`docs/case-study/Proposta TCC …md`) e organizar os próximos passos para concebê-los, aproveitando o protótipo `modular-bff` já existente, o estudo de caso (`docs/case-study/CASE_STUDY.md`) e as referências científicas já reunidas (`docs/case-study/REFERENCIAS_CIENTIFICAS.md`, `docs/case-study/CITACOES_ABNT.md`, PDFs em `docs/refs/`).
+
+---
+
+## 1. Situação atual
+
+O que a proposta **já** cobre:
+
+- **Introdução** — microsserviços, API Gateway e o surgimento do BFF (fundamentada).
+- **Justificativa** — vantagens do BFF e o problema de reuso/manutenção.
+- **Objetivos** — geral e específicos.
+- **Organização do Trabalho**.
+- **Proposta: Arquitetura Metamórfica** — com *Fundamentação teórica* (SPL, variabilidade por anotação) e *Segurança por ausência*.
+- **Referências** (ABNT).
+
+O que **falta** para transformar a proposta num TCC completo:
+
+- Referencial Teórico como capítulo próprio (hoje é subseção).
+- Trabalhos Relacionados.
+- Metodologia.
+- Desenvolvimento / Implementação do Protótipo.
+- Avaliação, Resultados e Discussão.
+- Conclusão e Trabalhos Futuros.
+
+---
+
+## 2. Estrutura-alvo do TCC
+
+Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a criar):
+
+1. ✅ Introdução
+2. 🟡 Referencial Teórico *(hoje embutido na Proposta; promover a capítulo)*
+3. ⬜ Trabalhos Relacionados
+4. 🟡 Proposta: Arquitetura Metamórfica *(refinar após o referencial)*
+5. ⬜ Metodologia
+6. ⬜ Desenvolvimento / Implementação do Protótipo
+7. ⬜ Avaliação, Resultados e Discussão
+8. ⬜ Conclusão e Trabalhos Futuros
+9. ✅ Referências
+
+> Observação: *Justificativa*, *Objetivos* e *Organização do Trabalho* permanecem como seções da Introdução (ou como capítulo introdutório), conforme o modelo da instituição.
+
+---
+
+## 3. Mapa dos capítulos a desenvolver
+
+### 3.1 Referencial Teórico *(promover a capítulo)*
+
+- **Objetivo:** consolidar os conceitos que sustentam o trabalho, hoje dispersos na *Fundamentação teórica* da Proposta.
+- **Conteúdo sugerido:**
+  - Microsserviços e API Gateway (contexto).
+  - Backend for Frontend (BFF).
+  - Linhas de Produto de Software (SPL): domínio × aplicação, derivação de produto, variabilidade **baseada em anotação × baseada em composição**.
+  - Compilação condicional / variabilidade em tempo de *build*.
+  - Superfície de ataque e segurança por redução de exposição.
+  - Arquitetura Hexagonal (Ports & Adapters) / Clean Architecture.
+- **Próximos passos:** mover os parágrafos de fundamentação já escritos para este capítulo e expandi-los; garantir uma subseção por conceito.
+- **Apoio já disponível:** todas as citações em `CITACOES_ABNT.md` (Eixos 1, 3 e 5); refs 1.1, 1.2, 3.1a, 3.1b, 3.2, 3.3, 5.1, 5.2, 6.2.
+- **Pronto quando:** cada conceito usado na Proposta tiver base citável neste capítulo.
+
+### 3.2 Trabalhos Relacionados
+
+- **Objetivo:** posicionar a Arquitetura Metamórfica frente a abordagens existentes e evidenciar a lacuna que ela preenche.
+- **Conteúdo sugerido — comparar com:**
+  - Repositórios separados (um BFF por frontend).
+  - *Feature flags* em tempo de execução.
+  - Microsserviços distintos por cliente.
+  - Linhas de produto por composição (FOP/AOP).
+  - A tabela comparativa (reuso × segurança × complexidade operacional) já esboçada no `CASE_STUDY.md` (seção 11) é o ponto de partida.
+- **Próximos passos:** transformar a tabela do estudo de caso em texto analítico, citando a literatura; destacar que a literatura *peer-reviewed* específica sobre BFF é escassa (reforça o ineditismo).
+- **Apoio:** refs 4.1–4.3 (feature toggles), 3.1a/3.1b/3.3 (SPL/variabilidade), 1.2 (padrões de microsserviços).
+- **Pronto quando:** houver um quadro comparativo justificado e a lacuna estiver explícita.
+
+### 3.3 Metodologia
+
+- **Objetivo:** descrever como o trabalho foi conduzido e como a proposta será avaliada.
+- **Abordagem recomendada:** **Design Science Research (DSR)** — pesquisa que produz e avalia um *artefato* (a arquitetura + o protótipo) para resolver um problema real. Alternativa: estudo de caso / prova de conceito.
+- **Conteúdo sugerido:**
+  - Classificação da pesquisa (aplicada, exploratória, DSR).
+  - Etapas: identificação do problema → definição de objetivos → projeto do artefato (arquitetura) → demonstração (protótipo) → avaliação (métricas) → comunicação.
+  - Definição das **métricas de avaliação** (ver 3.5) e do procedimento experimental (builds com diferentes *flags*).
+  - Ferramentas e ambiente (Kotlin/Quarkus, Docker, inspeção de artefato).
+- **Próximos passos:** escolher e citar 1–2 referências metodológicas de DSR; definir claramente as perguntas de pesquisa que a avaliação deve responder.
+- **Pronto quando:** cada objetivo específico tiver um método de verificação associado.
+
+### 3.4 Desenvolvimento / Implementação do Protótipo
+
+- **Objetivo:** descrever o protótipo `modular-bff` como *demonstração* concreta da arquitetura.
+- **Conteúdo sugerido (reaproveitar o `CASE_STUDY.md`, sem duplicá-lo):**
+  - Domínio escolhido (pedidos de e-commerce): 11 entidades, 9 estados.
+  - Camadas hexagonais (`domain`, `services`, `adapters/api`, `adapters/infrastructure`, `config`).
+  - O mecanismo metamórfico: `@IfBuildProperty` nos controllers `OrderInternalController` / `OrderExternalController`; `OrderGeneralController` sempre ativo.
+  - Configuração via `application.properties` e variáveis `BFF_API_INTERNAL_ACTIVE` / `BFF_API_EXTERNAL_ACTIVE`.
+  - Pipeline de *build* por artefato (interno vs externo).
+- **Próximos passos:**
+  - Incluir trechos de código-chave (o controller anotado, o `application.properties`).
+  - Registrar os comandos de *build* de cada variante.
+  - Preparar diagramas (o `CASE_STUDY.md` tem os textos; faltam figuras).
+- **Apoio:** `CASE_STUDY.md` (seções 2–10), código-fonte, ref 6.2 (Clean Architecture) para justificar o posicionamento das anotações nos adaptadores.
+- **Pronto quando:** um leitor conseguir reproduzir os dois artefatos a partir do capítulo.
+
+### 3.5 Avaliação, Resultados e Discussão
+
+> **Capítulo central da contribuição empírica.** É aqui que a "segurança por ausência" deixa de ser tese e vira evidência.
+
+- **Objetivo:** demonstrar, com dados, que a arquitetura entrega o que promete.
+- **Experimentos/medições sugeridos:**
+  1. **Ausência verificável de endpoints** — construir o artefato externo e o interno e inspecionar o JAR (`jar tf` / `unzip -l | grep adapters/api/v1`), mostrando que o controller do outro modo **não existe** no binário. É a prova direta da tese (procedimento já descrito no `CASE_STUDY.md`, seção 10).
+  2. **Redução da superfície de ataque** — quantificar os pontos de entrada expostos por artefato (nº de rotas/endpoints) e comparar com um *build* que contém todos os controllers; enquadrar com a métrica de superfície de ataque (MANADHATA; WING, 2011).
+  3. **Reuso de código** — medir a proporção de código compartilhado (domínio, serviços, repositórios) vs. especializado (controllers, DTOs) — LOC ou nº de classes —, sustentando o ganho de reuso.
+  4. **Custo operacional** — registrar que a abordagem exige *pipelines*/artefatos distintos; opcionalmente medir tamanho do artefato, tempo de *startup* e memória por variante.
+  5. **(Opcional) Comparação com *feature flag* em runtime** — evidenciar que, na alternativa em runtime, o endpoint permanece no binário (reproduzir e inspecionar).
+- **Discussão:** relacionar os números aos objetivos; retomar o contraste segurança por ausência × por proteção.
+- **Apoio:** refs 5.1, 5.2 (segurança/superfície de ataque), 3.1b (variabilidade em sistemas reais), 4.1–4.3 (feature toggles).
+- **Pronto quando:** cada afirmação da Proposta (reuso, segurança, ausência no binário) tiver um resultado que a confirme ou refute.
+
+### 3.6 Ameaças à Validade *(subseção de 3.5 ou seção própria)*
+
+- **Objetivo:** discutir os limites do estudo (padrão em TCCs orientados a evidência).
+- **Conteúdo sugerido:** protótipo único e domínio único (validade externa); escopo do "Design Metamórfico" que **não** cobre autenticação/autorização/rate limiting (já delimitado na seção *Segurança por ausência*); métricas escolhidas.
+
+### 3.7 Conclusão e Trabalhos Futuros
+
+- **Objetivo:** retomar objetivos × resultados e apontar continuidade.
+- **Conteúdo sugerido:**
+  - Síntese: a arquitetura reusou código sem duplicação e reduziu a superfície de ataque por construção.
+  - **Trabalhos futuros:** metamorfose que atinge camadas mais profundas (domínio/repositórios) — a ideia de granularidade mais grossa/composição descrita em `CITACOES_ABNT.md` (Eixo 3); automação da geração de *pipelines* por variante; aplicação a outro domínio; medição de segurança em produção; integração das camadas complementares (JWT/OAuth2, rate limiting).
+- **Pronto quando:** cada objetivo específico for explicitamente respondido.
+
+---
+
+## 4. Checklist priorizado de próximos passos
+
+1. [ ] **Promover o Referencial Teórico a capítulo** (mover o que já existe + expandir). *Base pronta.*
+2. [ ] **Escrever Trabalhos Relacionados** a partir da tabela comparativa do `CASE_STUDY.md`.
+3. [ ] **Definir a Metodologia (DSR)** e amarrar cada objetivo específico a um método de verificação.
+4. [ ] **Redigir o Desenvolvimento** com trechos de código, `application.properties` e comandos de *build*.
+5. [ ] **Executar a Avaliação** — começar pelo experimento 1 (inspeção do JAR), que é rápido e prova a tese central.
+6. [ ] **Coletar métricas** de reuso e de superfície de ataque (experimentos 2 e 3).
+7. [ ] **Escrever Resultados/Discussão e Ameaças à Validade**.
+8. [ ] **Concluir** com trabalhos futuros.
+9. [ ] **Produzir as figuras** (o `CASE_STUDY.md` traz os textos; faltam os diagramas — inclusive substituir os placeholders `[Trocar imagem]` da proposta).
+
+> **Sugestão de ordem de execução:** 1 → 5 (o experimento de inspeção do JAR dá o resultado mais forte com o menor esforço e ajuda a calibrar todo o resto) → 3/4 → 2 → 6/7 → 8 → 9.
+
+---
+
+## 5. Riscos e cuidados
+
+- **Consistência de citações:** manter a convenção autor-data alinhada entre a Proposta e os documentos de apoio (atenção às versões de registro vs. preprint de 5.1 e 5.2, já anotadas em `REFERENCIAS_CIENTIFICAS.md`).
+- **Não duplicar o estudo de caso:** o `CASE_STUDY.md` é insumo; o capítulo de Desenvolvimento deve resumi-lo e referenciá-lo, não copiá-lo.
+- **Escopo da segurança:** manter sempre explícito que a segurança por ausência é a *primeira linha de defesa*, não a única.
+- **Reprodutibilidade:** registrar versões e comandos exatos para que a avaliação seja repetível.
+
+---
+
+## 6. Insumos já disponíveis (mapa rápido)
+
+| Necessidade | Onde buscar |
+|---|---|
+| Conceitos e citações (ABNT) | `docs/case-study/CITACOES_ABNT.md`, `docs/case-study/REFERENCIAS_CIENTIFICAS.md` |
+| PDFs das referências | `docs/refs/` |
+| Detalhes do protótipo (arquitetura, entidades, endpoints, build) | `docs/case-study/CASE_STUDY.md` |
+| Tese de segurança por ausência e tabela comparativa | `docs/case-study/CASE_STUDY.md` (seção 11) e a seção *Segurança por ausência* da Proposta |
+| Código-fonte | raiz do repositório (`src/main/kotlin/edu/uerj/...`) |
