@@ -58,8 +58,118 @@ O que **falta** para transformar a proposta num TCC completo:
 - ~~Proposta: Arquitetura Metamórfica (capítulo redigido)~~ → **implementado no TCC** (seções 4.1–4.6), substituindo a redação preliminar. Rascunho de trabalho mantido em `PROPOSTA-ARQUITETURA-METAMORFICA.md`.
 - ~~Metodologia~~ → **rascunho concluído** em `METODOLOGIA.md`.
 - ~~Desenvolvimento / Implementação do Protótipo~~ → **rascunho concluído** em `DESENVOLVIMENTO.md`.
-- Avaliação, Resultados e Discussão.
+- ~~Avaliação, Resultados e Discussão~~ → **rascunho iniciado** em `AVALIACAO.md`, com os resultados de PP2 e PP3 já coletados e os demais marcados como `[A PREENCHER]`.
 - Conclusão e Trabalhos Futuros.
+
+---
+
+## 1.1 ⛔ Pendência crítica — a tese afirma mais do que o artefato demonstra
+
+> **Estado:** aberta. **Bloqueia:** o capítulo de Avaliação (experimento 1 / PP2) e, por consequência, a redação definitiva da *segurança por ausência*. **Descrição única:** esta seção é a **fonte da verdade** sobre o assunto; os demais pontos do repositório que tocam a tese devem **remeter a ela**, nunca reexpor o problema.
+
+### O que foi observado
+
+Em 9 jul. 2026 executou-se, pela primeira vez, o experimento 1 (inspeção do artefato) sobre um *build* real:
+
+```bash
+BFF_API_EXTERNAL_ACTIVE=true BFF_API_INTERNAL_ACTIVE=false ./gradlew quarkusBuild -x test
+```
+
+**O artefato inspecionado foi o *build* local de desenvolvimento** — a aplicação como existe durante o ciclo de codificação e depuração, produzida na máquina do desenvolvedor, com o estado do diretório `build/`, o cache do Gradle e as variáveis da sessão. É o modo de depuração, não o programa final que roda em produção. O que se descreve abaixo é o que ocorre nesse artefato.
+
+**A mesma análise foi então repetida sobre o artefato de produção** — o gerado no estágio de *builder* do `Dockerfile`, isolado do estado local e a partir das *flags* de `--build-arg` (ver *Builds de análise (produção)*, abaixo) — e **reproduz o mesmo comportamento**, conforme registrado ao final desta seção.
+
+**Somente o artefato de produção integra a avaliação.** A observação sobre o *build* local fica registrada aqui como o **modo pelo qual o problema foi descoberto**, e não como experimento do trabalho: medir sobre um artefato que depende do diretório `build/` da máquina, do cache do Gradle e das variáveis da sessão não sustentaria afirmação alguma sobre o que é entregue. O capítulo de Avaliação e o desenho experimental da Metodologia consideram exclusivamente as variantes de produção.
+
+O resultado **contraria o procedimento de verificação prescrito** hoje no `CASE_STUDY.md` (seção 10) e no `DESENVOLVIMENTO.md` (seção 6.8). Os dois mandam inspecionar o JAR da aplicação:
+
+```bash
+unzip -l build/quarkus-app/app/modular-bff-*.jar | grep "adapters/api/v1"
+```
+
+e esperam que `OrderInternalController` esteja ausente. Ele **está presente**:
+
+```
+edu/uerj/adapters/api/v1/OrderExternalController.class
+edu/uerj/adapters/api/v1/OrderGeneralController.class
+edu/uerj/adapters/api/v1/OrderInternalController.class   ← presente, com a flag em false
+```
+
+A razão é que `build/quarkus-app/app/*.jar` é a saída **bruta do compilador Kotlin**, anterior à fase de *augmentation* do Quarkus. A anotação `@IfBuildProperty` não atua sobre o compilador: ela atua sobre o **registro de beans CDI** e sobre a **geração das rotas REST**, cujo produto vive em `build/quarkus-app/quarkus/generated-bytecode.jar`. É nesse artefato que a metamorfose é observável:
+
+```bash
+unzip -l build/quarkus-app/quarkus/generated-bytecode.jar | grep "adapters/api/v1"
+```
+
+```
+OrderExternalController_Bean.class                                ✓
+OrderExternalController$quarkusrestinvoker$createOrder…           ✓
+OrderGeneralController_Bean.class                                 ✓
+OrderGeneralController$quarkusrestinvoker$getOrderById…           ✓
+OrderGeneralController$quarkusrestinvoker$listOrders…             ✓
+# OrderInternalController_Bean.class                              AUSENTE
+# OrderInternalController$quarkusrestinvoker$updateStatusOrder…   AUSENTE
+```
+
+### Confirmação sobre o artefato de produção
+
+Geradas as três variantes com `make container/build/variants` e inspecionadas com `make artifact/analysis`, o comportamento é idêntico ao observado no *build* de desenvolvimento. Em **todas as três** imagens, `app/*.jar` contém as três classes de *controller*:
+
+```
+edu/uerj/adapters/api/v1/OrderExternalController.class
+edu/uerj/adapters/api/v1/OrderGeneralController.class
+edu/uerj/adapters/api/v1/OrderInternalController.class
+```
+
+Já os **pontos de entrada** registrados em `quarkus/generated-bytecode.jar` variam exatamente conforme as *flags*:
+
+| Variante | *Beans* e *invokers* presentes |
+|---|---|
+| `bff-default` | `OrderGeneralController_Bean` + *invokers* de `getOrderById` e `listOrders` |
+| `bff-internal` | os do `default` + `OrderInternalController_Bean` e *invoker* de `updateStatusOrder` |
+| `bff-external` | os do `default` + `OrderExternalController_Bean` e *invoker* de `createOrder` |
+
+A separação entre "classe presente" e "ponto de entrada ausente" é, portanto, uma propriedade do artefato **entregue**, e não um efeito do ambiente de desenvolvimento. O empacotamento de produção é o mesmo `fast-jar` do *build* local, o que explica a coincidência.
+
+### O que isso implica para a tese
+
+A tese **sobrevive, mas está enunciada de forma mais forte do que o artefato de desenvolvimento sustenta**. Convém separar as duas afirmações:
+
+| Afirmação | Situação no artefato de desenvolvimento |
+|---|---|
+| Não há *bean* CDI, não há *invoker* REST, não há rota registrada; nenhuma configuração de runtime reativa o endpoint | ✅ **Verdadeira e verificável** no `generated-bytecode.jar` |
+| A classe do controller "não foi compilada", "não é compilada no artefato", "não existe no binário", "sequer é compilada nele" | ❌ **Falsa ao pé da letra** — o bytecode da classe permanece no `app/*.jar`, inerte e inalcançável |
+
+Trechos que hoje sustentam a afirmação falsa. A correção depende do que a análise do artefato de produção revelar — se ela confirmar o mesmo comportamento, todos passam à formulação do item 1 do encaminhamento:
+
+- `Proposta TCC …md` — seção 4.5, primeiro item da lista ("a classe que a declara **não foi compilada** nele") e último parágrafo da 4.5 ("garante-se que tais operações **sequer sejam compiladas** nele").
+- `Proposta TCC …md` — seções 2.4 e 3.2 ("ele **deixa de existir** no artefato final"; "ela simplesmente **não é compilada**"); mesmos trechos nos rascunhos `REFERENCIAL-TEORICO.md` (2.4) e `TRABALHOS-RELACIONADOS.md` (3.2, 3.3).
+- `PROPOSTA-ARQUITETURA-METAMORFICA.md` — seções 4.2, 4.5.
+- `DESENVOLVIMENTO.md` — seção 6.5 ("a classe **não é compilada** no artefato") e o procedimento da 6.8.
+- `CASE_STUDY.md` — seções 3 ("o endpoint simplesmente **não existe no binário**"), 10 (procedimento e saída esperada) e 11.
+- `REFERENCIAS_CIENTIFICAS.md` (3.3) e `CITACOES_ABNT.md` (glosa do Eixo 3) — glosas que repetem "não existe no binário".
+
+O risco acadêmico é concreto: um leitor que execute o comando publicado no próprio trabalho verá o controller do outro modo listado, e a evidência central da contribuição fica desmentida pelo próprio procedimento.
+
+### Encaminhamento proposto (a decidir)
+
+0. **Repetir a análise sobre o artefato de produção.** Gerar as três variantes pelo `Dockerfile` (alvos `make container/build/*`) e inspecionar cada imagem com `make artifact/entrypoints/*`. É o passo que converte a observação acima — feita no artefato de depuração — em evidência publicável, e é pré-requisito dos itens seguintes. O empacotamento de produção pode diferir do local (modo `fast-jar` versus *uber-jar*, ausência de resíduos do `build/` da máquina), e a redação final deve descrever o que o artefato entregue de fato contém.
+1. **Reancorar a tese no *ponto de entrada*, não na classe.** Substituir "o endpoint não existe no binário" por formulação do tipo "o artefato não contém o ponto de entrada: não há *bean*, *invoker* nem rota registrada". Isso preserva integralmente o argumento de superfície de ataque de MANADHATA; WING (2011), cuja unidade de medida é o **ponto de entrada**, e não a classe — o que, a rigor, torna a formulação corrigida **mais aderente** à métrica citada do que a original.
+2. **Trocar o procedimento de verificação** em `CASE_STUDY.md` (10), `DESENVOLVIMENTO.md` (6.8) e `METODOLOGIA.md` (5.1/5.2): inspecionar `quarkus/generated-bytecode.jar` filtrando por `_Bean` e `quarkusrestinvoker`, e não `app/*.jar`.
+3. **Investigar o *build* nativo** (`-Dquarkus.native.enabled=true`): a *dead code elimination* do GraalVM possivelmente elimina também o bytecode da classe, o que restauraria a versão forte da tese — desta vez de forma literalmente verdadeira. **Hipótese não testada**; se confirmada, vira uma seção da Avaliação e um argumento adicional. Se refutada, a versão do item 1 é a definitiva.
+4. **Registrar o achado como resultado**, não como erratum: a distinção entre "classe presente e inerte" e "ponto de entrada ausente" é exatamente o tipo de precisão que o capítulo de Avaliação existe para produzir, e o contraste com a *feature flag* em runtime permanece intacto (lá o ponto de entrada **existe e responde**).
+
+> **Nota de escopo:** os artefatos analisados devem ser os de **produção** (imagem Docker), não os do *build* de desenvolvimento — ver a seção *Builds de análise* logo abaixo.
+
+---
+
+## 1.2 Builds de análise (produção) — insumo do capítulo de Avaliação
+
+> **Distinção que o TCC precisa deixar explícita.** O `make debug/build` compila o projeto **na máquina do desenvolvedor** e serve ao ciclo de desenvolvimento e depuração; seu resultado depende do estado local (`build/`, cache do Gradle, variáveis de ambiente da sessão). Ele **não** é o artefato a ser medido.
+>
+> O artefato de análise é o produzido **dentro do `Dockerfile`**, em estágio de *builder* isolado, a partir do código-fonte e das *flags* passadas por `--build-arg`. É esse o artefato que se aproxima do que iria a produção e é ele, e somente ele, que deve alimentar as medições de PP2 (ausência do ponto de entrada), PP3 (superfície de ataque) e PP4 (custo operacional).
+>
+> As variantes de análise são três, geradas pelos alvos `make container/build/default`, `.../internal` e `.../external`, e inspecionadas por `make artifact/entrypoints/*`. A execução e os resultados obtidos ficam registrados na seção correspondente do capítulo de Avaliação.
 
 ---
 
@@ -73,7 +183,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 4. ✅ Proposta: Arquitetura Metamórfica — **implementado no TCC** (seções 4.1–4.6); rascunho de trabalho em `PROPOSTA-ARQUITETURA-METAMORFICA.md`
 5. 🟡 Metodologia — rascunho em `METODOLOGIA.md`
 6. 🟡 Desenvolvimento / Implementação do Protótipo — rascunho em `DESENVOLVIMENTO.md`
-7. ⬜ Avaliação, Resultados e Discussão
+7. 🟡 Avaliação, Resultados e Discussão — rascunho em `AVALIACAO.md`
 8. ⬜ Conclusão e Trabalhos Futuros
 9. ✅ Referências
 
@@ -193,8 +303,8 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 2b. [x] **Implementar a Proposta** — rascunho `PROPOSTA-ARQUITETURA-METAMORFICA.md` transposto para o TCC (seções 4.1–4.6), com as figuras preservadas e os cabeçalhos normalizados.
 3. [x] **Definir a Metodologia (DSR)** e amarrar cada objetivo específico a um método de verificação — rascunho em `METODOLOGIA.md`.
 4. [x] **Redigir o Desenvolvimento** com trechos de código, `application.properties` e comandos de *build* — rascunho em `DESENVOLVIMENTO.md`.
-5. [ ] **Executar a Avaliação** — começar pelo experimento 1 (inspeção do JAR), que é rápido e prova a tese central.
-6. [ ] **Coletar métricas** de reuso e de superfície de ataque (experimentos 2 e 3).
+5. [x] **Executar a Avaliação** — experimento 1 (inspeção do artefato) executado nas três variantes de produção; resultados em `AVALIACAO.md` (seções 7.2 e 7.3). O achado obrigou a reformular a tese: ver a pendência crítica da seção 1.1.
+6. [ ] **Coletar métricas** de reuso e de superfície de ataque (experimentos 2 e 3) — o método de cálculo do reuso está definido em `METRICA-REUSO.md`; falta executá-lo.
 7. [ ] **Escrever Resultados/Discussão e Ameaças à Validade**.
 8. [ ] **Concluir** com trabalhos futuros.
 9. [ ] **Produzir as figuras** (o `CASE_STUDY.md` traz os textos; faltam os diagramas — inclusive substituir os placeholders `[Trocar imagem]` da proposta).
@@ -228,6 +338,8 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 | Referencial Teórico redigido | `docs/case-study/REFERENCIAL-TEORICO.md` |
 | Trabalhos Relacionados redigido | `docs/case-study/TRABALHOS-RELACIONADOS.md` |
 | Metodologia (DSR) redigida | `docs/case-study/METODOLOGIA.md` |
+| Método de cálculo da métrica de reuso (PP1) | `docs/case-study/METRICA-REUSO.md` |
+| Resultados coletados e evidências pendentes | `docs/case-study/AVALIACAO.md` |
 | Desenvolvimento redigido | `docs/case-study/DESENVOLVIMENTO.md` |
 | Onde buscar fontes + *modus operandi* de pesquisa | `docs/FONTES-ACADEMICAS.md` |
 | Código-fonte | raiz do repositório (`src/main/kotlin/edu/uerj/...`) |

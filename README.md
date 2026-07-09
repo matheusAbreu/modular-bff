@@ -74,7 +74,7 @@ O projeto utiliza um [Makefile](Makefile) para padronizar as tarefas comuns.
 | Comando | Descrição |
 | :--- | :--- |
 | `make dev` | Inicia o Quarkus em modo de desenvolvimento (Live Coding). |
-| `make build` | Compila e empacota a aplicação via Gradle. |
+| `make debug/build` | Compila e empacota a aplicação via Gradle, para desenvolvimento e depuração. |
 | `make test` | Reinicia a infraestrutura e executa todos os testes automatizados. |
 | `make lint` | Executa o KtLint para verificar o estilo do código. |
 | `make detekt` | Executa o Detekt para análise estática do código. |
@@ -90,11 +90,26 @@ O projeto utiliza um [Makefile](Makefile) para padronizar as tarefas comuns.
 
 A aplicação suporta três modos de build, controlados via `--build-arg`:
 
+> O build da imagem Docker ocorre em estágio de *builder* isolado, a partir do código-fonte. É ele que produz o artefato como se espera para produção — diferente do `make debug/build`, que compila localmente para desenvolvimento e depuração.
+
 | Comando | Descrição |
 | :--- | :--- |
-| `make container/build` | Build da imagem Docker no modo padrão (external + internal ativos). |
+| `make container/build` | Build da imagem Docker com ambos os modos ativos (external + internal). |
+| `make container/build/default` | Build da imagem Docker sem as rotas internas nem externas. |
 | `make container/build/external` | Build da imagem Docker somente com a API externa ativa. |
 | `make container/build/internal` | Build da imagem Docker somente com a API interna ativa. |
+| `make container/build/variants` | Build das três variantes (`default`, `internal`, `external`) em sequência. |
+
+### Docker — Inspeção dos Artefatos
+
+Cada variante pode ser inspecionada para verificar quais *controllers* foram compilados e quais pontos de entrada (beans CDI e rotas REST) foram efetivamente registrados no artefato.
+
+| Comando | Descrição |
+| :--- | :--- |
+| `make artifact/entrypoints/default` | Inspeciona o artefato de produção padrão. |
+| `make artifact/entrypoints/internal` | Inspeciona o artefato de produção interno. |
+| `make artifact/entrypoints/external` | Inspeciona o artefato de produção externo. |
+| `make artifact/analysis` | Inspeciona as três variantes lado a lado. |
 
 ### Docker — Execução da Aplicação
 

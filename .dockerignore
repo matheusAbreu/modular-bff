@@ -1,5 +1,12 @@
-
-!build/*-runner
-!build/*-runner.jar
-!build/lib/*
-!build/quarkus-app/*
+# O estágio de builder do Dockerfile compila a partir do código-fonte.
+# Produtos de build local ficam fora do contexto, para que o artefato de
+# produção não herde estado da máquina do desenvolvedor.
+.git/
+.gradle/
+.kotlin/
+.quarkus/
+.idea/
+.vscode/
+build/
+bin/
+docs/

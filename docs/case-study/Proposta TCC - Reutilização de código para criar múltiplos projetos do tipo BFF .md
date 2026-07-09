@@ -46,7 +46,7 @@ Taibi, Lenarduzzi e Pahl (2018) alertam que o reuso de API deve ser tratado com 
 
 ## Objetivos Geral e Específicos
 
-Este trabalho tem como objetivo apresentar uma proposta de arquitetura de projeto que visa fornecer um melhor aproveitamento de código, onde múltiplas aplicações são geradas de um mesmo projeto, de forma que elas se tornem mais seguras, resilientes e leves ao ignorarem os trechos dos projeto que não lhe competem
+Este trabalho tem como objetivo apresentar uma proposta de arquitetura de projeto que visa fornecer um melhor aproveitamento de código, na qual múltiplas aplicações são geradas de um mesmo projeto, de forma que se tornem mais seguras, resilientes e de melhor manutenibilidade ao ignorarem os trechos do projeto que não lhes competem. A vantagem reivindicada não é a redução do tamanho do artefato, mas o **reuso**: concentrar em um único ponto o código comum a todas as variantes reduz o esforço de manutenção, ao mesmo tempo que a supressão, em cada artefato, das operações alheias ao seu cliente reduz a exposição.
 
 ## Objetivos específicos
 

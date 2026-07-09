@@ -173,7 +173,9 @@ Fundamenta a decisão de estruturar o projeto em Ports & Adapters, isolando o do
 
 ## 7. Metodologia de Pesquisa — Design Science Research (DSR)
 
-> ⏳ **Seção em análise pendente.** As obras abaixo fundamentam o método adotado no capítulo de **Metodologia** (`METODOLOGIA.md`), que atualmente descreve a DSR **sem citação**. Foram localizadas em bases reais e tiveram os metadados conferidos na fonte (venue, DOI/ISBN), mas **ainda não foram lidas em profundidade nem integradas ao texto**. Antes de citá-las no TCC: (1) validar edição/páginas na fonte; (2) ler ao menos uma referência de processo (vom Brocke, Hevner & Maedche) e uma de enquadramento/rigor (Baskerville et al. ou Dresch et al.); (3) inserir as citações nos pontos correspondentes da Metodologia (definição da DSR e as seis atividades).
+> ✅ **Pendência resolvida.** As referências **7.2** (processo) e **7.3** (enquadramento da contribuição) foram obtidas, verificadas no texto completo e integradas ao capítulo de Metodologia; acrescentou-se a **7.6**, que dá enquadramento **recente e específico de Engenharia de Software**. As demais (7.1, 7.4, 7.5) permanecem sem verificação e **não devem ser citadas**.
+>
+> ⚠️ **Nota sobre a idade das fontes.** Peffers et al. (7.2) é de 2007. Como no caso das métricas de reuso (seção 8), adota-se **redundância deliberada**: 7.3 (2018) atesta que o modelo de processo de Peffers et al. segue sendo referência corrente na literatura de DSR, e 7.6 (2020) sustenta a adequação do paradigma ao campo da Engenharia de Software — que é o campo deste trabalho, e não o de Sistemas de Informação, de onde a DSR provém.
 >
 > ⚠️ **Nota sobre a composição das referências:** privilegiaram-se fontes **mais recentes** (2018–2020) — vom Brocke, Hevner & Maedche (7.1) e Baskerville et al. (7.3) — em lugar dos marcos clássicos, mas o **Peffers et al. (2007) foi mantido de forma redundante** (7.2), por ser a fonte original do modelo das **seis atividades** usado na seção *Etapas da Pesquisa*. Assim, preserva-se a proveniência exata dessa estrutura sem abrir mão de embasamento atualizado. Igualmente foi dispensado apenas o Hevner et al. (2004), cujo papel de enquadramento passou ao vom Brocke, Hevner & Maedche (2020).
 
@@ -192,18 +194,29 @@ Fundamentam a escolha da **Design Science Research** como método condutor — a
 - **Fonte:** Journal of Management Information Systems, v. 24, n. 3, p. 45–77, 2007. DOI: 10.2753/MIS0742-1222240302
 - **Link (versão de registro, Taylor & Francis — acesso pago):** https://www.tandfonline.com/doi/abs/10.2753/MIS0742-1222240302
 - **Link (versão pública — PDF via Semantic Scholar):** https://www.semanticscholar.org/paper/A-Design-Science-Research-Methodology-for-Systems-Peffers-Tuunanen/186e57ffadbe45a30de067b0259357cded8db968
-- **Acesso:** 🟢 **Público.** Cópias em PDF amplamente disponíveis (Semantic Scholar, ResearchGate, repositórios). A versão de registro (Taylor & Francis/ACM) é paga.
-- **Resumo:** Propõe e demonstra a metodologia DSRM, estruturada em **seis atividades**: identificação do problema e motivação; definição dos objetivos da solução; projeto e desenvolvimento; demonstração; avaliação; e comunicação.
-- **Relação com o TCC:** Fonte **original** do modelo das seis atividades usado na seção *Etapas da Pesquisa* da Metodologia. Mantida de forma **redundante** ao lado das referências recentes (7.1) para preservar a proveniência exata dessa estrutura. Embora seja de 2007, tem acesso público e é a citação canônica do processo DSR. ⏳ *Análise pendente.*
+- **Acesso:** 🟢 **Público.** Reprint em PDF obtido em repositório aberto (indico.cern.ch). A versão de registro (Taylor & Francis) é paga. **PDF no acervo:** `docs/refs/7.2 - A Design Science Research Methodology for Information Systems Research.pdf`.
+- **Resumo (verificado na fonte):** Sintetiza sete trabalhos anteriores num modelo de processo composto de **seis atividades em sequência nominal** (p. 52): identificação do problema e motivação; definição dos objetivos de uma solução; projeto e desenvolvimento; demonstração; avaliação; e comunicação (p. 46). Demonstra e avalia a metodologia por meio de quatro estudos de caso.
+- **Relação com o TCC:** fonte **original e verificada** do modelo das seis atividades usado na seção *Etapas da Pesquisa* da Metodologia. ✅ *Verificado; citações inseridas.*
+- ⚠️ **Ambiguidade de ano.** O volume 24, n. 3 do JMIS é de inverno de 2007–08; parte da literatura — inclusive Baskerville et al. (7.3) — cita a obra como **2008**. Este trabalho adota **2007**, conforme a data de registro do DOI. Manter a forma uniforme em todas as citações.
 
 ### 7.3 Baskerville, R.; Baiyere, A.; Gregor, S.; Hevner, A.; Rossi, M. — *Design Science Research Contributions: Finding a Balance between Artifact and Theory* (JAIS, 2018)
 
 - **Fonte:** Journal of the Association for Information Systems, v. 19, n. 5, p. 358–376, 2018. DOI: 10.17705/1jais.00495
 - **Link (página oficial, AIS eLibrary):** https://aisel.aisnet.org/jais/vol19/iss5/3/
 - **Link (versão pública — publisher's version, repositório CBS):** https://research-api.cbs.dk/ws/files/59353297/abayomi_baiyere_et_al_design_science_research_contributions_publishersversion.pdf
-- **Acesso:** 🟢 **Público.** A versão do editor está aberta no repositório institucional da Copenhagen Business School. A página do AIS eLibrary bloqueia acesso automatizado (HTTP 403), mas o PDF é obtível pelo repositório CBS.
-- **Resumo:** Discute o que constitui uma contribuição aceitável em DSR — o artefato, a teoria de projeto ou ambos — e oferece orientações e recomendações acionáveis para autores e revisores posicionarem e avaliarem o rigor de trabalhos de *design science*.
-- **Relação com o TCC:** Referência **recente e revisada por pares** que sustenta o enquadramento da contribuição deste trabalho como **artefato** (arquitetura + protótipo) e ajuda a justificar os critérios de avaliação. Substitui o papel de processo/rigor antes atribuído a Peffers et al. (2007). ⏳ *Análise pendente.*
+- **Acesso:** 🟢 **Público.** Versão do editor aberta no repositório institucional da Copenhagen Business School. **PDF no acervo:** `docs/refs/7.3 - Design Science Research Contributions - Finding a Balance between Artifact and Theory.pdf`.
+- **Resumo (verificado na fonte):** Discute o que constitui contribuição aceitável em DSR — o **artefato de projeto**, a **teoria de projeto**, ou ambos — e oferece recomendações acionáveis para autores e revisores. Ao revisar a literatura de processo, registra que "Peffers, Tuunanen, Rothenberger e Chatterjee propõem um método e um esboço de processo para conduzir DSR".
+- **Relação com o TCC:** cumpre **duas funções**. (i) **Enquadramento da contribuição:** sustenta posicionar a contribuição deste trabalho no **artefato** (arquitetura + protótipo), sem reivindicar formulação de teoria de projeto. (ii) **Atualidade do processo:** por endossar explicitamente o modelo de Peffers et al., serve de corroboração recente (2018) de que a estrutura de seis atividades permanece referência corrente. ✅ *Verificado; citações inseridas.*
+- ⚠️ **Gênero do texto.** Trata-se de um **editorial** do JAIS, e não de artigo de pesquisa. É revisado e citável, mas o gênero deve ser considerado ao ponderar seu peso como evidência.
+
+### 7.6 Engström, E.; Storey, M.-A.; Runeson, P.; Höst, M.; Baldassarre, M. T. — *How software engineering research aligns with design science: a review* (Empirical Software Engineering, 2020) — ✅ VERIFICADO
+
+- **Fonte:** Empirical Software Engineering, v. 25, p. 2630–2660, 2020. DOI: 10.1007/s10664-020-09818-7
+- **Link (aberto):** https://link.springer.com/content/pdf/10.1007/s10664-020-09818-7.pdf · *Preprint:* arXiv:1904.12742
+- **Acesso:** 🟢 Público (*open access* híbrido). **PDF no acervo:** `docs/refs/7.6 - How software engineering research aligns with design science.pdf`.
+- **Resumo (verificado na fonte):** Revisão que aplica a lente de *design science* à pesquisa em Engenharia de Software, avaliando se ela ajuda a resumir e a apreciar contribuições da área. Registra que, "à semelhança de outras ciências do projeto, boa parte da pesquisa em engenharia de software visa projetar soluções para problemas práticos em contexto real" (p. 2630) e que a *design science*, "embora há tempos sugerida como paradigma útil para a pesquisa em engenharia de software, não é comumente usada" para enquadrá-la (p. 2652).
+- **Relação com o TCC:** é o enquadramento **recente e do campo correto**. A DSR provém de Sistemas de Informação; este trabalho é de Engenharia de Software. Engström et al. (2020) sustentam a adequação do paradigma a pesquisas de ES que projetam soluções para problemas práticos — exatamente a natureza da Arquitetura Metamórfica e de seu protótipo. Fecha, junto de 7.3, a redundância de fontes recentes que ampara a citação de Peffers et al. (2007).
+- ⚠️ **Limite do apoio.** O artigo **não** descreve nem endossa as seis atividades do DSRM; sua contribuição é de enquadramento do paradigma. A corroboração do modelo de processo cabe a 7.3, não a esta fonte.
 
 ### 7.4 Wieringa, R. J. — *Design Science Methodology for Information Systems and Software Engineering* (Springer, 2014)
 
@@ -223,6 +236,52 @@ Fundamentam a escolha da **Design Science Research** como método condutor — a
 
 ---
 
+## 8. Métricas de Reuso (fundamento do cálculo de PP1)
+
+> Fundamentam o **método de cálculo da métrica de reuso**, detalhado em `METRICA-REUSO.md`. Todas as fontes foram obtidas e conferidas no texto completo.
+>
+> ⚠️ **Nota sobre a idade das fontes.** As formulações originais das métricas (8.1, de 1996; 8.2, de 2005) são as fontes canônicas e permanecem as **referências das fórmulas**. Para não apoiar a avaliação apenas em literatura de três décadas, adota-se deliberadamente uma **redundância**: 8.4 (2016) e 8.3 (2024) demonstram que as mesmas métricas seguem em uso na literatura empírica — a primeira quanto ao `RSI`, a segunda quanto ao `reuse level` —, compondo a linha 1996 → 2016 → 2024. Trata-se de corroboração, não de substituição: cada citação deve indicar a fonte apropriada ao que afirma.
+
+### 8.1 Frakes, W.; Terry, C. — *Software Reuse: Metrics and Models* (ACM Computing Surveys, 1996) — ✅ VERIFICADO
+
+- **Fonte:** ACM Computing Surveys, v. 28, n. 2, p. 415–435, 1996. DOI: 10.1145/234528.234531
+- **Link (versão de registro, ACM — acesso pago):** https://dl.acm.org/doi/10.1145/234528.234531
+- **Link (versão de autor, aberta):** relatório técnico TR-95-07, Virginia Tech — http://eprints.cs.vt.edu/archive/00000422/
+- **Acesso:** 🟢 Aberto pela versão de autor. **PDF no acervo:** `docs/refs/8.1 - Software Reuse and Reusability Metrics and Models (TR-95-07).pdf`, conferido nas seções *Business Reuse Metrics*, *Amount of Reuse* e *Reuse Level*.
+- **Resumo (verificado na fonte):** Survey que classifica métricas e modelos de reuso em seis tipos (custo-benefício, avaliação de maturidade, **quantidade de reuso**, modos de falha, avaliação de reusabilidade e métricas de biblioteca). Documenta o **reuse percent** de Poulin et al. — `RSI/(RSI+SSI) × 100` — e define os **reuse level metrics**: dado um item de nível superior composto de `L` itens de nível inferior, dos quais `E` vêm de repositório externo e `M` são internos usados mais de uma vez, tem-se `ERL = E/L`, `IRL = M/L` e `TRL = ERL + IRL`, todos entre 0 e 1.
+- **Relação com o TCC:** É a **fonte direta das fórmulas** usadas para responder à PP1. O trabalho transpõe `RSI`/`SSI` da distinção "código herdado × código novo" para "base comum da linha de produto × adaptador específico da variante" — transposição declarada e justificada em `METRICA-REUSO.md` (seção 2.1).
+- ⚠️ **Atenção à citação de segunda mão:** o *reuse percent* é de **Poulin et al. (1993)**, cuja fonte primária **não foi obtida**. Citar via Frakes e Terry (1996).
+
+### 8.2 Frakes, W. B.; Kang, K. — *Software Reuse Research: Status and Future* (IEEE TSE, 2005) — ✅ VERIFICADO
+
+- **Fonte:** IEEE Transactions on Software Engineering, v. 31, n. 7, p. 529–536, jul. 2005. DOI: 10.1109/TSE.2005.85
+- **Link (aberto):** https://www.cse.chalmers.se/~feldt/courses/sple/papers/frakes_2005_sw_reuse_status_and_future.pdf
+- **Acesso:** 🟢 Público. **PDF no acervo:** `docs/refs/8.2 - Software Reuse Research - Status and Future.pdf`.
+- **Resumo (verificado na fonte):** Panorama da pesquisa em reuso de software. Define reuso como o uso de software existente para construir novo software e *reusabilidade* como a propriedade que indica a probabilidade de reuso. Reafirma a classificação de métricas de reuso (tipos de reuso, bibliotecas, custo-benefício, maturidade, **quantidade de reuso**, modos de falha, reusabilidade) e registra que "medição e experimentação em reuso e engenharia de domínio é uma área em que muito mais trabalho é necessário". Situa **engenharia de domínio como sinônimo de engenharia de linhas de produto**, cuja premissa é que sistemas novos são, em geral, **variantes** de sistemas já construídos.
+- **Relação com o TCC:** Dá enquadramento recente e revisado por pares (i) à escolha de triangular duas métricas em vez de reportar um número único e (ii) à leitura da Arquitetura Metamórfica como engenharia de domínio/linha de produto. Note-se que o artigo cita o **Koala** como método que integra componentes **em tempo de compilação**, precedente pertinente à variabilidade em *build-time*.
+
+### 8.3 Chen, X.; Usman, M.; Badampudi, D. — *Understanding and evaluating software reuse costs and benefits from industrial cases — A systematic literature review* (Information and Software Technology, 2024) — ✅ VERIFICADO
+
+- **Fonte:** Information and Software Technology, v. 171, art. 107451, 2024. DOI: 10.1016/j.infsof.2024.107451
+- **Link (aberto, CC BY):** https://doi.org/10.1016/j.infsof.2024.107451
+- **Acesso:** 🟢 Público — artigo *open access* sob licença CC BY. **PDF no acervo:** `docs/refs/8.3 - Understanding and evaluating software reuse costs and benefits (IST 2024).pdf`.
+- **Resumo (verificado na fonte):** Revisão sistemática sobre custos e benefícios do reuso relatados em casos industriais, com 30 estudos primários. Identifica nove benefícios e seis custos, sendo **melhor qualidade** e **produtividade** os mais investigados; entre as práticas de reuso, **linhas de produto de software** figuram no topo das que mais contribuem para os benefícios. Registra que o esforço para corrigir ou isolar erros é **reduzido** em ativos reusáveis, embora a proporção de erros que exigem correção mais longa seja maior neles. Vários estudos primários medem reuso pelas métricas de **External Reuse Level (ERL)** e **External Reuse Frequency**, relacionando-as a qualidade, produtividade e esforço.
+- **Relação com o TCC:** cumpre **duas funções**. (i) **Atualidade das métricas:** demonstra que o *reuse level* de Frakes e Terry (8.1) continua sendo instrumento corrente na literatura empírica revisada por pares — a escolha metodológica de `METRICA-REUSO.md` não repousa em fonte obsoleta. Os autores citam Frakes e Terry (ref. [24] do artigo) entre as fontes do benefício de produtividade. (ii) **Sustentação do objetivo geral:** ao vincular reuso a **manutenibilidade** e qualidade em casos industriais, dá lastro à reformulação do objetivo do trabalho, que trocou a promessa de artefatos "mais leves" pela de melhor manutenibilidade.
+- ⚠️ **Limites do apoio.** O artigo corrobora o **reuse level**, mas **não** discute o *reuse percent* de Poulin et al. (`RSI/(RSI+SSI)`), que permanece ancorado apenas em 8.1. Além disso, sua evidência é **mista**: um dos casos reporta relação marginalmente **negativa** entre `ERL` e a razão esforço/linhas de código, e outro estudo primário observa decaimento de desempenho com reuso. Ao citá-lo, não apresentar os achados como uniformemente favoráveis.
+
+### 8.4 Irshad, M.; Petersen, K.; Torkar, R.; Afzal, W. — *Capturing Cost Avoidance through Reuse: Systematic Literature Review and Industrial Evaluation* (EASE 2016) — ✅ VERIFICADO
+
+- **Fonte:** Proceedings of the 20th International Conference on Evaluation and Assessment in Software Engineering (EASE), Limerick, 2016, p. 1–12. DOI: 10.1145/2915970.2915989
+- **Link (versão de registro, ACM — acesso pago):** https://doi.org/10.1145/2915970.2915989
+- **Link (versão de autor, aberta):** https://torkar.github.io/pdfs/MohsinEaseCameraReady.pdf
+- **Acesso:** 🟢 Aberto pela versão de autor (*camera-ready*; o DOI impresso no PDF é um marcador de rascunho — usar o DOI de registro acima). **PDF no acervo:** `docs/refs/8.4 - Capturing Cost Avoidance through Reuse (EASE 2016).pdf`.
+- **Resumo (verificado na fonte):** Revisão sistemática sobre a captura de *cost avoidance* por meio do reuso, seguida de avaliação em ambiente industrial. Reconstrói o modelo de Poulin et al., no qual o custo direto evitado é estimado por `DCA = RSI × (1 − RCR) × NCC`, sendo `RSI` as linhas de código reusadas sem modificação e `RCR` o custo relativo do reuso; registra também a métrica de custo evitado em serviço/manutenção. Cita Frakes ao caracterizar os tipos de métrica de reuso — custos, **níveis de reuso** e reusabilidade — como "fundação para construir, manter e melhorar os processos de reuso e os produtos reusáveis".
+- **Relação com o TCC:** é a fonte que **sustenta a continuidade do `RSI`** — a grandeza do *reuse percent* adotado em `METRICA-REUSO.md` — em literatura revisada por pares posterior a Frakes e Terry (1996), preenchendo a lacuna deixada por 8.3, que corrobora o *reuse level* mas não o *reuse percent*. Junto de 8.3 (2024), compõe a linha temporal que evidencia a **permanência do método** ao longo das décadas: 1996 (formulação) → 2016 (uso e avaliação industrial) → 2024 (uso em revisão sistemática).
+- **Status:** **fonte principal** para a vigência do `RSI`. A data (2016) situa-se na fronteira do critério de dez anos, mas o critério de aceitação é o **mérito**: revisão sistemática seguida de avaliação em contexto industrial, publicada em conferência revisada por pares (EASE), com texto integral verificado. Não há, no acervo, fonte mais recente que cumpra esse papel.
+- ⚠️ **Ressalva de escopo.** O artigo emprega `RSI` dentro de um modelo de **custo evitado**, e não da fórmula de *reuse percent*. A corroboração é da **grandeza** e de sua vigência, não da razão `RSI/(RSI+SSI)`. Não atribuir ao artigo o que ele não afirma.
+
+---
+
 ## Resumo do Mapeamento Tema × Referência
 
 | Conceito do TCC | Referências de apoio |
@@ -233,6 +292,7 @@ Fundamentam a escolha da **Design Science Research** como método condutor — a
 | Compilação condicional vs. feature flag em runtime | 4.1 Rahman et al.; 4.2 Mahdavi-Hezaveh et al. (2021); 4.3 Mahdavi-Hezaveh et al. (2022) |
 | Segurança por redução de superfície de ataque | 5.1 Manadhata & Wing; 5.2 SMS Securing Microservices; 5.3 SoK Microservice Security |
 | Arquitetura Hexagonal / Clean Architecture | 6.1 Cockburn; 6.2 Martin |
+| Medição de reuso (PP1) e vigência do método | 8.1 Frakes & Terry (fórmulas); 8.2 Frakes & Kang; 8.4 Irshad et al. (`RSI`); 8.3 Chen, Usman & Badampudi (`reuse level`, manutenibilidade) |
 
 ---
 

@@ -110,10 +110,27 @@ O sistema gerencia o ciclo de vida completo de pedidos, composto por **11 entida
 
 ### Ciclo de Vida do Pedido
 
+O enum `OrderStatus` define os nove estados abaixo. Cada constante carrega um `id` numérico que fixa a ordem do fluxo e uma `description` em português, persistida no banco:
+
 ```
-NEW_ORDER → CONFIRMED → PAYMENT_PENDING → PAID
-→ PREPARING → SHIPPED → OUT_FOR_DELIVERY → DELIVERED
+NEW_ORDER (0)            → WAITING_PAYMENT (1)      → UNDER_FRAUD_ANALYSIS (2)
+→ PAID (3)               → INVOICE_BEGINNING (4)    → INVOICED (5)
+→ SEPARATION_BEGINNING (6) → SEPARATION_FINISHED (7) → DELIVERED (8)
 ```
+
+| Constante | `id` | `description` (valor persistido) |
+|---|---|---|
+| `NEW_ORDER` | 0 | Novo Pedido |
+| `WAITING_PAYMENT` | 1 | Aguardando Pagamento |
+| `UNDER_FRAUD_ANALYSIS` | 2 | Em análise de fraude |
+| `PAID` | 3 | Pagamento efetuado |
+| `INVOICE_BEGINNING` | 4 | Faturamento iniciado |
+| `INVOICED` | 5 | Faturamento realizado |
+| `SEPARATION_BEGINNING` | 6 | Separação iniciada |
+| `SEPARATION_FINISHED` | 7 | Separação realizada |
+| `DELIVERED` | 8 | Produto Entregue |
+
+O `id` é o que torna a validação de transição possível: `OrderService.updateStatus` só aceita um novo status cujo `id` seja **maior** que o atual, de modo que o pedido avança e nunca retrocede.
 
 ---
 
@@ -192,7 +209,7 @@ make db/seed         # Popula dados de teste
 make dev             # Inicia Quarkus em modo dev (Live Coding)
 make test            # Executa todos os testes
 make lint            # Executa KtLint
-make build           # Gera artefato JAR
+make debug/build     # Gera o artefato JAR de desenvolvimento/depuração
 ```
 
 ### Inspecionar a estrutura do artefato gerado
