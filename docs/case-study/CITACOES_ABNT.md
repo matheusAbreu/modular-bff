@@ -70,6 +70,12 @@ Complementarmente, o padrão de agregação também aparece em **PAHL; JAMSHIDI 
 >
 > *Tradução livre:* "Padrão de Projeto de Microsserviço Agregador – p. ex., um serviço que invoca outros para recuperar / processar dados."
 
+**NEWMAN (2015)** — a caracterização primária do BFF (fonte pública do autor; **paráfrase**, não citação direta, por ser artigo web protegido):
+
+Newman caracteriza o BFF como um serviço de borda (*edge service*) de propósito único, acoplado a uma experiência de usuário específica e mantido pela mesma equipe que constrói aquela interface — em contraste com um backend/gateway de propósito geral que serve a múltiplos clientes (NEWMAN, 2015). Situa a origem do padrão em observações na REA e no SoundCloud, e atribui a diretriz "*one experience, one BFF*" a Stewart Gleadow (NEWMAN, 2015).
+
+> *Glosa:* fonte **primária, pública e verificável** do conceito central do trabalho; sustenta a caracterização do BFF como backend dedicado a um único tipo de cliente. Optou-se por paráfrase (e não citação direta longa) por se tratar de artigo web protegido por direito autoral.
+
 ---
 
 ## Eixo 3 — Linhas de produto, variabilidade e derivação de produtos (fundamento da "Metamorfose")
@@ -209,7 +215,7 @@ E o respaldo à **separação do build em entregáveis independentes** (ressoa c
 | Argumento do TCC | Citações de apoio |
 |---|---|
 | Microsserviços descentralizados exigem agregação | PAHL; JAMSHIDI (2016, p. 137–140); TAIBI; LENARDUZZI; PAHL (2018, p. 221) |
-| API Gateway/BFF: API sob medida por frontend | TAIBI; LENARDUZZI; PAHL (2018, p. 223–224); PAHL; JAMSHIDI (2016, p. 140) |
+| API Gateway/BFF: API sob medida por frontend | TAIBI; LENARDUZZI; PAHL (2018, p. 223–224); PAHL; JAMSHIDI (2016, p. 140); NEWMAN (2015) |
 | Duplicação/custo com múltiplos BFFs; valor do reuso | TAIBI; LENARDUZZI; PAHL (2018, p. 224, 227) |
 | Metamorfose = variabilidade/derivação de produtos (SPL) | HORCAS; PINTO; FUENTES (2023, p. 377–381) |
 | `@IfBuildProperty` = variabilidade por anotação em build-time | HORCAS; PINTO; FUENTES (2023, p. 381); HUNSEN et al. (2016, p. 1, 6); BAUM et al. (2019, p. 1) |
@@ -232,6 +238,8 @@ HUNSEN, Claus; ZHANG, Bo; SIEGMUND, Janet; KÄSTNER, Christian; LESSENICH, Olaf;
 MANADHATA, Pratyusa K.; WING, Jeannette M. **An attack surface metric**. Pittsburgh: School of Computer Science, Carnegie Mellon University, 2005. (Technical Report CMU-CS-05-155). Versão publicada: MANADHATA, Pratyusa K.; WING, Jeannette M. An attack surface metric. **IEEE Transactions on Software Engineering**, [*s. l.*], v. 37, n. 3, p. 371-386, 2011. DOI: 10.1109/TSE.2010.60.
 
 MARTIN, Robert C. **Clean architecture**: a craftsman's guide to software structure and design. Boston: Prentice Hall, 2017.
+
+NEWMAN, Sam. **Backends For Frontends**. [*S. l.*], 18 nov. 2015. Disponível em: https://samnewman.io/patterns/architectural/bff/. Acesso em: 9 jul. 2026.
 
 PAHL, Claus; JAMSHIDI, Pooyan. Microservices: a systematic mapping study. In: INTERNATIONAL CONFERENCE ON CLOUD COMPUTING AND SERVICES SCIENCE, 6., 2016. **Proceedings** [...]. Setúbal: SciTePress, 2016. v. 1, p. 137-146. DOI: 10.5220/0005785501370146.
 

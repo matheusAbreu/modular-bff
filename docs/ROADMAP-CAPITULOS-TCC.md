@@ -19,7 +19,7 @@ O que a proposta **já** cobre:
 
 O que **falta** para transformar a proposta num TCC completo:
 
-- ~~Referencial Teórico como capítulo próprio~~ → **rascunho concluído** em `REFERENCIAL-TEORICO.md`.
+- ~~Referencial Teórico como capítulo próprio~~ → **implementado no TCC** (arquivo original `Proposta TCC …md`, como capítulo *Referencial Teórico* antes da Proposta). Rascunho de trabalho mantido em `REFERENCIAL-TEORICO.md`.
 - ~~Trabalhos Relacionados~~ → **rascunho concluído** em `TRABALHOS-RELACIONADOS.md`.
 - ~~Metodologia~~ → **rascunho concluído** em `METODOLOGIA.md`.
 - ~~Desenvolvimento / Implementação do Protótipo~~ → **rascunho concluído** em `DESENVOLVIMENTO.md`.
@@ -33,7 +33,7 @@ O que **falta** para transformar a proposta num TCC completo:
 Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a criar):
 
 1. ✅ Introdução
-2. 🟡 Referencial Teórico — rascunho em `REFERENCIAL-TEORICO.md`
+2. ✅ Referencial Teórico — **implementado no TCC** (`Proposta TCC …md`); rascunho de trabalho em `REFERENCIAL-TEORICO.md`
 3. 🟡 Trabalhos Relacionados — rascunho em `TRABALHOS-RELACIONADOS.md`
 4. 🟡 Proposta: Arquitetura Metamórfica — rascunho refinado em `PROPOSTA-ARQUITETURA-METAMORFICA.md` (original preservado)
 5. 🟡 Metodologia — rascunho em `METODOLOGIA.md`
@@ -48,7 +48,9 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 
 ## 3. Mapa dos capítulos a desenvolver
 
-### 3.1 Referencial Teórico *(promover a capítulo)*
+### 3.1 Referencial Teórico — ✅ implementado no TCC
+
+> **Status:** inserido no arquivo original `Proposta TCC …md` como capítulo *Referencial Teórico* (seções 2.1–2.7), antes da *Proposta*. A *Fundamentação teórica* embutida foi desduplicada (virou remissão) e a *Organização do Trabalho* foi atualizada para "seis partes". Integridade preservada: Apel & Kästner (2009) — não verificado — foi reatribuído a Horcas, Pinto e Fuentes (2023); Newman citado como (2015). **Follow-ups editoriais:** (a) sobreposição entre a *Introdução* e as seções 2.1/2.2 (microsserviços/BFF); (b) sobreposição entre a *Segurança por ausência* da Proposta e a seção 2.5; (c) níveis de cabeçalho (o capítulo está em `##` e a *Proposta* em `###`); (d) decidir se o livro Newman (2021), agora não citado no corpo, sai da lista.
 
 - **Objetivo:** consolidar os conceitos que sustentam o trabalho, hoje dispersos na *Fundamentação teórica* da Proposta.
 - **Conteúdo sugerido:**
@@ -141,7 +143,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 
 ## 4. Checklist priorizado de próximos passos
 
-1. [x] **Promover o Referencial Teórico a capítulo** — rascunho em `REFERENCIAL-TEORICO.md`.
+1. [x] **Promover o Referencial Teórico a capítulo** — **implementado no TCC** (`Proposta TCC …md`); *Fundamentação teórica* da Proposta já desduplicada (passou a remeter ao novo capítulo).
 2. [x] **Escrever Trabalhos Relacionados** a partir da tabela comparativa do `CASE_STUDY.md` — rascunho em `TRABALHOS-RELACIONADOS.md`.
 3. [x] **Definir a Metodologia (DSR)** e amarrar cada objetivo específico a um método de verificação — rascunho em `METODOLOGIA.md`.
 4. [x] **Redigir o Desenvolvimento** com trechos de código, `application.properties` e comandos de *build* — rascunho em `DESENVOLVIMENTO.md`.
@@ -153,13 +155,14 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 
 > **Sugestão de ordem de execução:** 1 → 5 (o experimento de inspeção do JAR dá o resultado mais forte com o menor esforço e ajuda a calibrar todo o resto) → 3/4 → 2 → 6/7 → 8 → 9.
 >
-> **Progresso:** já estão em rascunho os capítulos **Referencial Teórico**, **Trabalhos Relacionados**, **Metodologia** e **Desenvolvimento**. **Próximo alvo:** esqueleto da **Avaliação, Resultados e Discussão** — redigível agora com marcadores `[RESULTADO A PREENCHER]`; a execução dos experimentos fica para uma sessão dedicada.
+> **Progresso:** o **Referencial Teórico** já está **implementado no TCC** (arquivo original); **Trabalhos Relacionados**, **Metodologia** e **Desenvolvimento** seguem em rascunho. **Próximo alvo:** esqueleto da **Avaliação, Resultados e Discussão** — redigível agora com marcadores `[RESULTADO A PREENCHER]`; a execução dos experimentos fica para uma sessão dedicada.
 
 ---
 
 ## 5. Riscos e cuidados
 
 - **Consistência de citações:** manter a convenção autor-data alinhada entre a Proposta e os documentos de apoio (atenção às versões de registro vs. preprint de 5.1 e 5.2, já anotadas em `REFERENCIAS_CIENTIFICAS.md`).
+- **Reconciliação original × refinado (pendente):** existem duas versões da proposta — o arquivo original `Proposta TCC …md` (intacto) e o rascunho refinado `PROPOSTA-ARQUITETURA-METAMORFICA.md`. Ao consolidar, decidir se o refinado **substitui** a seção no original ou se **coexistem**, e uniformizar a **voz** (o original usa 1ª pessoa; o refinado, 3ª). Ponto específico a alinhar: as **citações do Newman** — os rascunhos e os documentos de apoio já usam o **artigo verificado NEWMAN (2015)** (`docs/refs/2.2`), enquanto o original ainda lista o **livro NEWMAN (2021)**, não verificado. Adotar 2015 em tudo, ou obter/verificar o livro caso se prefira citá-lo.
 - **Não duplicar o estudo de caso:** o `CASE_STUDY.md` é insumo; o capítulo de Desenvolvimento deve resumi-lo e referenciá-lo, não copiá-lo.
 - **Escopo da segurança:** manter sempre explícito que a segurança por ausência é a *primeira linha de defesa*, não a única.
 - **Reprodutibilidade:** registrar versões e comandos exatos para que a avaliação seja repetível.

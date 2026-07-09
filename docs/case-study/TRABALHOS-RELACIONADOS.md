@@ -12,7 +12,7 @@ Servir múltiplos *frontends* a partir de um mesmo contexto de negócio é um pr
 
 ## 3.1 Repositórios separados (um BFF por frontend)
 
-A abordagem canônica do padrão *Backend for Frontend* é manter **um projeto por cliente**: cada *frontend* possui seu próprio BFF, com repositório e ciclo de vida independentes. É a formulação original de Newman (2021), que reconhece explicitamente o custo do padrão quando há muitos *frontends* — a proliferação de BFFs multiplica o esforço de manutenção.
+A abordagem canônica do padrão *Backend for Frontend* — documentado por Sam Newman a partir de práticas observadas na indústria (NEWMAN, 2015) — é manter **um projeto por cliente**: cada *frontend* possui seu próprio BFF, com repositório e ciclo de vida independentes. Seu custo aparece quando há muitos *frontends*: a proliferação de BFFs multiplica o esforço de manutenção.
 
 O ponto fraco é o **reuso**. Quando dois ou mais BFFs atendem ao mesmo contexto (por exemplo, aplicações de e-commerce), estruturas idênticas tendem a ser reescritas em cada projeto. A literatura de padrões de microsserviços registra os dois lados dessa tensão: o reuso de API "deve ser considerado com cuidado", pois clientes distintos que compartilham APIs semelhantes obrigam a alterá-las em conjunto a cada mudança; por outro lado, compartilhar um único componente entre projetos reduz o esforço, concentrando cada alteração em um só ponto (TAIBI; LENARDUZZI; PAHL, 2018). Em segurança, a separação física é uma vantagem — cada artefato expõe apenas o seu —, mas a manutenção divergente entre repositórios é um risco a médio prazo.
 
