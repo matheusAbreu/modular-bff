@@ -1,6 +1,6 @@
 # Reutilização de código para criar múltiplos projetos do tipo BFF (backend for frontend)
 
-### Introdução:
+## Introdução
 
 A crescente adoção de arquiteturas distribuídas transferiu para o backend a responsabilidade de compor, num contrato coerente, dados que antes viviam espalhados por múltiplos serviços. Nesse contexto, o padrão *Backend for Frontend* (BFF) consolidou-se como resposta à necessidade de servir cada aplicação cliente com uma interface sob medida. Sua adoção em larga escala, porém, multiplica projetos que compartilham grande parte de sua estrutura, revelando uma tensão entre especialização e reuso. Este trabalho investiga como resolver essa tensão a partir de um único código-fonte capaz de assumir formas diferentes conforme o cliente que se propõe a servir.
 
@@ -57,7 +57,7 @@ Este trabalho tem como objetivo apresentar uma proposta de arquitetura de projet
 
 Este documento está organizado em sete partes. A **Introdução** contextualiza o leitor na arquitetura de microsserviços, no papel do API Gateway como ponto central de agregação de dados e no surgimento do padrão *Backend for Frontend* (BFF). A **Justificativa** discute as vantagens do BFF frente ao API Gateway e expõe o problema que motiva o trabalho: a dificuldade de reuso de código e o crescente custo de manutenção quando múltiplos BFF atendem a um mesmo contexto. Os **Objetivos** delimitam a meta geral — propor uma arquitetura capaz de gerar múltiplas aplicações a partir de um único código-fonte — e os objetivos específicos que a operacionalizam. O **Referencial Teórico** consolida os conceitos que fundamentam a proposta: microsserviços e BFF, Linhas de Produto de Software e variabilidade em tempo de compilação, superfície de ataque e Arquitetura Hexagonal. Os **Trabalhos Relacionados** posicionam a proposta frente a abordagens alternativas — repositórios separados, *feature flags* em runtime, microsserviços distintos e linhas de produto por composição —, evidenciando a lacuna que ela preenche.
 
-A seção **Proposta: Arquitetura Metamórfica** apresenta a solução: uma configuração resolvida em tempo de compilação que faz o projeto assumir a forma adequada a cada cliente. Nela, a *Fundamentação teórica* situa a proposta no campo das Linhas de Produto de Software e da variabilidade baseada em anotação, e a *Segurança por ausência* desenvolve a principal contribuição do método — a redução da superfície de ataque pela eliminação, no artefato, das operações que não competem ao cliente. Por fim, as **Referências** reúnem as fontes utilizadas.
+O capítulo **Proposta: Arquitetura Metamórfica** apresenta a solução: uma configuração resolvida em tempo de compilação que faz o projeto assumir a forma adequada a cada cliente. Nele, delimita-se a tensão entre especialização e reuso, formula-se a proposta e mostra-se sua concretização no protótipo; a seguir, a *fundamentação* situa a arquitetura no campo das Linhas de Produto de Software e da variabilidade baseada em anotação, e a *segurança por ausência* desenvolve a principal contribuição do método — a redução da superfície de ataque pela eliminação, no artefato, das operações que não competem ao cliente. Por fim, as **Referências** reúnem as fontes utilizadas.
 
 ## Referencial Teórico
 
@@ -171,44 +171,69 @@ Cada abordagem otimiza um objetivo diferente. Os repositórios separados e os mi
 
 O padrão *Backend for Frontend* nasceu na indústria (NEWMAN, 2015) e, embora amplamente praticado, é pouco tratado em literatura acadêmica revisada por pares — frequentemente aparece de forma indireta, sob a discussão de *API Gateway* e agregadores (TAIBI; LENARDUZZI; PAHL, 2018). Essa escassez tem duas implicações. Primeiro, **reforça o ineditismo** de um trabalho que sistematiza uma estratégia arquitetural específica para BFFs. Segundo, obriga a fundamentação a apoiar-se em campos maduros e adjacentes — Linhas de Produto de Software, variabilidade por compilação condicional e superfície de ataque —, exatamente o que este trabalho faz ao enquadrar a metamorfose como derivação de produtos (HORCAS; PINTO; FUENTES, 2023) com efeito de segurança mensurável (MANADHATA; WING, 2011).
 
-### Proposta: Arquitetura Metamórfica
+## Proposta: Arquitetura Metamórfica
 
-Quando analisamos a arquitetura de projeto de uma API Gateway em comparação com a um projeto BFF, vemos que existe a simplicidade e foco do BFF traz vantagens.
+Este capítulo apresenta a **Arquitetura Metamórfica**: uma estratégia em que um único código-fonte assume formas diferentes conforme o cliente que se propõe a servir, resolvendo em **tempo de compilação** qual conjunto de operações cada artefato conterá. A seção 4.1 delimita o problema; a 4.2 formula a proposta; a 4.3 mostra sua concretização no protótipo; a 4.4 sintetiza a fundamentação; a 4.5 desenvolve a principal contribuição — a *segurança por ausência*; e a 4.6 encerra com uma síntese.
+
+### 4.1 O problema: especialização × reuso em múltiplos BFFs
+
+O padrão *Backend for Frontend* (BFF) — documentado por Sam Newman a partir de práticas da indústria (NEWMAN, 2015) — especializa a lógica de agregação de um API Gateway para atender a um único *frontend*, entregando a cada cliente uma API sob medida (TAIBI; LENARDUZZI; PAHL, 2018). Ao comparar a arquitetura de projeto de uma API Gateway com a de um projeto BFF, observa-se que a simplicidade e o foco do BFF trazem vantagens: ganham-se personalização, implantação e escalabilidade independentes.
 
 ![][image3]
 
-Contudo, quando temos o cenário onde dois, ou mais, BFF atendem ao mesmo contexto, como por exemplo uma loja e-commerce, é notório que teremos o uso dos mesmos serviços podendo conter os mesmos comportamentos.
+Contudo, no cenário em que dois ou mais BFF atendem a um mesmo contexto de negócio — várias aplicações de e-commerce, por exemplo —, os mesmos serviços tendem a ser utilizados, podendo conter os mesmos comportamentos, e grande parte de suas estruturas tende a ser idêntica. Emerge então uma tensão entre **especialização** e **reuso**: quanto mais *frontends*, mais projetos BFF a manter, com estruturas duplicadas.
 
 ![][image4]![][image5]
 
-Diante desse problema, proponho uma junção de conceitos:
+Como discutido na *Justificativa*, a literatura de padrões de microsserviços registra os dois lados dessa tensão: o reuso de API cobra o preço de manter em conjunto as APIs semelhantes, mas compartilhar um único componente entre projetos concentra cada alteração num só ponto e reduz o esforço de manutenção (TAIBI; LENARDUZZI; PAHL, 2018). A arquitetura proposta a seguir persegue esse ganho de reuso **sem renunciar à especialização por cliente**.
 
-* A utilização de um projeto mais robusto, como um API Gateway  
-* Com a performance foco que os BFF fornecem aos seus clientes  
-* Saber identificar qual cliente servir
+### 4.2 A proposta: variabilidade resolvida em tempo de compilação
 
-Proponho que seja feita uma configuração, em tempo de compilação, no projeto que o permita identificar qual será o seu cliente e, a partir de tal configuração, o projeto saberá se adequar quando necessário.  
+Diante desse problema, este trabalho propõe uma junção de três ideias: a robustez de um projeto único que concentra a lógica de negócio, como um API Gateway; o foco de desempenho que o BFF oferece a cada cliente; e a capacidade de o próprio projeto **identificar qual cliente servir**. Para conciliá-las, propõe-se uma **configuração resolvida em tempo de compilação**: a partir dela, o projeto assume a forma adequada a cada cliente, incluindo somente as operações que lhe competem.
+
 ![][image6]
 
 ![][image7]
 
-#### Fundamentação teórica
+O termo *metamórfica* descreve essa propriedade: o artefato final **muda de forma** conforme a configuração escolhida no *build* — e não conforme uma decisão avaliada em tempo de execução. A operação que não pertence a um dado cliente não é apenas ignorada; ela **deixa de existir** no artefato correspondente. Cada configuração produz, portanto, uma variante distinta do sistema, derivada de uma base comum.
 
-Os fundamentos teóricos que sustentam a configuração em tempo de compilação aqui proposta — Linhas de Produto de Software e derivação de produtos, variabilidade baseada em anotação, compilação condicional e o princípio de arquitetura limpa que mantém domínio e repositórios compartilhados entre as variantes — foram desenvolvidos no capítulo **Referencial Teórico** (seções 2.3, 2.4 e 2.6). Em síntese: cada artefato gerado é um *produto derivado* de um mesmo código-fonte pela seleção de *features* no *build* (HORCAS; PINTO; FUENTES, 2023), mecanismo da mesma categoria da compilação condicional consolidada na indústria (HUNSEN et al., 2016; BAUM et al., 2019); e a viabilidade de preservar as camadas inferiores apoia-se em manter a anotação de variabilidade (`@IfBuildProperty`) nos adaptadores de entrada, isolando as regras de negócio do *framework* (MARTIN, 2017).
+### 4.3 Concretização no protótipo
 
-#### Segurança por ausência
+A proposta foi materializada em um protótipo funcional — um BFF de domínio de e-commerce escrito em **Kotlin** sobre o framework **Quarkus**. Nele, a variabilidade em tempo de compilação é obtida com a anotação `@IfBuildProperty` (do Quarkus Arc), aplicada aos controladores de cada modo:
 
-A eliminação de código em tempo de compilação confere à arquitetura metamórfica uma propriedade de segurança que abordagens em tempo de execução não alcançam. A tese pode ser enunciada de forma direta: a maneira mais segura de proteger um endpoint é garantir que ele não exista no artefato implantado.
+* um **controlador de leitura** permanece sempre presente, em qualquer artefato;
+* os controladores das operações **interna** (atualização de status de entrega) e **externa** (criação de pedido) são **incluídos ou removidos** do artefato conforme a configuração selecionada no *build*.
 
-Esse argumento apoia-se no conceito de *superfície de ataque*. A segurança de um sistema pode ser aferida pelo conjunto de recursos e pontos de entrada por meio dos quais um atacante pode influenciá-lo, de modo que, quanto maior essa superfície, mais formas de ataque existem e mais inseguro o sistema tende a ser (MANADHATA; WING, 2011). Por operar no nível de projeto — acima do código, mas abaixo do sistema como um todo —, essa métrica pode ser empregada deliberadamente por arquitetos para reduzir a exposição (MANADHATA; WING, 2011). Ao remover no *build* as rotas que não competem a determinado cliente, a arquitetura metamórfica reduz por construção o número de pontos de entrada do artefato: onde a rota não existe, não há bean instanciado, não há configuração capaz de reativá-la por engano e não há vulnerabilidade a explorar.
+Assim, de um mesmo código-fonte derivam-se artefatos distintos — interno e externo —, cada um contendo apenas as operações que lhe competem, enquanto domínio, serviços e repositórios permanecem **compartilhados** entre todas as variantes. Os detalhes de implementação, a ligação entre a anotação e as variáveis de ambiente, o pipeline de *build* por artefato e o procedimento de verificação (inspeção do JAR) são apresentados no capítulo **Desenvolvimento**.
 
-Convém contrastar essa *segurança por ausência* com a *segurança por proteção*, na qual o endpoint existe no binário e tenta defender-se por camadas de autenticação, autorização e limitação de requisições. A segurança por proteção é necessária, mas é intrinsecamente mais frágil: cada camada pode ser mal configurada, contornada ou exposta por uma vulnerabilidade futura do framework. O mesmo vale para a alternativa de *feature flag* em tempo de execução, em que a operação permanece no artefato e apenas é rejeitada por uma verificação condicional — uma variável de ambiente mal configurada ou um erro nessa verificação bastaria para reexpor a rota. Na abordagem metamórfica esse cenário é impossível por construção, pois não há código a ser ativado acidentalmente.
+### 4.4 Fundamentação (síntese)
 
-A pertinência dessa propriedade acentua-se em arquiteturas distribuídas. Em microsserviços, a segurança torna-se mais desafiadora justamente pelo grande número de pontos de entrada gerados pela decomposição do sistema, e a literatura aponta um foco de pesquisa desequilibrado em favor dos ataques externos, recomendando maior atenção às ameaças de origem interna (HANNOUSSE; YAHIOUCHE, 2021). A separação entre modos interno e externo proposta neste trabalho responde a essa recomendação na origem: em vez de confiar que o artefato externo saberá recusar operações internas em tempo de execução, garante-se que tais operações sequer sejam compiladas nele.
+Do ponto de vista teórico, a configuração em tempo de compilação insere-se no campo das **Linhas de Produto de Software** (SPL), no qual múltiplos produtos são derivados de uma base comum pela resolução de sua variabilidade; cada artefato (interno/externo) é um **produto derivado** na fase de *product derivation* (HORCAS; PINTO; FUENTES, 2023). Entre as duas famílias de implementação de variabilidade — baseada em composição e baseada em anotação —, a proposta pertence à **segunda**: a `@IfBuildProperty` é um parâmetro de configuração resolvido no *build*, mesmo princípio da compilação condicional consolidada na indústria (HUNSEN et al., 2016; BAUM et al., 2019). A viabilidade de preservar as camadas inferiores compartilhadas apoia-se, ainda, no princípio de isolar as regras de negócio dos detalhes de framework, mantendo a anotação de variabilidade nos adaptadores de entrada (MARTIN, 2017).
 
-Cabe delimitar o alcance da estratégia. A segurança por ausência elimina uma classe inteira de riscos — a de um endpoint existir onde não deveria —, mas não substitui as demais camadas de proteção: autenticação do solicitante, autorização por posse do recurso, limitação de abuso e mascaramento de dados sensíveis permanecem necessários. O modelo adequado é tratá-la como a primeira linha de defesa, sobre a qual as demais camadas se constroem.
+> O desenvolvimento completo desses conceitos — SPL, variabilidade por anotação, compilação condicional, superfície de ataque e arquitetura hexagonal — está no capítulo **Referencial Teórico** (seções 2.3 a 2.6).
 
-### Referências
+### 4.5 Segurança por ausência
+
+A eliminação de código em tempo de compilação confere à arquitetura metamórfica uma propriedade de segurança que abordagens em tempo de execução não alcançam. A tese pode ser enunciada de forma direta: **a maneira mais segura de proteger um endpoint é garantir que ele não exista no artefato implantado.**
+
+Retomam-se, a seguir, os pontos estabelecidos na seção 2.5, indicando a correspondência de cada um no artefato proposto:
+
+* **A superfície é feita de pontos de entrada.** Se cada rota REST exposta é um ponto de entrada, então remover a rota **reduz** a superfície, em vez de apenas defendê-la. O artefato externo não contém a rota de atualização de status porque a classe que a declara não foi compilada nele — não há *bean* instanciado, nem configuração capaz de reativá-la por engano. E a ausência é **verificável**: basta inspecionar o conteúdo do artefato, como demonstra o capítulo **Avaliação**.
+* **A métrica opera em nível de projeto** e pode ser empregada deliberadamente por projetistas (MANADHATA; WING, 2011). A arquitetura acolhe esse convite: a redução da exposição vira **decisão de projeto** — qual variante compilar —, e não parâmetro de *deploy*.
+* **A distinção método externo × interno, transposta ao negócio.** Os *controllers* interno e externo materializam os dois públicos, e as propriedades de *build* decidem qual deles existe em cada artefato. A fronteira, que na formulação original é uma propriedade **observada** do código, torna-se aqui **imposta** pela compilação: a operação interna não é apenas inacessível no artefato externo — ela não existe nele.
+* **Microsserviços multiplicam pontos de entrada**, e a literatura subatende a ameaça de origem interna (HANNOUSSE; YAHIOUCHE, 2021). A separação de modos responde às duas observações: reduz os pontos de entrada de cada artefato e trata a fronteira interno/externo como decisão de compilação, em vez de confiança depositada numa verificação de tempo de execução.
+
+Convém contrastar essa *segurança por ausência* com a *segurança por proteção*, na qual o endpoint existe no binário e se defende por camadas de autenticação, autorização e limitação de requisições. A segurança por proteção é necessária, mas depende da correção contínua de cada camada. Quanto à **feature flag em tempo de execução**, a distinção é de **finalidade, não de mérito**: manter a operação no artefato é justamente o que habilita seus usos legítimos e valiosos — ativar funcionalidades sem novo *deploy*, conduzir experimentos e realizar *rollout* gradual. A arquitetura metamórfica não compete com a *feature flag* nesses objetivos; persegue um objetivo **distinto e complementar** — garantir que a operação que não compete a um cliente sequer exista no artefato dele. Onde a *feature flag* preserva o código por design, a metamorfose o remove em tempo de compilação: são respostas a problemas diferentes (ver capítulo **Trabalhos Relacionados**, seção 3.2).
+
+O quarto elemento situa a contribuição no contexto distribuído que a motiva. A seção 2.5 registra que a decomposição em microsserviços multiplica os pontos de entrada e que a pesquisa em segurança tem privilegiado o ataque externo, subatendendo a ameaça de origem interna (HANNOUSSE; YAHIOUCHE, 2021). A separação de modos adotada neste trabalho responde às duas observações de uma só vez: reduz o número de pontos de entrada de cada artefato e trata a fronteira entre interno e externo como decisão de compilação, em lugar de confiança depositada em uma verificação de tempo de execução. Em vez de esperar que o artefato externo saiba recusar operações internas, garante-se que tais operações sequer sejam compiladas nele.
+
+Cabe, por fim, delimitar o alcance da estratégia. A segurança por ausência elimina uma classe inteira de riscos — a de um endpoint existir onde não deveria —, mas **não substitui** as demais camadas de proteção: autenticação do solicitante, autorização por posse do recurso, limitação de abuso e mascaramento de dados sensíveis permanecem necessários. O modelo adequado é tratá-la como a **primeira linha de defesa**, sobre a qual as demais camadas se constroem.
+
+### 4.6 Síntese
+
+A Arquitetura Metamórfica combina duas propriedades que as alternativas usuais não reúnem simultaneamente: **reuso de código-fonte** (domínio, serviços e repositórios compartilhados) e **ausência, no artefato, das operações que não competem ao cliente**. O custo dessa combinação — pipelines e artefatos distintos por variante — e as evidências de reuso, de redução de superfície de ataque e de ausência verificável no binário são objeto do capítulo **Avaliação**, guiado pelas perguntas de pesquisa definidas no capítulo **Metodologia**.
+
+## Referências
 
 Referências científicas utilizadas na fundamentação, no padrão ABNT (NBR 6023):
 
@@ -231,8 +256,6 @@ TAIBI, Davide; LENARDUZZI, Valentina; PAHL, Claus. Architectural patterns for mi
 **Fontes complementares (literatura técnica e web):**
 
 NEWMAN, Sam. **Backends For Frontends**. [*S. l.*], 18 nov. 2015. Disponível em: https://samnewman.io/patterns/architectural/bff/. Acesso em: 9 jul. 2026.
-
-NEWMAN, Sam. **Building microservices**: designing fine-grained systems. 2. ed. Sebastopol: O'Reilly Media, 2021.
 
 COCKBURN, Alistair. **Hexagonal architecture (ports and adapters)**. [*S. l.*], 2005. Disponível em: https://alistair.cockburn.us/hexagonal-architecture/. Acesso em: 9 jul. 2026.
 

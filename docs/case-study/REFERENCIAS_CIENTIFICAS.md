@@ -32,12 +32,13 @@ Fundamentam a Introdução e a Justificativa: por que microsserviços motivam a 
 
 O conceito central do trabalho. A literatura **peer-reviewed** especificamente sobre BFF ainda é escassa (o padrão nasceu na indústria — documentado por Sam Newman a partir de práticas na REA e no SoundCloud, que credita o termo a Phil Calçado), o que reforça a **relevância e o ineditismo** do TCC.
 
-### 2.1 Newman, S. — *Building Microservices: Designing Fine-Grained Systems* (O'Reilly, 2ª ed., 2021)
+### 2.1 Newman, S. — *Building Microservices: Designing Fine-Grained Systems* (O'Reilly, 2ª ed., 2021) — ❌ DESCARTADO / NÃO CITADO
+
+> **Decisão:** esta obra **não é citada nem listada** nas Referências do TCC. Adota-se exclusivamente o artigo verificado **NEWMAN (2015)** (item 2.2) como fonte do padrão BFF. O registro abaixo é mantido apenas como memória da avaliação da fonte. Para reverter a decisão, seria preciso obter o livro e verificá-lo na fonte primária.
 
 - **Fonte:** O'Reilly Media. ISBN: 978-1492034025.
-- **Resumo:** Obra de referência que introduziu e popularizou o padrão **Backend for Frontend**. Descreve o BFF como uma variação do API Gateway dedicada a um único tipo de cliente (frontend), discutindo suas vantagens de personalização e implantação independente e os custos de manutenção quando há muitos frontends.
-- **Relação com o TCC:** É a fonte primária do conceito de BFF usado no trabalho. Embora seja um livro técnico (não um paper), é a referência canônica citada por praticamente toda a literatura acadêmica sobre o tema — indispensável na fundamentação.
-- ⚠️ **NÃO VERIFICADO NA FONTE.** O resumo acima foi redigido a partir de conhecimento secundário; **não temos o PDF do livro** em `docs/refs/` nem citação direta em `CITACOES_ABNT.md`. Por isso, os capítulos usam Newman apenas como **atribuição de origem histórica** do padrão, sem afirmação específica. Para citar qualquer caracterização substantiva atribuída a Newman, é preciso verificar na fonte primária (o livro ou o artigo público do autor sobre BFF — ver abaixo).
+- **Resumo:** Obra de referência que popularizou o padrão **Backend for Frontend**. Descreve o BFF como uma variação do API Gateway dedicada a um único tipo de cliente (frontend), discutindo suas vantagens de personalização e implantação independente e os custos de manutenção quando há muitos frontends.
+- ⚠️ **NÃO VERIFICADO NA FONTE.** O resumo acima foi redigido a partir de conhecimento secundário; **não temos o PDF do livro** em `docs/refs/` nem citação direta em `CITACOES_ABNT.md`. Foi esse o motivo do descarte: o artigo de 2015 cobre o mesmo papel com verificação na fonte.
 
 > **Observação:** para uma referência estritamente acadêmica sobre BFF, vale acompanhar publicações recentes em repositórios como ResearchGate e arXiv (ex.: estudos sobre *"BFF architecture across platforms and its dynamic adaptations"*), mas avalie criticamente o rigor/venue antes de citar, pois muitas ainda são preprints não revisados.
 
@@ -227,7 +228,7 @@ Fundamentam a escolha da **Design Science Research** como método condutor — a
 | Conceito do TCC | Referências de apoio |
 |---|---|
 | Microsserviços e API Gateway | 1.1 Pahl & Jamshidi; 1.2 Taibi, Lenarduzzi & Pahl |
-| Backend for Frontend (BFF) | 2.2 Newman (artigo 2015, verificado); 2.1 Newman (livro 2021, não verificado) |
+| Backend for Frontend (BFF) | 2.2 Newman (artigo 2015, verificado) — fonte única adotada; 2.1 Newman (livro 2021) descartado |
 | Arquitetura Metamórfica (variabilidade em build-time) | 3.1a Horcas, Pinto & Fuentes (2023); 3.1b Hunsen et al. (2016); 3.2 Apel & Kästner; 3.3 Kästner et al.; 3.4 Adkins et al. |
 | Compilação condicional vs. feature flag em runtime | 4.1 Rahman et al.; 4.2 Mahdavi-Hezaveh et al. (2021); 4.3 Mahdavi-Hezaveh et al. (2022) |
 | Segurança por redução de superfície de ataque | 5.1 Manadhata & Wing; 5.2 SMS Securing Microservices; 5.3 SoK Microservice Security |

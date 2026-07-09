@@ -12,6 +12,15 @@
 >
 > **Arquivo final do TCC:** `docs/case-study/Proposta TCC - Reutilização de código para criar múltiplos projetos do tipo BFF .md`
 
+### Convenções de redação (valem para todos os capítulos)
+
+- **3ª pessoa acadêmica.** Vedadas construções em 1ª pessoa ("proponho", "analisamos", "vemos", "temos"); usar "propõe-se", "observa-se", "este trabalho propõe".
+- **Não reforçar a qualidade do estudo.** O trabalho fala por si. Evitar frases que anunciem o próprio mérito ou antecipem a conclusão do leitor — "essa tese não repousa sobre intuição", "cada ponto encontra correspondência direta", "o argumento é robusto", "o resultado é maior segurança". Prefira o registro neutro que apenas **declara o que o texto faz**: "retomam-se, a seguir, os pontos estabelecidos na seção 2.5". A evidência convence; o adjetivo, não.
+- **Remissões explícitas.** Ao retomar conteúdo de outro capítulo, nomear a seção ("conforme a seção 2.5") em vez de reexpor o conceito.
+- **Fonte única do BFF:** apenas o artigo verificado NEWMAN (2015). O livro NEWMAN (2021), não verificado, não é citado nem listado.
+
+### Procedimento
+
 1. **Revisar o rascunho.**
    - Conferir **todas as citações** (autor-data; fontes verificadas em `docs/refs/` / `CITACOES_ABNT.md`; reatribuir ou remover as não verificadas).
    - Aplicar **correções ortográficas e gramaticais** e garantir a consistência de termos.
@@ -46,6 +55,7 @@ O que **falta** para transformar a proposta num TCC completo:
 
 - ~~Referencial Teórico como capítulo próprio~~ → **implementado no TCC** (arquivo original `Proposta TCC …md`, como capítulo *Referencial Teórico* antes da Proposta). Rascunho de trabalho mantido em `REFERENCIAL-TEORICO.md`.
 - ~~Trabalhos Relacionados~~ → **implementado no TCC** (arquivo original `Proposta TCC …md`, como capítulo antes da Proposta). Rascunho de trabalho mantido em `TRABALHOS-RELACIONADOS.md`.
+- ~~Proposta: Arquitetura Metamórfica (capítulo redigido)~~ → **implementado no TCC** (seções 4.1–4.6), substituindo a redação preliminar. Rascunho de trabalho mantido em `PROPOSTA-ARQUITETURA-METAMORFICA.md`.
 - ~~Metodologia~~ → **rascunho concluído** em `METODOLOGIA.md`.
 - ~~Desenvolvimento / Implementação do Protótipo~~ → **rascunho concluído** em `DESENVOLVIMENTO.md`.
 - Avaliação, Resultados e Discussão.
@@ -60,7 +70,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 1. ✅ Introdução
 2. ✅ Referencial Teórico — **implementado no TCC** (`Proposta TCC …md`); rascunho de trabalho em `REFERENCIAL-TEORICO.md`
 3. ✅ Trabalhos Relacionados — **implementado no TCC** (`Proposta TCC …md`); rascunho de trabalho em `TRABALHOS-RELACIONADOS.md`
-4. 🟡 Proposta: Arquitetura Metamórfica — rascunho refinado em `PROPOSTA-ARQUITETURA-METAMORFICA.md` (original preservado)
+4. ✅ Proposta: Arquitetura Metamórfica — **implementado no TCC** (seções 4.1–4.6); rascunho de trabalho em `PROPOSTA-ARQUITETURA-METAMORFICA.md`
 5. 🟡 Metodologia — rascunho em `METODOLOGIA.md`
 6. 🟡 Desenvolvimento / Implementação do Protótipo — rascunho em `DESENVOLVIMENTO.md`
 7. ⬜ Avaliação, Resultados e Discussão
@@ -75,7 +85,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 
 ### 3.1 Referencial Teórico — ✅ implementado no TCC
 
-> **Status:** inserido no arquivo original `Proposta TCC …md` como capítulo *Referencial Teórico* (seções 2.1–2.7), antes da *Proposta*. A *Fundamentação teórica* embutida foi desduplicada (virou remissão) e a *Organização do Trabalho* foi atualizada para "seis partes". Integridade preservada: Apel & Kästner (2009) — não verificado — foi reatribuído a Horcas, Pinto e Fuentes (2023); Newman citado como (2015). **Follow-ups editoriais:** (a) sobreposição entre a *Introdução* e as seções 2.1/2.2 (microsserviços/BFF); (b) sobreposição entre a *Segurança por ausência* da Proposta e a seção 2.5; (c) níveis de cabeçalho (o capítulo está em `##` e a *Proposta* em `###`); (d) decidir se o livro Newman (2021), agora não citado no corpo, sai da lista.
+> **Status:** inserido no arquivo original `Proposta TCC …md` como capítulo *Referencial Teórico* (seções 2.1–2.7), antes da *Proposta*. A *Fundamentação teórica* embutida foi desduplicada (virou remissão) e a *Organização do Trabalho* foi atualizada (hoje em **"sete partes"**, após a entrada de *Trabalhos Relacionados*). Integridade preservada: Apel & Kästner (2009) — não verificado — foi reatribuído a Horcas, Pinto e Fuentes (2023); Newman citado como (2015). **Follow-ups editoriais:** (a) sobreposição entre a *Introdução* e as seções 2.1/2.2 (microsserviços/BFF) — **ainda aberto**; (b) ~~sobreposição entre a *Segurança por ausência* da Proposta e a seção 2.5~~ → **resolvido:** a 2.5 permanece intocada como base teórica e a 4.5 passou a **retomá-la ponto a ponto**, em lista, sem reexpor os conceitos; (c) ~~níveis de cabeçalho (o capítulo está em `##` e a *Proposta* em `###`)~~ → **resolvido:** *Introdução*, *Proposta* e *Referências* normalizadas para `##`; (d) ~~decidir se o livro Newman (2021), agora não citado no corpo, sai da lista~~ → **resolvido:** o livro foi **removido** das Referências do TCC; adota-se sempre o artigo verificado NEWMAN (2015).
 
 - **Objetivo:** consolidar os conceitos que sustentam o trabalho, hoje dispersos na *Fundamentação teórica* da Proposta.
 - **Conteúdo sugerido:**
@@ -103,6 +113,16 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 - **Próximos passos:** transformar a tabela do estudo de caso em texto analítico, citando a literatura; destacar que a literatura *peer-reviewed* específica sobre BFF é escassa (reforça o ineditismo).
 - **Apoio:** refs 4.1–4.3 (feature toggles), 3.1a/3.1b/3.3 (SPL/variabilidade), 1.2 (padrões de microsserviços).
 - **Pronto quando:** houver um quadro comparativo justificado e a lacuna estiver explícita.
+
+### 3.2b Proposta: Arquitetura Metamórfica — ✅ implementado no TCC
+
+> **Status:** o rascunho `PROPOSTA-ARQUITETURA-METAMORFICA.md` foi implementado no TCC como capítulo *Proposta* (seções 4.1–4.6), substituindo a redação preliminar. As **cinco figuras** da versão preliminar (`image3`–`image7`) foram **preservadas** e reancoradas: a comparação API Gateway × BFF e o cenário de BFFs duplicados na 4.1; o esquema da configuração em tempo de compilação na 4.2. As remissões por caminho de arquivo viraram referências de capítulo. Cabeçalhos normalizados: *Introdução*, *Proposta* e *Referências* passaram a `##`, alinhando-se a *Referencial Teórico* e *Trabalhos Relacionados* — **resolve o follow-up (c)** da seção 3.1. Nenhuma citação nova foi introduzida e nenhuma ficou órfã. Desduplicação aplicada: o parágrafo de 4.1 que repetia o fechamento da *Justificativa* (Taibi et al. sobre o custo do reuso) virou remissão.
+>
+> **Follow-ups editoriais:**
+> - **Figuras definitivas:** as cinco imagens continuam sendo os *placeholders* originais; produzir os diagramas finais (ver checklist, item 9). Restam também dois `[Trocar imagem]` na Introdução (`image1`, `image2`).
+> - ~~**Sobreposição 4.5 × 2.5:** a *segurança por ausência* reintroduz a superfície de ataque, já desenvolvida na seção 2.5.~~ → **resolvido** (follow-up (b) da seção 3.1). A 2.5 é a **base teórica** e permaneceu **intocada**; a 4.5 é a **solução** e passou a **retomar a 2.5 ponto a ponto**, em lista de quatro itens — superfície como conjunto de pontos de entrada; métrica em nível de projeto; distinção método externo × interno transposta ao negócio; microsserviços e ameaça interna —, mostrando a correspondência de cada um no artefato, sem redefinir os conceitos. Aplicadas também as *Convenções de redação* (registro neutro): removidas as frases que reforçavam a qualidade do estudo, na 4.5 e na 4.1.
+> - **Remissões antecipadas:** as seções 4.3 e 4.6 remetem aos capítulos *Desenvolvimento*, *Metodologia* e *Avaliação*, ainda não implementados no TCC. As remissões passam a valer quando esses capítulos entrarem.
+> - **Cabeçalhos vazios:** sobraram dois `###` sem título entre a *Justificativa* e os *Objetivos* (resquício do documento original) — remover na revisão final.
 
 ### 3.3 Metodologia — 🟡 rascunho concluído
 
@@ -170,6 +190,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 
 1. [x] **Promover o Referencial Teórico a capítulo** — **implementado no TCC** (`Proposta TCC …md`); *Fundamentação teórica* da Proposta já desduplicada (passou a remeter ao novo capítulo).
 2. [x] **Escrever Trabalhos Relacionados** a partir da tabela comparativa do `CASE_STUDY.md` — **implementado no TCC** (`Proposta TCC …md`).
+2b. [x] **Implementar a Proposta** — rascunho `PROPOSTA-ARQUITETURA-METAMORFICA.md` transposto para o TCC (seções 4.1–4.6), com as figuras preservadas e os cabeçalhos normalizados.
 3. [x] **Definir a Metodologia (DSR)** e amarrar cada objetivo específico a um método de verificação — rascunho em `METODOLOGIA.md`.
 4. [x] **Redigir o Desenvolvimento** com trechos de código, `application.properties` e comandos de *build* — rascunho em `DESENVOLVIMENTO.md`.
 5. [ ] **Executar a Avaliação** — começar pelo experimento 1 (inspeção do JAR), que é rápido e prova a tese central.
@@ -180,14 +201,15 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 
 > **Sugestão de ordem de execução:** 1 → 5 (o experimento de inspeção do JAR dá o resultado mais forte com o menor esforço e ajuda a calibrar todo o resto) → 3/4 → 2 → 6/7 → 8 → 9.
 >
-> **Progresso:** **Referencial Teórico** e **Trabalhos Relacionados** já **implementados no TCC** (arquivo original); **Metodologia** e **Desenvolvimento** seguem em rascunho. **Próximo alvo:** esqueleto da **Avaliação, Resultados e Discussão** — redigível agora com marcadores `[RESULTADO A PREENCHER]`; a execução dos experimentos fica para uma sessão dedicada.
+> **Progresso:** **Referencial Teórico**, **Trabalhos Relacionados** e **Proposta** já **implementados no TCC**; **Metodologia** e **Desenvolvimento** seguem em rascunho, prontos para transposição. **Próximo alvo:** implementar Metodologia e Desenvolvimento (a Metodologia depende de resolver a pendência das citações de DSR — ver 3.3) e, em paralelo, executar o experimento 1 (inspeção do JAR), que prova a tese central com o menor esforço.
 
 ---
 
 ## 5. Riscos e cuidados
 
 - **Consistência de citações:** manter a convenção autor-data alinhada entre a Proposta e os documentos de apoio (atenção às versões de registro vs. preprint de 5.1 e 5.2, já anotadas em `REFERENCIAS_CIENTIFICAS.md`).
-- **Reconciliação original × refinado (pendente):** existem duas versões da proposta — o arquivo original `Proposta TCC …md` (intacto) e o rascunho refinado `PROPOSTA-ARQUITETURA-METAMORFICA.md`. Ao consolidar, decidir se o refinado **substitui** a seção no original ou se **coexistem**, e uniformizar a **voz** (o original usa 1ª pessoa; o refinado, 3ª). Ponto específico a alinhar: as **citações do Newman** — os rascunhos e os documentos de apoio já usam o **artigo verificado NEWMAN (2015)** (`docs/refs/2.2`), enquanto o original ainda lista o **livro NEWMAN (2021)**, não verificado. Adotar 2015 em tudo, ou obter/verificar o livro caso se prefira citá-lo.
+- **Convenções de redação:** consolidadas no *modus operandi*, no início deste documento. Já aplicadas ao arquivo do TCC.
+- **Natureza dos arquivos `*.md` em `docs/case-study/`:** cada um é o **rascunho de um capítulo** do TCC — **não** uma versão concorrente dele nem um documento a "coexistir" com ele. Ao ser implementado pelo *modus operandi*, o rascunho **substitui** a redação correspondente no TCC, e a **fonte da verdade passa a ser o TCC**. Vale para `PROPOSTA-ARQUITETURA-METAMORFICA.md` (já implementado), `REFERENCIAL-TEORICO.md` e `TRABALHOS-RELACIONADOS.md` (já implementados), e para `METODOLOGIA.md` e `DESENVOLVIMENTO.md` (pendentes).
 - **Não duplicar o estudo de caso:** o `CASE_STUDY.md` é insumo; o capítulo de Desenvolvimento deve resumi-lo e referenciá-lo, não copiá-lo.
 - **Escopo da segurança:** manter sempre explícito que a segurança por ausência é a *primeira linha de defesa*, não a única.
 - **Reprodutibilidade:** registrar versões e comandos exatos para que a avaliação seja repetível.
@@ -202,6 +224,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 | PDFs das referências | `docs/refs/` |
 | Detalhes do protótipo (arquitetura, entidades, endpoints, build) | `docs/case-study/CASE_STUDY.md` |
 | Tese de segurança por ausência e tabela comparativa | `docs/case-study/CASE_STUDY.md` (seção 11) e a seção *Segurança por ausência* da Proposta |
+| Proposta (capítulo) redigida | `docs/case-study/PROPOSTA-ARQUITETURA-METAMORFICA.md` |
 | Referencial Teórico redigido | `docs/case-study/REFERENCIAL-TEORICO.md` |
 | Trabalhos Relacionados redigido | `docs/case-study/TRABALHOS-RELACIONADOS.md` |
 | Metodologia (DSR) redigida | `docs/case-study/METODOLOGIA.md` |

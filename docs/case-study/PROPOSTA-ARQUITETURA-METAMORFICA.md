@@ -1,10 +1,12 @@
 # Proposta: Arquitetura Metamórfica
 
-> 🟡 **Rascunho** — documento de trabalho, no mesmo estágio dos demais capítulos (`REFERENCIAL-TEORICO.md`, `TRABALHOS-RELACIONADOS.md`, `METODOLOGIA.md`, `DESENVOLVIMENTO.md`). É uma **reescrita refinada** da seção *Proposta: Arquitetura Metamórfica* da Proposta original, nutrida com o protótipo já implementado, as citações verificadas em `CITACOES_ABNT.md` e o enquadramento equilibrado de *feature toggles*. Estrutura e conteúdo sujeitos a revisão antes da consolidação no TCC.
+> ✅ **Implementado no TCC** — este rascunho foi transposto para o arquivo `Proposta TCC …md` como capítulo *Proposta: Arquitetura Metamórfica* (seções 4.1–4.6), substituindo a redação preliminar. **A fonte da verdade passa a ser o TCC**; este documento é mantido apenas como registro de trabalho. Alterações de conteúdo devem ser feitas no TCC.
 >
-> **Relação com os demais capítulos:** a fundamentação teórica completa está no Referencial Teórico (`REFERENCIAL-TEORICO.md`, seções 2.3–2.6); a comparação com abordagens alternativas, em Trabalhos Relacionados (`TRABALHOS-RELACIONADOS.md`); a implementação e a reprodução dos artefatos, em Desenvolvimento (`DESENVOLVIMENTO.md`). Este capítulo apresenta o **artefato** e sua contribuição, remetendo a eles para não duplicar.
+> Diferenças aplicadas na transposição: as cinco figuras da versão preliminar foram preservadas e reancoradas (4.1 e 4.2); as remissões por caminho de arquivo viraram referências de capítulo; e o parágrafo de 4.1 que duplicava o fechamento da *Justificativa* foi condensado em remissão.
 >
-> **Convenção:** citações no sistema autor-data (ABNT NBR 10520).
+> **Relação com os demais capítulos:** a fundamentação teórica completa está no capítulo **Referencial Teórico** (seções 2.3–2.6, já implementado no TCC); a comparação com abordagens alternativas, em **Trabalhos Relacionados** (também já implementado); a implementação e a reprodução dos artefatos, em **Desenvolvimento** (rascunho em `DESENVOLVIMENTO.md`). Este capítulo apresenta o **artefato** e sua contribuição, remetendo a eles para não duplicar.
+>
+> **Convenções:** citações no sistema autor-data (ABNT NBR 10520); 3ª pessoa acadêmica; NEWMAN (2015) — o artigo verificado — como fonte única do padrão BFF.
 
 Este capítulo apresenta a **Arquitetura Metamórfica**: uma estratégia em que um único código-fonte assume formas diferentes conforme o cliente que se propõe a servir, resolvendo em **tempo de compilação** qual conjunto de operações cada artefato conterá. A seção 4.1 delimita o problema; a 4.2 formula a proposta; a 4.3 mostra sua concretização no protótipo; a 4.4 sintetiza a fundamentação; e a 4.5 desenvolve a principal contribuição — a *segurança por ausência*.
 
@@ -66,6 +68,8 @@ A Arquitetura Metamórfica combina duas propriedades que as alternativas usuais 
 ---
 
 > **Pendências de redação:**
-> - **Figuras:** a Proposta original traz placeholders `[Trocar imagem]` (comparação API Gateway × BFF; cenário de BFFs duplicados; esquema da configuração em tempo de compilação). Produzir os diagramas definitivos ao consolidar.
-> - **Voz do texto:** este rascunho adota a 3ª pessoa acadêmica, enquanto a Proposta original usa 1ª pessoa ("proponho"). Uniformizar conforme o padrão da instituição ao montar o documento final.
-> - **Desduplicação:** ao promover o Referencial Teórico a capítulo, confirmar que a fundamentação aqui permanece apenas em síntese, remetendo a ele.
+> - **Figuras:** a seção preliminar do TCC traz placeholders `[Trocar imagem]` (comparação API Gateway × BFF; cenário de BFFs duplicados; esquema da configuração em tempo de compilação). Este rascunho não os reproduz — decidir, ao implementar, se as figuras entram aqui e produzir os diagramas definitivos.
+> - ~~**Voz do texto:** este rascunho adota a 3ª pessoa acadêmica, enquanto a Proposta original usa 1ª pessoa ("proponho").~~ → **resolvido:** a 3ª pessoa acadêmica é a convenção do TCC e já foi aplicada à seção preliminar.
+> - **Desduplicação:** o Referencial Teórico já é capítulo no TCC (seções 2.1–2.7). Confirmar, ao implementar, que a fundamentação da seção 4.4 permanece apenas em síntese, remetendo a ele — e que a seção 4.5 não repete a seção 2.5 (*superfície de ataque*).
+> - **Remissões a converter (passo 2 do *modus operandi*):** as menções por caminho de arquivo — `DESENVOLVIMENTO.md` (seções 4.3 e 4.6), `TRABALHOS-RELACIONADOS.md` (seção 4.5), `METODOLOGIA.md` (seção 4.6) e `REFERENCIAL-TEORICO.md` (seção 4.4) — devem virar referências de capítulo/seção no TCC, nunca caminho de arquivo.
+> - **Níveis de cabeçalho:** o rascunho numera 4.1–4.6 supondo a Proposta como capítulo 4. No TCC, a *Proposta* está em `###` enquanto Referencial Teórico e Trabalhos Relacionados estão em `##` — normalizar na implementação (follow-up (c) do ROADMAP).
