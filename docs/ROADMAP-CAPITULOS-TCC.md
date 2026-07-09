@@ -6,6 +6,31 @@
 
 ---
 
+## Modus Operandi — Implementação de rascunhos no TCC
+
+> Procedimento padrão para promover cada capítulo-rascunho (`*.md` em `docs/case-study/`) ao documento final do TCC. Seguir sempre nesta ordem.
+>
+> **Arquivo final do TCC:** `docs/case-study/Proposta TCC - Reutilização de código para criar múltiplos projetos do tipo BFF .md`
+
+1. **Revisar o rascunho.**
+   - Conferir **todas as citações** (autor-data; fontes verificadas em `docs/refs/` / `CITACOES_ABNT.md`; reatribuir ou remover as não verificadas).
+   - Aplicar **correções ortográficas e gramaticais** e garantir a consistência de termos.
+2. **Implementar no TCC.** Transpor o texto para o **arquivo final** (acima), na posição definida pelo sumário.
+   - Ajustar os **níveis de cabeçalho** e **remover a meta de rascunho** (cabeçalho 🟡, notas de pendência).
+   - **Converter remissões de rascunho em referências internas:** apontamentos a arquivos (`ver TRABALHOS-RELACIONADOS.md`, caminhos `docs/refs/…`) tornam-se referências de capítulo/seção ("ver capítulo Trabalhos Relacionados"), **nunca** caminho de arquivo.
+   - **Atualizar a "Organização do Trabalho":** ajustar a contagem de partes e descrever o novo capítulo no sumário narrativo.
+   - **Cross-check citações ↔ Referências:** acrescentar à lista toda fonte nova que o capítulo introduza e **remover as que ficaram sem uso** após reatribuições.
+3. **Revisar o resultado no arquivo final.**
+   - Validar **duplicações** com capítulos vizinhos e a **coesão textual** (transições, numeração, remissões).
+   - **Normalizar os níveis de cabeçalho** dos capítulos entre si, padronizando a hierarquia do documento.
+   - Identificar os **pontos que pedem imagem/figura** para ilustração — nesta etapa apenas **anotar**; o registro é feito no passo 4.
+4. **Atualizar o ROADMAP.**
+   - Marcar o capítulo como implementado (seção 1, sumário, subseção do mapa, checklist e nota de progresso).
+   - **Registrar as pendências de figura** e demais follow-ups editoriais identificados no passo 3.
+   - **Manter rascunho e TCC coerentes:** propagar as correções ao rascunho ou marcá-lo como "implementado — fonte da verdade passa a ser o TCC".
+
+---
+
 ## 1. Situação atual
 
 O que a proposta **já** cobre:
@@ -20,7 +45,7 @@ O que a proposta **já** cobre:
 O que **falta** para transformar a proposta num TCC completo:
 
 - ~~Referencial Teórico como capítulo próprio~~ → **implementado no TCC** (arquivo original `Proposta TCC …md`, como capítulo *Referencial Teórico* antes da Proposta). Rascunho de trabalho mantido em `REFERENCIAL-TEORICO.md`.
-- ~~Trabalhos Relacionados~~ → **rascunho concluído** em `TRABALHOS-RELACIONADOS.md`.
+- ~~Trabalhos Relacionados~~ → **implementado no TCC** (arquivo original `Proposta TCC …md`, como capítulo antes da Proposta). Rascunho de trabalho mantido em `TRABALHOS-RELACIONADOS.md`.
 - ~~Metodologia~~ → **rascunho concluído** em `METODOLOGIA.md`.
 - ~~Desenvolvimento / Implementação do Protótipo~~ → **rascunho concluído** em `DESENVOLVIMENTO.md`.
 - Avaliação, Resultados e Discussão.
@@ -34,7 +59,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 
 1. ✅ Introdução
 2. ✅ Referencial Teórico — **implementado no TCC** (`Proposta TCC …md`); rascunho de trabalho em `REFERENCIAL-TEORICO.md`
-3. 🟡 Trabalhos Relacionados — rascunho em `TRABALHOS-RELACIONADOS.md`
+3. ✅ Trabalhos Relacionados — **implementado no TCC** (`Proposta TCC …md`); rascunho de trabalho em `TRABALHOS-RELACIONADOS.md`
 4. 🟡 Proposta: Arquitetura Metamórfica — rascunho refinado em `PROPOSTA-ARQUITETURA-METAMORFICA.md` (original preservado)
 5. 🟡 Metodologia — rascunho em `METODOLOGIA.md`
 6. 🟡 Desenvolvimento / Implementação do Protótipo — rascunho em `DESENVOLVIMENTO.md`
@@ -64,7 +89,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 - **Apoio já disponível:** todas as citações em `CITACOES_ABNT.md` (Eixos 1, 3 e 5); refs 1.1, 1.2, 3.1a, 3.1b, 3.2, 3.3, 5.1, 5.2, 6.2.
 - **Pronto quando:** cada conceito usado na Proposta tiver base citável neste capítulo.
 
-### 3.2 Trabalhos Relacionados — 🟡 rascunho concluído
+### 3.2 Trabalhos Relacionados — ✅ implementado no TCC
 
 > **Status:** capítulo rascunhado em `docs/case-study/TRABALHOS-RELACIONADOS.md`, contrastando quatro abordagens — repositórios separados, *feature flags* em runtime, microsserviços distintos e SPL por composição — com a metamorfose, mais a síntese comparativa e a discussão da lacuna sobre BFF. Todas as afirmações estão ancoradas em referências do acervo (`docs/refs/`); o capítulo trata *feature toggles* de forma equilibrada, reconhecendo seu valor na indústria. **Pendência opcional:** obter o PDF de Rahman et al. (2016) para citar formalmente a adoção das toggles.
 
@@ -144,7 +169,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 ## 4. Checklist priorizado de próximos passos
 
 1. [x] **Promover o Referencial Teórico a capítulo** — **implementado no TCC** (`Proposta TCC …md`); *Fundamentação teórica* da Proposta já desduplicada (passou a remeter ao novo capítulo).
-2. [x] **Escrever Trabalhos Relacionados** a partir da tabela comparativa do `CASE_STUDY.md` — rascunho em `TRABALHOS-RELACIONADOS.md`.
+2. [x] **Escrever Trabalhos Relacionados** a partir da tabela comparativa do `CASE_STUDY.md` — **implementado no TCC** (`Proposta TCC …md`).
 3. [x] **Definir a Metodologia (DSR)** e amarrar cada objetivo específico a um método de verificação — rascunho em `METODOLOGIA.md`.
 4. [x] **Redigir o Desenvolvimento** com trechos de código, `application.properties` e comandos de *build* — rascunho em `DESENVOLVIMENTO.md`.
 5. [ ] **Executar a Avaliação** — começar pelo experimento 1 (inspeção do JAR), que é rápido e prova a tese central.
@@ -155,7 +180,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 
 > **Sugestão de ordem de execução:** 1 → 5 (o experimento de inspeção do JAR dá o resultado mais forte com o menor esforço e ajuda a calibrar todo o resto) → 3/4 → 2 → 6/7 → 8 → 9.
 >
-> **Progresso:** o **Referencial Teórico** já está **implementado no TCC** (arquivo original); **Trabalhos Relacionados**, **Metodologia** e **Desenvolvimento** seguem em rascunho. **Próximo alvo:** esqueleto da **Avaliação, Resultados e Discussão** — redigível agora com marcadores `[RESULTADO A PREENCHER]`; a execução dos experimentos fica para uma sessão dedicada.
+> **Progresso:** **Referencial Teórico** e **Trabalhos Relacionados** já **implementados no TCC** (arquivo original); **Metodologia** e **Desenvolvimento** seguem em rascunho. **Próximo alvo:** esqueleto da **Avaliação, Resultados e Discussão** — redigível agora com marcadores `[RESULTADO A PREENCHER]`; a execução dos experimentos fica para uma sessão dedicada.
 
 ---
 
