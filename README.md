@@ -6,10 +6,11 @@ Este projeto é um **Backend For Frontend (BFF) Modular** desenvolvido com o fra
 
 O sistema atua como um agregador de serviços para o front-end, gerenciando diversos domínios de negócio de forma modularizado. A arquitetura está dividida em:
 
-*   **Domínio ([src/main/kotlin/org/acme/domain](src/main/kotlin/org/acme/domain)):** Contém as entidades de negócio e regras puras.
-*   **Adaptadores de API ([src/main/kotlin/org/acme/adapters/api](src/main/kotlin/org/acme/adapters/api)):** Implementações de entrada (REST Controllers).
-*   **Adaptadores de Infraestrutura ([src/main/kotlin/org/acme/adapters/infrastructure](src/main/kotlin/org/acme/adapters/infrastructure)):** Implementações de saída como persistência com Hibernate/PostgreSQL.
-*   **Configuração ([src/main/kotlin/org/acme/config](src/main/kotlin/org/acme/config)):** Configurações globais e provedores.
+*   **Domínio ([src/main/kotlin/edu/uerj/domain](src/main/kotlin/edu/uerj/domain)):** Contém as entidades de negócio e regras puras.
+*   **Serviços ([src/main/kotlin/edu/uerj/services](src/main/kotlin/edu/uerj/services)):** Casos de uso e regras de negócio (ex.: `OrderService`), compartilhados por todos os modos.
+*   **Adaptadores de API ([src/main/kotlin/edu/uerj/adapters/api](src/main/kotlin/edu/uerj/adapters/api)):** Implementações de entrada (REST Controllers e DTOs).
+*   **Adaptadores de Infraestrutura ([src/main/kotlin/edu/uerj/adapters/infrastructure](src/main/kotlin/edu/uerj/adapters/infrastructure)):** Implementações de saída como persistência com Hibernate/PostgreSQL.
+*   **Configuração ([src/main/kotlin/edu/uerj/config](src/main/kotlin/edu/uerj/config)):** Configurações globais e provedores.
 
 ## 🛠 Dependências Necessárias
 

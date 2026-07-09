@@ -159,6 +159,58 @@ Fundamenta a decisão de estruturar o projeto em Ports & Adapters, isolando o do
 
 ---
 
+## 7. Metodologia de Pesquisa — Design Science Research (DSR)
+
+> ⏳ **Seção em análise pendente.** As obras abaixo fundamentam o método adotado no capítulo de **Metodologia** (`METODOLOGIA.md`), que atualmente descreve a DSR **sem citação**. Foram localizadas em bases reais e tiveram os metadados conferidos na fonte (venue, DOI/ISBN), mas **ainda não foram lidas em profundidade nem integradas ao texto**. Antes de citá-las no TCC: (1) validar edição/páginas na fonte; (2) ler ao menos uma referência de processo (vom Brocke, Hevner & Maedche) e uma de enquadramento/rigor (Baskerville et al. ou Dresch et al.); (3) inserir as citações nos pontos correspondentes da Metodologia (definição da DSR e as seis atividades).
+>
+> ⚠️ **Nota sobre a composição das referências:** privilegiaram-se fontes **mais recentes** (2018–2020) — vom Brocke, Hevner & Maedche (7.1) e Baskerville et al. (7.3) — em lugar dos marcos clássicos, mas o **Peffers et al. (2007) foi mantido de forma redundante** (7.2), por ser a fonte original do modelo das **seis atividades** usado na seção *Etapas da Pesquisa*. Assim, preserva-se a proveniência exata dessa estrutura sem abrir mão de embasamento atualizado. Igualmente foi dispensado apenas o Hevner et al. (2004), cujo papel de enquadramento passou ao vom Brocke, Hevner & Maedche (2020).
+
+Fundamentam a escolha da **Design Science Research** como método condutor — a pesquisa orientada à construção e à avaliação de um *artefato* (a Arquitetura Metamórfica e o protótipo).
+
+### 7.1 vom Brocke, J.; Hevner, A.; Maedche, A. — *Introduction to Design Science Research* (2020)
+
+- **Fonte:** In: vom Brocke, J.; Hevner, A.; Maedche, A. (eds.). *Design Science Research. Cases*. Cham: Springer, 2020, p. 1–13. DOI: 10.1007/978-3-030-46781-4_1
+- **Link (versão de registro, Springer — acesso pago):** https://link.springer.com/chapter/10.1007/978-3-030-46781-4_1
+- **Acesso:** 🟡 Capítulo de livro **pago** no Springer. Cópias de autor disponíveis em repositórios institucionais (Univ. Münster, Univ. Liechtenstein) e ResearchGate — *grey literature*, verificar se corresponde à versão final antes de citar.
+- **Resumo:** Capítulo introdutório recente que sintetiza os conceitos centrais da *Design Science Research* — o paradigma de resolução de problemas por criação de artefatos inovadores — e apresenta o processo e os componentes essenciais da DSR para orientar estudos de caso aplicados.
+- **Relação com o TCC:** Substituto **atual** do enquadramento clássico de Hevner et al. (2004); fundamenta a definição da DSR e a natureza prescritiva (orientada a artefato) da contribuição, com terminologia de processo aplicável à seção *Etapas da Pesquisa*. ⏳ *Análise pendente.*
+
+### 7.2 Peffers, K.; Tuunanen, T.; Rothenberger, M. A.; Chatterjee, S. — *A Design Science Research Methodology for Information Systems Research* (JMIS, 2007)
+
+- **Fonte:** Journal of Management Information Systems, v. 24, n. 3, p. 45–77, 2007. DOI: 10.2753/MIS0742-1222240302
+- **Link (versão de registro, Taylor & Francis — acesso pago):** https://www.tandfonline.com/doi/abs/10.2753/MIS0742-1222240302
+- **Link (versão pública — PDF via Semantic Scholar):** https://www.semanticscholar.org/paper/A-Design-Science-Research-Methodology-for-Systems-Peffers-Tuunanen/186e57ffadbe45a30de067b0259357cded8db968
+- **Acesso:** 🟢 **Público.** Cópias em PDF amplamente disponíveis (Semantic Scholar, ResearchGate, repositórios). A versão de registro (Taylor & Francis/ACM) é paga.
+- **Resumo:** Propõe e demonstra a metodologia DSRM, estruturada em **seis atividades**: identificação do problema e motivação; definição dos objetivos da solução; projeto e desenvolvimento; demonstração; avaliação; e comunicação.
+- **Relação com o TCC:** Fonte **original** do modelo das seis atividades usado na seção *Etapas da Pesquisa* da Metodologia. Mantida de forma **redundante** ao lado das referências recentes (7.1) para preservar a proveniência exata dessa estrutura. Embora seja de 2007, tem acesso público e é a citação canônica do processo DSR. ⏳ *Análise pendente.*
+
+### 7.3 Baskerville, R.; Baiyere, A.; Gregor, S.; Hevner, A.; Rossi, M. — *Design Science Research Contributions: Finding a Balance between Artifact and Theory* (JAIS, 2018)
+
+- **Fonte:** Journal of the Association for Information Systems, v. 19, n. 5, p. 358–376, 2018. DOI: 10.17705/1jais.00495
+- **Link (página oficial, AIS eLibrary):** https://aisel.aisnet.org/jais/vol19/iss5/3/
+- **Link (versão pública — publisher's version, repositório CBS):** https://research-api.cbs.dk/ws/files/59353297/abayomi_baiyere_et_al_design_science_research_contributions_publishersversion.pdf
+- **Acesso:** 🟢 **Público.** A versão do editor está aberta no repositório institucional da Copenhagen Business School. A página do AIS eLibrary bloqueia acesso automatizado (HTTP 403), mas o PDF é obtível pelo repositório CBS.
+- **Resumo:** Discute o que constitui uma contribuição aceitável em DSR — o artefato, a teoria de projeto ou ambos — e oferece orientações e recomendações acionáveis para autores e revisores posicionarem e avaliarem o rigor de trabalhos de *design science*.
+- **Relação com o TCC:** Referência **recente e revisada por pares** que sustenta o enquadramento da contribuição deste trabalho como **artefato** (arquitetura + protótipo) e ajuda a justificar os critérios de avaliação. Substitui o papel de processo/rigor antes atribuído a Peffers et al. (2007). ⏳ *Análise pendente.*
+
+### 7.4 Wieringa, R. J. — *Design Science Methodology for Information Systems and Software Engineering* (Springer, 2014)
+
+- **Fonte:** Berlin: Springer, 2014. ISBN: 978-3-662-43838-1. DOI: 10.1007/978-3-662-43839-8
+- **Link:** https://doi.org/10.1007/978-3-662-43839-8
+- **Acesso:** 🔴 **Livro pago** (Springer). Sem versão aberta integral; há apenas materiais avulsos do autor (slides, capítulos de amostra) em domínio público.
+- **Resumo:** Livro-texto que oferece diretrizes para a prática de *design science* em SI e Engenharia de Software, articulando o ciclo de projeto do artefato com o ciclo de investigação empírica (*design cycle* e *empirical cycle*).
+- **Relação com o TCC:** Dá suporte à distinção entre projetar o artefato e avaliá-lo empiricamente, útil para amarrar a proposta (projeto) à avaliação (evidência). ⏳ *Análise pendente.*
+
+### 7.5 Dresch, A.; Lacerda, D. P.; Antunes Júnior, J. A. V. — *Design Science Research: Método de Pesquisa para Avanço da Ciência e Tecnologia* (Bookman, 2015)
+
+- **Fonte:** Porto Alegre: Bookman, 2015. ISBN: 978-85-8260-298-0.
+- **Link:** https://books.google.com/books/about/Design_Science_Research.html?id=matYBQAAQBAJ
+- **Acesso:** 🔴 **Livro comercial** (Bookman/Grupo A). Sem versão aberta; apenas prévia no Google Books e acesso institucional (ex.: Minha Biblioteca). Versão em **português**, conveniente para citação em ABNT.
+- **Resumo:** Referência **em português** que sistematiza a *Design Science Research* como método de pesquisa, apresentando seus fundamentos, etapas e critérios de rigor para a produção de artefatos que resolvem problemas de engenharia e gestão.
+- **Relação com o TCC:** Referência em língua portuguesa conveniente para a redação e citação da Metodologia no padrão ABNT, alinhada ao público do TCC. ⏳ *Análise pendente.*
+
+---
+
 ## Resumo do Mapeamento Tema × Referência
 
 | Conceito do TCC | Referências de apoio |

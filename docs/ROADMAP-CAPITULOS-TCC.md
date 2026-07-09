@@ -1,6 +1,8 @@
 # Roadmap dos Capítulos do TCC — Próximos Passos
 
 > **Objetivo deste documento:** mapear os capítulos ainda ausentes na proposta (`docs/case-study/Proposta TCC …md`) e organizar os próximos passos para concebê-los, aproveitando o protótipo `modular-bff` já existente, o estudo de caso (`docs/case-study/CASE_STUDY.md`) e as referências científicas já reunidas (`docs/case-study/REFERENCIAS_CIENTIFICAS.md`, `docs/case-study/CITACOES_ABNT.md`, PDFs em `docs/refs/`).
+>
+> **Insumos de apoio criados durante a redação:** o capítulo de **Metodologia** já rascunhado (`docs/case-study/METODOLOGIA.md`) e o **guia de fontes acadêmicas** com o *modus operandi* de pesquisa (`docs/FONTES-ACADEMICAS.md`).
 
 ---
 
@@ -17,10 +19,10 @@ O que a proposta **já** cobre:
 
 O que **falta** para transformar a proposta num TCC completo:
 
-- Referencial Teórico como capítulo próprio (hoje é subseção).
-- Trabalhos Relacionados.
-- Metodologia.
-- Desenvolvimento / Implementação do Protótipo.
+- ~~Referencial Teórico como capítulo próprio~~ → **rascunho concluído** em `REFERENCIAL-TEORICO.md`.
+- ~~Trabalhos Relacionados~~ → **rascunho concluído** em `TRABALHOS-RELACIONADOS.md`.
+- ~~Metodologia~~ → **rascunho concluído** em `METODOLOGIA.md`.
+- ~~Desenvolvimento / Implementação do Protótipo~~ → **rascunho concluído** em `DESENVOLVIMENTO.md`.
 - Avaliação, Resultados e Discussão.
 - Conclusão e Trabalhos Futuros.
 
@@ -31,11 +33,11 @@ O que **falta** para transformar a proposta num TCC completo:
 Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a criar):
 
 1. ✅ Introdução
-2. 🟡 Referencial Teórico *(hoje embutido na Proposta; promover a capítulo)*
-3. ⬜ Trabalhos Relacionados
-4. 🟡 Proposta: Arquitetura Metamórfica *(refinar após o referencial)*
-5. ⬜ Metodologia
-6. ⬜ Desenvolvimento / Implementação do Protótipo
+2. 🟡 Referencial Teórico — rascunho em `REFERENCIAL-TEORICO.md`
+3. 🟡 Trabalhos Relacionados — rascunho em `TRABALHOS-RELACIONADOS.md`
+4. 🟡 Proposta: Arquitetura Metamórfica — rascunho refinado em `PROPOSTA-ARQUITETURA-METAMORFICA.md` (original preservado)
+5. 🟡 Metodologia — rascunho em `METODOLOGIA.md`
+6. 🟡 Desenvolvimento / Implementação do Protótipo — rascunho em `DESENVOLVIMENTO.md`
 7. ⬜ Avaliação, Resultados e Discussão
 8. ⬜ Conclusão e Trabalhos Futuros
 9. ✅ Referências
@@ -60,7 +62,9 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 - **Apoio já disponível:** todas as citações em `CITACOES_ABNT.md` (Eixos 1, 3 e 5); refs 1.1, 1.2, 3.1a, 3.1b, 3.2, 3.3, 5.1, 5.2, 6.2.
 - **Pronto quando:** cada conceito usado na Proposta tiver base citável neste capítulo.
 
-### 3.2 Trabalhos Relacionados
+### 3.2 Trabalhos Relacionados — 🟡 rascunho concluído
+
+> **Status:** capítulo rascunhado em `docs/case-study/TRABALHOS-RELACIONADOS.md`, contrastando quatro abordagens — repositórios separados, *feature flags* em runtime, microsserviços distintos e SPL por composição — com a metamorfose, mais a síntese comparativa e a discussão da lacuna sobre BFF. Todas as afirmações estão ancoradas em referências do acervo (`docs/refs/`); o capítulo trata *feature toggles* de forma equilibrada, reconhecendo seu valor na indústria. **Pendência opcional:** obter o PDF de Rahman et al. (2016) para citar formalmente a adoção das toggles.
 
 - **Objetivo:** posicionar a Arquitetura Metamórfica frente a abordagens existentes e evidenciar a lacuna que ela preenche.
 - **Conteúdo sugerido — comparar com:**
@@ -73,7 +77,9 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 - **Apoio:** refs 4.1–4.3 (feature toggles), 3.1a/3.1b/3.3 (SPL/variabilidade), 1.2 (padrões de microsserviços).
 - **Pronto quando:** houver um quadro comparativo justificado e a lacuna estiver explícita.
 
-### 3.3 Metodologia
+### 3.3 Metodologia — 🟡 rascunho concluído
+
+> **Status:** capítulo rascunhado em `docs/case-study/METODOLOGIA.md` (classificação da pesquisa, DSR como método, 4 perguntas de pesquisa, 6 etapas DSR mapeadas aos capítulos, procedimentos de avaliação, ambiente/ferramentas e quadro de amarração objetivo→método→evidência). **Pendência:** integrar as citações de DSR (refs 7.1–7.5 de `REFERENCIAS_CIENTIFICAS.md`, ainda em *análise pendente*) e reancorar as "seis atividades" em Peffers et al. (2007).
 
 - **Objetivo:** descrever como o trabalho foi conduzido e como a proposta será avaliada.
 - **Abordagem recomendada:** **Design Science Research (DSR)** — pesquisa que produz e avalia um *artefato* (a arquitetura + o protótipo) para resolver um problema real. Alternativa: estudo de caso / prova de conceito.
@@ -82,10 +88,12 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
   - Etapas: identificação do problema → definição de objetivos → projeto do artefato (arquitetura) → demonstração (protótipo) → avaliação (métricas) → comunicação.
   - Definição das **métricas de avaliação** (ver 3.5) e do procedimento experimental (builds com diferentes *flags*).
   - Ferramentas e ambiente (Kotlin/Quarkus, Docker, inspeção de artefato).
-- **Próximos passos:** escolher e citar 1–2 referências metodológicas de DSR; definir claramente as perguntas de pesquisa que a avaliação deve responder.
-- **Pronto quando:** cada objetivo específico tiver um método de verificação associado.
+- **Próximos passos:** ler as referências de DSR reunidas na seção 7 de `REFERENCIAS_CIENTIFICAS.md` e inserir as citações no texto; as perguntas de pesquisa PP1–PP4 já estão definidas.
+- **Pronto quando:** cada objetivo específico tiver um método de verificação associado. ✅
 
-### 3.4 Desenvolvimento / Implementação do Protótipo
+### 3.4 Desenvolvimento / Implementação do Protótipo — 🟡 rascunho concluído
+
+> **Status:** capítulo rascunhado em `docs/case-study/DESENVOLVIMENTO.md`, com as divergências doc × código já reconciliadas em `README.md` e `CASE_STUDY.md`. **Pendências:** produzir as figuras e tratar as melhorias sinalizadas no rodapé do capítulo — CORS permissivo, `init.sh`, `countOrders`, `@Transactional` em leituras e as métricas de reuso.
 
 - **Objetivo:** descrever o protótipo `modular-bff` como *demonstração* concreta da arquitetura.
 - **Conteúdo sugerido (reaproveitar o `CASE_STUDY.md`, sem duplicá-lo):**
@@ -133,10 +141,10 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 
 ## 4. Checklist priorizado de próximos passos
 
-1. [ ] **Promover o Referencial Teórico a capítulo** (mover o que já existe + expandir). *Base pronta.*
-2. [ ] **Escrever Trabalhos Relacionados** a partir da tabela comparativa do `CASE_STUDY.md`.
-3. [ ] **Definir a Metodologia (DSR)** e amarrar cada objetivo específico a um método de verificação.
-4. [ ] **Redigir o Desenvolvimento** com trechos de código, `application.properties` e comandos de *build*.
+1. [x] **Promover o Referencial Teórico a capítulo** — rascunho em `REFERENCIAL-TEORICO.md`.
+2. [x] **Escrever Trabalhos Relacionados** a partir da tabela comparativa do `CASE_STUDY.md` — rascunho em `TRABALHOS-RELACIONADOS.md`.
+3. [x] **Definir a Metodologia (DSR)** e amarrar cada objetivo específico a um método de verificação — rascunho em `METODOLOGIA.md`.
+4. [x] **Redigir o Desenvolvimento** com trechos de código, `application.properties` e comandos de *build* — rascunho em `DESENVOLVIMENTO.md`.
 5. [ ] **Executar a Avaliação** — começar pelo experimento 1 (inspeção do JAR), que é rápido e prova a tese central.
 6. [ ] **Coletar métricas** de reuso e de superfície de ataque (experimentos 2 e 3).
 7. [ ] **Escrever Resultados/Discussão e Ameaças à Validade**.
@@ -144,6 +152,8 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 9. [ ] **Produzir as figuras** (o `CASE_STUDY.md` traz os textos; faltam os diagramas — inclusive substituir os placeholders `[Trocar imagem]` da proposta).
 
 > **Sugestão de ordem de execução:** 1 → 5 (o experimento de inspeção do JAR dá o resultado mais forte com o menor esforço e ajuda a calibrar todo o resto) → 3/4 → 2 → 6/7 → 8 → 9.
+>
+> **Progresso:** já estão em rascunho os capítulos **Referencial Teórico**, **Trabalhos Relacionados**, **Metodologia** e **Desenvolvimento**. **Próximo alvo:** esqueleto da **Avaliação, Resultados e Discussão** — redigível agora com marcadores `[RESULTADO A PREENCHER]`; a execução dos experimentos fica para uma sessão dedicada.
 
 ---
 
@@ -164,4 +174,9 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 | PDFs das referências | `docs/refs/` |
 | Detalhes do protótipo (arquitetura, entidades, endpoints, build) | `docs/case-study/CASE_STUDY.md` |
 | Tese de segurança por ausência e tabela comparativa | `docs/case-study/CASE_STUDY.md` (seção 11) e a seção *Segurança por ausência* da Proposta |
+| Referencial Teórico redigido | `docs/case-study/REFERENCIAL-TEORICO.md` |
+| Trabalhos Relacionados redigido | `docs/case-study/TRABALHOS-RELACIONADOS.md` |
+| Metodologia (DSR) redigida | `docs/case-study/METODOLOGIA.md` |
+| Desenvolvimento redigido | `docs/case-study/DESENVOLVIMENTO.md` |
+| Onde buscar fontes + *modus operandi* de pesquisa | `docs/FONTES-ACADEMICAS.md` |
 | Código-fonte | raiz do repositório (`src/main/kotlin/edu/uerj/...`) |

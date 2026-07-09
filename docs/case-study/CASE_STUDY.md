@@ -122,11 +122,11 @@ NEW_ORDER → CONFIRMED → PAYMENT_PENDING → PAID
 | Modo     | Método  | Rota                                              | Descrição                    |
 |----------|---------|---------------------------------------------------|------------------------------|
 | Geral    | `GET`   | `/v1/order/{orderId}`                             | Busca pedido por ID          |
-| Geral    | `GET`   | `/v1/order/list?limit={n}&offset={n}`             | Listagem paginada de pedidos |
+| Geral    | `GET`   | `/v1/order/list?limitPerPage={n}&page={n}`        | Listagem paginada de pedidos |
 | Externo  | `POST`  | `/v1/order/create`                                | Cria novo pedido             |
 | Interno  | `PATCH` | `/v1/order/{orderId}/delivery/{deliveryId}/{status}` | Atualiza status do pedido |
 
-**Restrições de paginação**: `limit` entre 1 e 500, padrão 30.
+**Restrições de paginação**: o parâmetro `limitPerPage` aceita valores entre **1 e 500**, com padrão **30** (aplicado pelo controller quando o parâmetro é omitido). Valores fora dessa faixa são saneados pelo `OrderService`, que adota um *fallback* de **50**. O parâmetro `page` (padrão **0**) é multiplicado por `limitPerPage` para calcular o deslocamento (paginação baseada em página).
 
 **Endpoints de infraestrutura**:
 - `GET /health` — Health check

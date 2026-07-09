@@ -38,7 +38,7 @@ Contudo, utilizar um BFF não são somente vantagens. Quantos mais frontend houv
 * Dificuldade de reuso de código: Por definição o BFF é um projeto para cada frontend, o que significa que se 2 ou mais frontend atuam sobre um mesmo tema/contexto, como aplicações e-commerce por exemplo, é possível que muitas estruturas sejam simplesmente idênticas dentre ambas as aplicações.  
 *  Maior custo de manutenção: Quanto mais projetos frontend, mais projetos BFF.
 
-Esse dilema entre especialização e reuso é reconhecido pela literatura. Taibi, Lenarduzzi e Pahl (2018) alertam que o reuso de API deve ser tratado com cautela, pois clientes distintos que compartilham APIs semelhantes obrigam a manter e alterar cada uma em conjunto a cada mudança; em contrapartida, os mesmos autores registram que compartilhar um único componente entre vários projetos reduz o esforço de manutenção, ao concentrar cada alteração num só ponto. É exatamente esse ganho de reuso — sem renunciar à especialização por cliente — que a arquitetura proposta neste trabalho persegue. 
+Taibi, Lenarduzzi e Pahl (2018) alertam que o reuso de API deve ser tratado com cautela, pois clientes distintos que compartilham APIs semelhantes obrigam a manter e alterar cada uma em conjunto a cada mudança; em contrapartida, os mesmos autores registram que compartilhar um único componente entre vários projetos reduz o esforço de manutenção, ao concentrar cada alteração num só ponto. É exatamente esse ganho de reuso — sem renunciar à especialização por cliente — que a arquitetura proposta neste trabalho persegue. 
 
 ### 
 
