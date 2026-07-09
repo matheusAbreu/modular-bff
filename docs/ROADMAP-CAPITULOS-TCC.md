@@ -57,7 +57,7 @@ O que **falta** para transformar a proposta num TCC completo:
 - ~~Trabalhos Relacionados~~ → **implementado no TCC** (arquivo original `Proposta TCC …md`, como capítulo antes da Proposta). Rascunho de trabalho mantido em `TRABALHOS-RELACIONADOS.md`.
 - ~~Proposta: Arquitetura Metamórfica (capítulo redigido)~~ → **implementado no TCC** (seções 4.1–4.6), substituindo a redação preliminar. Rascunho de trabalho mantido em `PROPOSTA-ARQUITETURA-METAMORFICA.md`.
 - ~~Metodologia~~ → **implementado no TCC** (seções 5.1–5.7), absorvendo o método de reuso de `METRICA-REUSO.md` na seção 5.5.2. Rascunhos mantidos como registro de trabalho.
-- ~~Desenvolvimento / Implementação do Protótipo~~ → **rascunho concluído** em `DESENVOLVIMENTO.md`.
+- ~~Desenvolvimento / Implementação do Protótipo~~ → **implementado no TCC** (seções 6.1–6.8), com as afirmações técnicas ancoradas na documentação oficial do Quarkus. Rascunho mantido como registro de trabalho.
 - ~~Avaliação, Resultados e Discussão~~ → **rascunho iniciado** em `AVALIACAO.md`, com os resultados de PP2 e PP3 já coletados e os demais marcados como `[A PREENCHER]`.
 - Conclusão e Trabalhos Futuros.
 
@@ -182,7 +182,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 3. ✅ Trabalhos Relacionados — **implementado no TCC** (`Proposta TCC …md`); rascunho de trabalho em `TRABALHOS-RELACIONADOS.md`
 4. ✅ Proposta: Arquitetura Metamórfica — **implementado no TCC** (seções 4.1–4.6); rascunho de trabalho em `PROPOSTA-ARQUITETURA-METAMORFICA.md`
 5. ✅ Metodologia — **implementado no TCC** (seções 5.1–5.7); rascunho de trabalho em `METODOLOGIA.md` e `METRICA-REUSO.md`
-6. 🟡 Desenvolvimento / Implementação do Protótipo — rascunho em `DESENVOLVIMENTO.md`
+6. ✅ Desenvolvimento / Implementação do Protótipo — **implementado no TCC** (seções 6.1–6.8); rascunho de trabalho em `DESENVOLVIMENTO.md`
 7. 🟡 Avaliação, Resultados e Discussão — rascunho em `AVALIACAO.md`
 8. ⬜ Conclusão e Trabalhos Futuros
 9. ✅ Referências
@@ -250,7 +250,9 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 
 ### 3.4 Desenvolvimento / Implementação do Protótipo — 🟡 rascunho concluído
 
-> **Status:** capítulo rascunhado em `docs/case-study/DESENVOLVIMENTO.md`, com as divergências doc × código já reconciliadas em `README.md` e `CASE_STUDY.md`. **Pendências:** produzir as figuras e tratar as melhorias sinalizadas no rodapé do capítulo — CORS permissivo, `init.sh`, `countOrders`, `@Transactional` em leituras e as métricas de reuso.
+> **Status:** capítulo rascunhado em `docs/case-study/DESENVOLVIMENTO.md` e **revisado** após a pendência crítica da seção 1.1: a seção 6.5 passou a enunciar a ausência do *ponto de entrada* (e não da classe), e a 6.8 substituiu o procedimento de inspeção pelo do artefato de produção, em duas camadas. Atualizados também os alvos do `Makefile` (seção 6.6), o vocabulário de variantes e linha de base, e o job de CI. As remissões a `CASE_STUDY.md` foram convertidas: a 6.1 remete à seção 5.5.3 e as 6.2 e 6.4 absorveram o conteúdo (entidades, estados do `OrderStatus`, escopo das migrações). **Pendência única:** substituir os cinco marcadores `🖼️ [FIGURA A INSERIR]` pelas imagens definitivas — camadas hexagonais, modelo de domínio, ciclo de vida do pedido, schema do banco e fluxo de *build*.
+>
+> **Decisões registradas:** o CORS teve os métodos restringidos aos verbos atendidos e as origens parametrizadas por ambiente, mantendo o coringa `*` como padrão — escolha deliberada de projeto-referência, para facilitar a reprodução. As demais melhorias de código sinalizadas (`init.sh`, `countOrders`, `@Transactional` em leituras) foram **descartadas**: são pormenores sem efeito sobre a segurança por ausência ou sobre qualquer medição. O método das métricas de reuso migrou para a Metodologia (seção 5.5.2).
 
 - **Objetivo:** descrever o protótipo `modular-bff` como *demonstração* concreta da arquitetura.
 - **Conteúdo sugerido (reaproveitar o `CASE_STUDY.md`, sem duplicá-lo):**
@@ -302,7 +304,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 2. [x] **Escrever Trabalhos Relacionados** a partir da tabela comparativa do `CASE_STUDY.md` — **implementado no TCC** (`Proposta TCC …md`).
 2b. [x] **Implementar a Proposta** — rascunho `PROPOSTA-ARQUITETURA-METAMORFICA.md` transposto para o TCC (seções 4.1–4.6), com as figuras preservadas e os cabeçalhos normalizados.
 3. [x] **Definir a Metodologia (DSR)** e amarrar cada objetivo específico a um método de verificação — **implementado no TCC** (seções 5.1–5.7), com as citações de DSR resolvidas (Peffers, Baskerville, Engström).
-4. [x] **Redigir o Desenvolvimento** com trechos de código, `application.properties` e comandos de *build* — rascunho em `DESENVOLVIMENTO.md`.
+4. [x] **Redigir o Desenvolvimento** com trechos de código, `application.properties` e comandos de *build* — **implementado no TCC** (seções 6.1–6.8), com citação da documentação oficial do Quarkus e cinco marcadores de figura pendentes.
 5. [x] **Executar a Avaliação** — experimento 1 (inspeção do artefato) executado nas três variantes de produção; resultados em `AVALIACAO.md` (seções 7.2 e 7.3). O achado obrigou a reformular a tese: ver a pendência crítica da seção 1.1.
 6. [ ] **Coletar métricas** de reuso e de superfície de ataque (experimentos 2 e 3) — o método de cálculo do reuso está definido em `METRICA-REUSO.md`; falta executá-lo.
 7. [ ] **Escrever Resultados/Discussão e Ameaças à Validade**.

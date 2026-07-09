@@ -336,6 +336,63 @@ A evidência, contudo, não é unânime:
 
 ---
 
+## Eixo 8 — Documentação oficial das tecnologias (comportamento do mecanismo)
+
+> Conferido nas páginas oficiais do Quarkus em **9 jul. 2026**, conforme a **regra obrigatória** de `FONTES-ACADEMICAS.md`, que exige registrar o **link completo**, a **seção consultada**, a **versão** e a **data de acesso** de toda documentação citada. Documentação é fonte viva: muda sem aviso e sem trocar de endereço.
+>
+> **Links das fontes deste eixo** (todos referentes à linha 3.x, a mesma da versão 3.37.0 empregada no protótipo):
+>
+> | Chamada | Guia | Seção conferida | Link |
+> |---|---|---|---|
+> | QUARKUS (2026a) | *Quarkus ArC: CDI reference guide* | 5.8, *Enabling Beans for Quarkus Build Properties* | https://quarkus.io/guides/cdi-reference |
+> | QUARKUS (2026b) | *Writing your own extension* | 2.6, *Generating Bytecode* | https://quarkus.io/guides/writing-extensions |
+> | QUARKUS (2026c) | *Using Kotlin* | *Important Maven configuration points* | https://quarkus.io/guides/kotlin |
+> | QUARKUS (2026d) | *Building applications with Gradle* | *Using fast-jar* | https://quarkus.io/guides/gradle-tooling |
+>
+> ⚠️ **Nuance de 2026c.** O trecho sobre classes `final` e o plugin `all-open` está sob uma seção de configuração **Maven** do guia de Kotlin. Isso não invalida a citação: o `all-open` é plugin do **compilador Kotlin** e independe do sistema de *build*. O protótipo o configura no `build.gradle.kts`, com as mesmas anotações que a documentação indica. Registrar a seção tal como ela é, e não como conviria que fosse.
+
+**QUARKUS (2026a)** — o que a `@IfBuildProperty` faz:
+
+> "conditionally enable a bean when a Quarkus build time property has or does not have a specific value, via the `@io.quarkus.arc.properties.IfBuildProperty` and `@io.quarkus.arc.properties.UnlessBuildProperty` annotations." (QUARKUS, 2026a).
+>
+> *Tradução livre:* "habilitar condicionalmente um *bean* quando uma propriedade de tempo de compilação do Quarkus tem, ou não tem, um valor específico, por meio das anotações `@IfBuildProperty` e `@UnlessBuildProperty`."
+
+E a afirmação decisiva para a tese — a irreversibilidade em tempo de execução:
+
+> "Properties set at runtime have absolutely no effect on the bean resolution using `@IfBuildProperty` / `@UnlessBuildProperty`." (QUARKUS, 2026a).
+>
+> *Tradução livre:* "Propriedades definidas em tempo de execução não têm absolutamente nenhum efeito sobre a resolução do *bean* quando se usa `@IfBuildProperty` / `@UnlessBuildProperty`."
+
+*Glosa:* é a fonte primária do comportamento do mecanismo. O segundo trecho sustenta, na documentação do próprio *framework*, a afirmação de que nenhuma configuração de *deploy* reativa um ponto de entrada não registrado no *build* — o que distingue a metamorfose da *feature flag* em runtime.
+
+**QUARKUS (2026b)** — a fase de *augmentation*, onde a variabilidade é resolvida:
+
+> "The output of these build steps is some recorded bytecode, using a bytecode generation library called Gizmo, that is used to actually bootstrap the application at runtime." (QUARKUS, 2026b).
+>
+> *Tradução livre:* "A saída dessas etapas de *build* é um *bytecode* gravado, por meio de uma biblioteca de geração de *bytecode* chamada Gizmo, que é usado para efetivamente inicializar a aplicação em tempo de execução."
+
+*Glosa:* explica **por que** o efeito da anotação é observável num artefato distinto do JAR da aplicação: o *bean* e o invocador são *bytecode gerado* na *augmentation*, e não saída do compilador Kotlin.
+
+**QUARKUS (2026c)** — classes `final` e o plugin `all-open`:
+
+> "Having `final` classes however does not work well with various frameworks that need to create Dynamic Proxies. Thus, the `all-open` Kotlin compiler plugin allows us to configure the compiler to **not** mark as `final` classes that have certain annotations." (QUARKUS, 2026c).
+>
+> *Tradução livre:* "Ter classes `final`, contudo, não funciona bem com diversos *frameworks* que precisam criar *dynamic proxies*. Assim, o plugin de compilação Kotlin `all-open` permite configurar o compilador para **não** marcar como `final` as classes que tenham certas anotações."
+
+*Glosa:* fundamenta a seção 6.1. As anotações configuradas no protótipo (`@Path`, `@ApplicationScoped`, `@Entity`) são exatamente as indicadas pela documentação.
+
+**QUARKUS (2026d)** — o empacotamento `fast-jar` e seu diretório de saída:
+
+> "`fast-jar` is now the default quarkus package type. The result of `./gradlew build` command is a new directory under `build` named `quarkus-app`." e "In order to successfully run the produced jar, you need to have the entire contents of the `quarkus-app` directory. If any of the files are missing, the application will not start or might not function correctly." (QUARKUS, 2026d).
+>
+> *Tradução livre:* "`fast-jar` é agora o tipo de empacotamento padrão do Quarkus. O resultado do comando `./gradlew build` é um novo diretório sob `build`, chamado `quarkus-app`." e "Para executar com sucesso o *jar* produzido, é necessário ter todo o conteúdo do diretório `quarkus-app`. Se qualquer um dos arquivos estiver faltando, a aplicação não iniciará ou poderá não funcionar corretamente."
+
+*Glosa:* sustenta a caracterização do artefato na seção 6.8. Adota-se o guia de **Gradle**, e não o de Maven, por ser o sistema de *build* do protótipo — exigência do passo 8 do procedimento de `FONTES-ACADEMICAS.md`.
+
+> ⚠️ **Limite da documentação (passo 7 do procedimento).** A **estrutura interna** do diretório `quarkus-app` — os subdiretórios `app/` e `quarkus/` e os arquivos `generated-bytecode.jar` e `transformed-bytecode.jar` — **não é descrita** em nenhuma das páginas oficiais consultadas: `gradle-tooling` e `maven-tooling` apenas registram que o resultado do *build* é o diretório `quarkus-app`, e `class-loading-reference` (https://quarkus.io/guides/class-loading-reference, acesso em 9 jul. 2026) trata dos carregadores de classe, não do layout físico. As afirmações do trabalho sobre esses arquivos são, portanto, **evidência empírica por inspeção**, e o TCC as apresenta como tais na seção 6.8, com os comandos que as reproduzem.
+
+---
+
 ## Mapa síntese: argumento do TCC × citações
 
 | Argumento do TCC | Citações de apoio |
@@ -349,6 +406,9 @@ A evidência, contudo, não é unânime:
 | Separação interno/externo (método/ameaça) | MANADHATA; WING (2005, p. 5); HANNOUSSE; YAHIOUCHE (2020, p. 2) |
 | Hexagonal: isolar negócio; framework é detalhe | MARTIN (2017, cap. 31–33) |
 | Medição de reuso (PP1): *reuse percent* e *reuse level* | FRAKES; TERRY (1996, p. 8, 15–16); FRAKES; KANG (2005, p. 529, 531) |
+| Comportamento do `@IfBuildProperty`; irreversibilidade em runtime | QUARKUS (2026a) |
+| Fase de *augmentation*; bytecode gerado no *build* | QUARKUS (2026b) |
+| Classes `final` em Kotlin e o plugin `all-open` | QUARKUS (2026c) |
 | DSR: seis atividades do processo de pesquisa | PEFFERS et al. (2007, p. 46, 52); BASKERVILLE et al. (2018, p. 364) |
 | DSR: contribuição no artefato; adequação à Engenharia de Software | BASKERVILLE et al. (2018, p. 358); ENGSTRÖM et al. (2020, p. 2630, 2652) |
 | Vigência do `RSI` e das métricas de reuso em avaliação industrial | IRSHAD et al. (2016, p. 1, 5) |
@@ -387,5 +447,13 @@ NEWMAN, Sam. **Backends For Frontends**. [*S. l.*], 18 nov. 2015. Disponível em
 PAHL, Claus; JAMSHIDI, Pooyan. Microservices: a systematic mapping study. In: INTERNATIONAL CONFERENCE ON CLOUD COMPUTING AND SERVICES SCIENCE, 6., 2016. **Proceedings** [...]. Setúbal: SciTePress, 2016. v. 1, p. 137-146. DOI: 10.5220/0005785501370146.
 
 PEFFERS, Ken; TUUNANEN, Tuure; ROTHENBERGER, Marcus A.; CHATTERJEE, Samir. A design science research methodology for information systems research. **Journal of Management Information Systems**, [*s. l.*], v. 24, n. 3, p. 45-77, 2007. DOI: 10.2753/MIS0742-1222240302.
+
+QUARKUS. **Quarkus ArC: CDI reference guide**. Seção 5.8, *Enabling Beans for Quarkus Build Properties*. [*S. l.*]: Red Hat, 2026a. Documentação oficial, versão 3.x. Disponível em: https://quarkus.io/guides/cdi-reference. Acesso em: 9 jul. 2026.
+
+QUARKUS. **Writing your own extension**. Seção 2.6, *Generating Bytecode*. [*S. l.*]: Red Hat, 2026b. Documentação oficial, versão 3.x. Disponível em: https://quarkus.io/guides/writing-extensions. Acesso em: 9 jul. 2026.
+
+QUARKUS. **Using Kotlin**. Seção *Important Maven configuration points*. [*S. l.*]: Red Hat, 2026c. Documentação oficial, versão 3.x. Disponível em: https://quarkus.io/guides/kotlin. Acesso em: 9 jul. 2026.
+
+QUARKUS. **Building applications with Gradle**. Seção *Using fast-jar*. [*S. l.*]: Red Hat, 2026d. Documentação oficial, versão 3.x. Guia de Gradle — o sistema de *build* do protótipo —, e não o de Maven. Disponível em: https://quarkus.io/guides/gradle-tooling. Acesso em: 9 jul. 2026.
 
 TAIBI, Davide; LENARDUZZI, Valentina; PAHL, Claus. Architectural patterns for microservices: a systematic mapping study. In: INTERNATIONAL CONFERENCE ON CLOUD COMPUTING AND SERVICES SCIENCE, 8., 2018. **Proceedings** [...]. Setúbal: SciTePress, 2018. p. 221-232. DOI: 10.5220/0006798302210232.

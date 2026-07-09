@@ -55,9 +55,9 @@ Este trabalho tem como objetivo apresentar uma proposta de arquitetura de projet
 
 ## Organização do Trabalho
 
-Este documento está organizado em oito partes. A **Introdução** contextualiza o leitor na arquitetura de microsserviços, no papel do API Gateway como ponto central de agregação de dados e no surgimento do padrão *Backend for Frontend* (BFF). A **Justificativa** discute as vantagens do BFF frente ao API Gateway e expõe o problema que motiva o trabalho: a dificuldade de reuso de código e o crescente custo de manutenção quando múltiplos BFF atendem a um mesmo contexto. Os **Objetivos** delimitam a meta geral — propor uma arquitetura capaz de gerar múltiplas aplicações a partir de um único código-fonte — e os objetivos específicos que a operacionalizam. O **Referencial Teórico** consolida os conceitos que fundamentam a proposta: microsserviços e BFF, Linhas de Produto de Software e variabilidade em tempo de compilação, superfície de ataque e Arquitetura Hexagonal. Os **Trabalhos Relacionados** posicionam a proposta frente a abordagens alternativas — repositórios separados, *feature flags* em runtime, microsserviços distintos e linhas de produto por composição —, evidenciando a lacuna que ela preenche.
+Este documento está organizado em nove partes. A **Introdução** contextualiza o leitor na arquitetura de microsserviços, no papel do API Gateway como ponto central de agregação de dados e no surgimento do padrão *Backend for Frontend* (BFF). A **Justificativa** discute as vantagens do BFF frente ao API Gateway e expõe o problema que motiva o trabalho: a dificuldade de reuso de código e o crescente custo de manutenção quando múltiplos BFF atendem a um mesmo contexto. Os **Objetivos** delimitam a meta geral — propor uma arquitetura capaz de gerar múltiplas aplicações a partir de um único código-fonte — e os objetivos específicos que a operacionalizam. O **Referencial Teórico** consolida os conceitos que fundamentam a proposta: microsserviços e BFF, Linhas de Produto de Software e variabilidade em tempo de compilação, superfície de ataque e Arquitetura Hexagonal. Os **Trabalhos Relacionados** posicionam a proposta frente a abordagens alternativas — repositórios separados, *feature flags* em runtime, microsserviços distintos e linhas de produto por composição —, evidenciando a lacuna que ela preenche.
 
-O capítulo **Proposta: Arquitetura Metamórfica** apresenta a solução: uma configuração resolvida em tempo de compilação que faz o projeto assumir a forma adequada a cada cliente. Nele, delimita-se a tensão entre especialização e reuso, formula-se a proposta e mostra-se sua concretização no protótipo; a seguir, a *fundamentação* situa a arquitetura no campo das Linhas de Produto de Software e da variabilidade baseada em anotação, e a *segurança por ausência* desenvolve a principal contribuição do método — a redução da superfície de ataque pela eliminação, no artefato, das operações que não competem ao cliente. A **Metodologia** descreve como o trabalho foi conduzido: classifica a pesquisa, justifica a adoção da *Design Science Research* como método condutor, formula as quatro perguntas de pesquisa, detalha os procedimentos de avaliação — incluindo as métricas de reuso e a inspeção dos artefatos de produção — e amarra cada propriedade reivindicada a um método de verificação, distinguindo o que é verificado, o que é inferido e o que não é aferido. Por fim, as **Referências** reúnem as fontes utilizadas.
+O capítulo **Proposta: Arquitetura Metamórfica** apresenta a solução: uma configuração resolvida em tempo de compilação que faz o projeto assumir a forma adequada a cada cliente. Nele, delimita-se a tensão entre especialização e reuso, formula-se a proposta e mostra-se sua concretização no protótipo; a seguir, a *fundamentação* situa a arquitetura no campo das Linhas de Produto de Software e da variabilidade baseada em anotação, e a *segurança por ausência* desenvolve a principal contribuição do método — a redução da superfície de ataque pela eliminação, no artefato, das operações que não competem ao cliente. A **Metodologia** descreve como o trabalho foi conduzido: classifica a pesquisa, justifica a adoção da *Design Science Research* como método condutor, formula as quatro perguntas de pesquisa, detalha os procedimentos de avaliação — incluindo as métricas de reuso e a inspeção dos artefatos de produção — e amarra cada propriedade reivindicada a um método de verificação, distinguindo o que é verificado, o que é inferido e o que não é aferido. O **Desenvolvimento** apresenta o protótipo `modular-bff` como demonstração da arquitetura: sua organização em camadas hexagonais, o domínio, o serviço compartilhado que materializa o reuso, o mecanismo metamórfico de ativação condicional dos *controllers* em tempo de compilação, o pipeline de *build* por artefato e o procedimento de reprodução das variantes. Por fim, as **Referências** reúnem as fontes utilizadas.
 
 ## Referencial Teórico
 
@@ -375,6 +375,175 @@ A distinção entre propriedade verificada, inferida e não aferida é parte do 
 
 Por se tratar de pesquisa baseada em um único artefato, a discussão das **ameaças à validade** — protótipo e domínio únicos, escopo delimitado da segurança por ausência e escolha das métricas — é desenvolvida no capítulo **Avaliação, Resultados e Discussão**.
 
+## Desenvolvimento
+
+Este capítulo descreve a implementação do protótipo que demonstra a Arquitetura Metamórfica — a atividade de **demonstração** do método DSR, conforme a seção 5.4. Parte da organização em camadas hexagonais (seção 6.1), percorre o domínio (6.2), o serviço compartilhado que materializa o reuso (6.3) e a persistência (6.4), e culmina no **mecanismo metamórfico**, a ativação condicional de *controllers* em tempo de compilação (6.5), e no **pipeline de build por artefato** (6.6). Encerra com a estratégia de testes e qualidade (6.7) e o procedimento de reprodução dos artefatos (6.8), que alimenta o capítulo de Avaliação. Os trechos de código são recortes fiéis do repositório, apresentados de forma reduzida para ilustrar decisões-chave.
+
+### 6.1 Visão geral e organização em camadas
+
+O protótipo é escrito em **Kotlin 2.4 / JVM 21** sobre **Quarkus 3.37**, com persistência em **PostgreSQL** via **Hibernate ORM**, migrações versionadas com **Goose** e documentação **OpenAPI/Swagger** gerada por anotações. As versões exatas do ambiente de referência constam da seção 5.5.3. O código segue a Arquitetura Hexagonal, com o pacote-raiz `edu.uerj`:
+
+```
+src/main/kotlin/edu/uerj/
+├── domain/              # Entidades de negócio e enums (núcleo)
+├── services/            # Casos de uso (OrderService) — compartilhados
+├── adapters/
+│   ├── api/             # Controllers REST (v1) + DTOs (porta de entrada)
+│   └── infrastructure/  # Repositórios JPA (porta de saída)
+└── config/              # ApiConfig (OpenAPI) e inicialização
+```
+
+> 🖼️ **[FIGURA A INSERIR — camadas hexagonais]** Representação em anéis ou hexágono das camadas `domain`, `services` e `adapters`, com as portas de entrada (*controllers*) e de saída (repositórios), destacando que a anotação de variabilidade vive apenas no adaptador de entrada.
+
+Um detalhe técnico habilita essa organização em Kotlin. Por padrão, as classes Kotlin são marcadas como `final`, e a documentação do Quarkus registra que "ter classes `final` não funciona bem com diversos *frameworks* que precisam criar *dynamic proxies*"; a solução é o plugin de compilação `all-open`, que "permite configurar o compilador para **não** marcar como `final` classes que tenham certas anotações" (QUARKUS, 2026c). O `build.gradle.kts` do protótipo aplica esse plugin às classes anotadas com `@Path`, `@ApplicationScoped` e `@Entity` — as mesmas que a documentação indica —, o que permite que o domínio e os adaptadores permaneçam idiomáticos, sem `open` manual.
+
+### 6.2 Domínio
+
+O domínio modela o ciclo de vida de pedidos de e-commerce em **11 entidades** — `Customer`, `Contact`, `CustomerAddress`, `Order`, `OrderAddress`, `OrderItem`, `Product`, `ProductImage`, `Payment`, `Delivery` e `FiscalNote` —, organizadas em torno do agregado `Order`.
+
+> 🖼️ **[FIGURA A INSERIR — modelo de domínio]** Diagrama de classes das 11 entidades, evidenciando o agregado `Order` e suas associações com `Delivery`, `OrderItem`, `Payment` e `OrderAddress`.
+
+Duas decisões merecem destaque, por concentrarem regra de negócio no núcleo:
+
+* **`OrderStatus` como enum ordenado.** O enum define nove estados, cada um com um `id` que fixa a ordem do fluxo: `NEW_ORDER` (0), `WAITING_PAYMENT` (1), `UNDER_FRAUD_ANALYSIS` (2), `PAID` (3), `INVOICE_BEGINNING` (4), `INVOICED` (5), `SEPARATION_BEGINNING` (6), `SEPARATION_FINISHED` (7) e `DELIVERED` (8). É esse `id` que torna possível validar transições: o `OrderService` só aceita um novo status cujo `id` seja maior que o atual, de modo que o pedido avança e nunca retrocede. O enum expõe ainda os utilitários `getById` e `getByDescription`.
+* **Modelo de domínio rico.** A entidade `Order` não é anêmica: o método `checkOrderStatus()` recalcula o status do pedido a partir do menor estado entre suas entregas, mantendo a consistência do agregado.
+
+> 🖼️ **[FIGURA A INSERIR — ciclo de vida do pedido]** Máquina de estados do `OrderStatus`, de `NEW_ORDER` a `DELIVERED`, indicando que as transições só ocorrem no sentido crescente do `id`.
+
+Esse domínio é **idêntico em todos os artefatos** — interno, externo ou padrão —, pois não contém nenhuma anotação de variabilidade. É a base compartilhada sobre a qual a metamorfose ocorre, apenas nas camadas externas.
+
+### 6.3 Serviço compartilhado: o reuso sem duplicação
+
+O `OrderService`, anotado `@ApplicationScoped` e `@Transactional`, concentra os casos de uso e é **injetado nos três controllers**. É a peça central da tese de reuso: a mesma lógica serve a clientes distintos, que diferem apenas no ponto de entrada.
+
+| Caso de uso (`OrderService`) | Consumido por | Operação |
+|---|---|---|
+| `createOrder(newOrder)` | `OrderExternalController` | Criação de pedido |
+| `updateStatus(orderId, deliveryId, status)` | `OrderInternalController` | Atualização de status de entrega |
+| `getOrder(id)` · `listAll(limit, page)` | `OrderGeneralController` | Leitura de pedidos |
+
+O `createOrder` reúne validações de negócio compartilhadas: existência de cliente, endereço e contato; conferência do preço do produto contra a base; agrupamento de itens em entregas; e cálculo de totais e descontos por método de pagamento. O `updateStatus` aplica a regra de avanço de estado e delega o recálculo ao próprio agregado, por `checkOrderStatus`. **Nenhuma dessas regras é duplicada por modo** — a especialização vive apenas nos controllers, que são finos.
+
+### 6.4 Persistência
+
+A porta de saída é implementada por repositórios sobre uma classe-base:
+
+* **`BaseRepository`** expõe o `EntityManager` da unidade de persistência `"bff"`, injetado como `Instance<EntityManager>` e resolvido sob demanda. Os repositórios concretos (`OrderRepository`, `CustomerRepository` e os demais) o estendem e escrevem consultas JPQL e nativas explícitas — escolha deliberada por controle direto, em vez de uma camada de abstração como Panache.
+* **Schema gerenciado externamente.** O Hibernate roda com `database.generation=none`; a evolução do schema é responsabilidade das **migrações Goose** versionadas — três, que criam respectivamente as tabelas de clientes e produtos; as de pedidos, contatos, endereços e imagens de produto; e as de pagamentos, notas fiscais, entregas e itens de pedido. Isso desacopla a evolução do banco do ciclo de vida da aplicação.
+
+> 🖼️ **[FIGURA A INSERIR — schema do banco]** Diagrama entidade-relacionamento das tabelas criadas pelas três migrações, agrupadas por migração de origem.
+
+### 6.5 Adaptadores de API e o mecanismo metamórfico
+
+A porta de entrada tem **três controllers**, todos sob a rota base `/v1/order`, que se distinguem pela presença — ou ausência — da anotação de variabilidade:
+
+* **`OrderGeneralController`** — **sem** `@IfBuildProperty`: está presente em **qualquer** artefato. Expõe as leituras (`GET /{orderId}` e `GET /list`).
+* **`OrderExternalController`** — anotado para o modo externo; expõe `POST /create`.
+* **`OrderInternalController`** — anotado para o modo interno; expõe `PATCH /{orderId}/delivery/{deliveryId}/{newStatus}`.
+
+A anotação é o coração da arquitetura. A documentação do Quarkus descreve a `@IfBuildProperty` como o recurso que permite "habilitar condicionalmente um *bean* quando uma propriedade de tempo de compilação do Quarkus tem, ou não tem, um valor específico" (QUARKUS, 2026a). Aplicada na classe do controller, ela condiciona o registro do *bean* ao valor da propriedade no *build*:
+
+```kotlin
+@Path("/v1/order")
+@IfBuildProperty(name = "modular-bff.api.mode.external.enable", stringValue = "true")
+class OrderExternalController(private val orderService: OrderService) { … }
+```
+
+Quando a propriedade não está ativa, **o ponto de entrada não existe no artefato**: o Quarkus Arc não registra o *bean* CDI, não gera o invocador REST e não publica a rota. A resolução ocorre na fase de ***augmentation***, executada em tempo de compilação, na qual processadores de *build* leem anotações e produzem "*bytecode* gravado […] usado para efetivamente inicializar a aplicação em tempo de execução" (QUARKUS, 2026b). Como a documentação afirma de forma categórica, "propriedades definidas em tempo de execução não têm absolutamente nenhum efeito sobre a resolução do *bean*" quando se usa a `@IfBuildProperty` (QUARKUS, 2026a). Nenhuma variável de ambiente, nenhum parâmetro de execução e nenhuma reconfiguração em tempo de *deploy* reintroduzem, portanto, o que não foi registrado no *build*.
+
+Cabe uma precisão que a documentação não faz e que a inspeção do artefato revela: o que a anotação suprime é o **registro do bean e a rota**, não a classe compilada. O bytecode do controller permanece no JAR da aplicação, inerte e inalcançável. Essa distinção — entre classe presente e ponto de entrada ausente — é estabelecida por evidência empírica no capítulo **Avaliação**, e é ela que sustenta a formulação da tese em termos de pontos de entrada.
+
+A distinção é deliberada e coerente com a métrica que fundamenta a proposta: a superfície de ataque é definida pelo conjunto de **pontos de entrada**, e não pelo conjunto de classes compiladas, conforme a seção 2.5. A superfície resultante por variante é, portanto, determinada no *build*:
+
+| Variante | Pontos de entrada presentes | Endpoints além das leituras |
+|---|---|---|
+| `default` (ambas `false`) | General | — (somente leitura) |
+| `external` | General + External | `POST /v1/order/create` |
+| `internal` | General + Internal | `PATCH /v1/order/{orderId}/delivery/{deliveryId}/{newStatus}` |
+| linha de base (ambas `true`) | General + External + Internal | ambos |
+
+A fundamentação teórica dessa técnica — variabilidade por anotação em tempo de compilação e Linhas de Produto de Software — está no capítulo **Referencial Teórico**, seções 2.3 e 2.4; a leitura de segurança, na seção 2.5.
+
+### 6.6 Configuração e pipeline de build por artefato
+
+#### Configuração: a ligação entre anotação e ambiente
+
+As propriedades lidas pela anotação são resolvidas a partir de variáveis de ambiente, com padrão `false`, em `application.properties`:
+
+```properties
+modular-bff.api.mode.internal.enable=${BFF_API_INTERNAL_ACTIVE:false}
+modular-bff.api.mode.external.enable=${BFF_API_EXTERNAL_ACTIVE:false}
+```
+
+Como se trata de uma **build property**, o valor precisa estar definido **no momento da compilação**, e não em runtime. É isso que torna a variabilidade estrutural, em vez de uma condicional avaliada em execução.
+
+A política de CORS segue o mesmo princípio de não expor o que não é usado: os métodos habilitados limitam-se aos verbos efetivamente atendidos pelos *controllers*, e as origens permitidas são parametrizadas por variável de ambiente.
+
+```properties
+quarkus.http.cors.origins=${BFF_CORS_ORIGINS:*}
+quarkus.http.cors.methods=GET,POST,PATCH,OPTIONS
+```
+
+O valor padrão das origens é o coringa `*`, escolha **deliberada** de um protótipo cuja finalidade é servir de projeto-referência: qualquer pessoa que reproduza os artefatos consegue exercitá-los a partir de qualquer *frontend*, sem configuração prévia. A parametrização por variável de ambiente é o que permite, em uma implantação real, substituir o coringa pelas origens do cliente atendido. O CORS é, ademais, configuração de **tempo de execução**: ele não remove pontos de entrada, apenas restringe quem pode alcançá-los a partir de um navegador. Não se confunde, portanto, com a segurança por ausência — é uma das camadas complementares descritas na seção 4.5.
+
+#### Build por artefato
+
+O `Dockerfile` recebe as *flags* como `ARG` e as injeta na compilação, produzindo um artefato já metamorfoseado:
+
+```dockerfile
+ARG BFF_API_EXTERNAL_ACTIVE
+ARG BFF_API_INTERNAL_ACTIVE
+RUN gradle assemble -g /tmp/cache --no-daemon
+```
+
+Os valores dos `ARG` ficam disponíveis como variáveis de ambiente durante a compilação, e é delas que o `application.properties` resolve as propriedades de *build*. Quando uma *flag* não é informada, a propriedade assume o padrão `false` e a variante não expõe as rotas do modo correspondente. O contexto de *build* exclui o diretório de saída local, o cache do sistema de *build* e os metadados do repositório, de modo que o artefato de produção não herda estado da máquina do desenvolvedor — condição necessária para que as medições da Avaliação recaiam sobre aquilo que seria efetivamente entregue.
+
+O `Makefile` padroniza a geração das variantes, sua inspeção e sua execução. Os alvos de *build* produzem imagens distintas a partir do mesmo código-fonte, sem reaproveitamento de cache:
+
+| Alvo | `BFF_API_EXTERNAL_ACTIVE` | `BFF_API_INTERNAL_ACTIVE` | Imagem |
+|---|---|---|---|
+| `make container/build/default` | `false` | `false` | `bff-default` |
+| `make container/build/external` | `true` | `false` | `bff-external` |
+| `make container/build/internal` | `false` | `true` | `bff-internal` |
+| `make container/build` | `true` | `true` | `bff` (linha de base) |
+
+> 🖼️ **[FIGURA A INSERIR — fluxo de build por variante]** Diagrama do código-fonte único ramificando-se, no estágio de *builder*, em três artefatos distintos conforme as *flags*, com o ponto de variação situado nos adaptadores de entrada.
+
+O alvo `make container/build/variants` encadeia as três primeiras, e `make artifact/analysis` inspeciona as imagens resultantes. A execução de cada variante é feita pelos alvos `container/run/*`, que mapeiam portas distintas no hospedeiro — `9000` para a linha de base, `9001` para a externa e `9002` para a interna — sobre a mesma porta interna do contêiner.
+
+A implicação é central: deploys interno e externo exigem **pipelines e artefatos distintos**, gerados do mesmo código-fonte. Esse é o custo operacional da abordagem, dimensionado no capítulo de **Avaliação** (PP4).
+
+### 6.7 Estratégia de testes, qualidade e integração contínua
+
+* **Testes:** JUnit 5 com **MockK**, para unidade, e **REST Assured**, para API, com um teste dedicado por controller e por repositório; **builders** de dados de teste desacoplam a criação de fixtures da estrutura das entidades. A cobertura é apurada com **JaCoCo**.
+* **Qualidade:** **KtLint**, para estilo, e **Detekt**, para análise estática, com configuração centralizada.
+* **Integração contínua:** três *jobs* — verificação de estilo, testes (que sobem a infraestrutura, aplicam as migrações e executam a suíte) e *build*, que compila com ambas as *flags* ativas. Note-se que o *job* de *build* exercita o **artefato de desenvolvimento**, cuja função é validar a compilação; os artefatos de produção são gerados pelos alvos de contêiner descritos na seção 6.6.
+
+### 6.8 Reprodução dos artefatos
+
+O efeito da metamorfose é **verificável por inspeção do artefato de produção** — a imagem gerada pelo `Dockerfile`, e não o resultado do *build* local, que não integra o desenho experimental, conforme a seção 5.5.
+
+O protótipo é empacotado no tipo `fast-jar`, que a documentação registra como o padrão do Quarkus e cujo resultado é um diretório `quarkus-app`; para executar o artefato, "é necessário ter todo o conteúdo do diretório `quarkus-app`", pois a ausência de qualquer arquivo impede a aplicação de iniciar ou de funcionar corretamente (QUARKUS, 2026d). A **estrutura interna** desse diretório — a separação entre o JAR da aplicação e os artefatos produzidos na *augmentation* — **não é descrita na documentação oficial**; o que se afirma a seguir decorre da inspeção direta dos artefatos gerados, e é reprodutível pelos comandos apresentados.
+
+A verificação ocorre em duas camadas, e importa distinguir onde cada uma atua. O JAR da aplicação contém o bytecode produzido pelo compilador Kotlin e, portanto, **as três classes de *controller* em qualquer variante**:
+
+```bash
+jar tf /deployments/app/*.jar | grep "adapters/api/v1"
+# OrderExternalController.class · OrderGeneralController.class · OrderInternalController.class
+```
+
+Já o artefato gerado na fase de *augmentation* do Quarkus contém apenas os *beans* e invocadores efetivamente registrados. É nele que a metamorfose é observável:
+
+```bash
+jar tf /deployments/quarkus/generated-bytecode.jar | grep "adapters/api/v1"
+# Na variante externa: OrderExternalController_Bean e seu invocador estão presentes;
+# o OrderInternalController_Bean e seu invocador NÃO existem.
+```
+
+O alvo `make artifact/analysis` executa essa inspeção nas três variantes. A camada corroborativa acima explica **por que** a rota não existe; a evidência primária — a ausência da rota no documento OpenAPI e no atendimento HTTP — independe de convenções internas do *framework* e é apresentada no capítulo **Avaliação**.
+
+Esse procedimento é o insumo direto da PP2 e a base para as medições de superfície de ataque (PP3) e de reuso (PP1), definidas no capítulo **Metodologia**.
+
 ## Referências
 
 Referências científicas utilizadas na fundamentação, no padrão ABNT (NBR 6023):
@@ -409,9 +578,19 @@ PEFFERS, Ken; TUUNANEN, Tuure; ROTHENBERGER, Marcus A.; CHATTERJEE, Samir. A des
 
 TAIBI, Davide; LENARDUZZI, Valentina; PAHL, Claus. Architectural patterns for microservices: a systematic mapping study. In: INTERNATIONAL CONFERENCE ON CLOUD COMPUTING AND SERVICES SCIENCE, 8., 2018. **Proceedings** [...]. Setúbal: SciTePress, 2018. p. 221-232. DOI: 10.5220/0006798302210232.
 
-**Fontes complementares (literatura técnica e web):**
+**Fontes complementares (literatura técnica e documentação oficial):**
 
 NEWMAN, Sam. **Backends For Frontends**. [*S. l.*], 18 nov. 2015. Disponível em: https://samnewman.io/patterns/architectural/bff/. Acesso em: 9 jul. 2026.
+
+QUARKUS. **Quarkus ArC: CDI reference guide**. Seção 5.8, *Enabling Beans for Quarkus Build Properties*. [*S. l.*]: Red Hat, 2026a. Documentação oficial do framework, versão 3.x — a mesma linha da versão 3.37.0 empregada no protótipo. Disponível em: https://quarkus.io/guides/cdi-reference. Acesso em: 9 jul. 2026.
+
+QUARKUS. **Writing your own extension**. Seção 2.6, *Generating Bytecode*. [*S. l.*]: Red Hat, 2026b. Documentação oficial do framework, versão 3.x. Disponível em: https://quarkus.io/guides/writing-extensions. Acesso em: 9 jul. 2026.
+
+QUARKUS. **Using Kotlin**. Seção *Important Maven configuration points*. [*S. l.*]: Red Hat, 2026c. Documentação oficial do framework, versão 3.x. O plugin `all-open` é do compilador Kotlin e independe do sistema de *build*; a documentação o descreve sob uma seção de configuração Maven, mas o protótipo o configura no `build.gradle.kts`. Disponível em: https://quarkus.io/guides/kotlin. Acesso em: 9 jul. 2026.
+
+QUARKUS. **Building applications with Gradle**. Seção *Using fast-jar*. [*S. l.*]: Red Hat, 2026d. Documentação oficial do framework, versão 3.x. Adota-se o guia de Gradle, e não o de Maven, por ser o sistema de *build* empregado no protótipo. Disponível em: https://quarkus.io/guides/gradle-tooling. Acesso em: 9 jul. 2026.
+
+> **Nota sobre a citação de documentação.** As páginas acima são **documentação viva**: seu conteúdo pode ser alterado sem aviso e sem mudança de endereço. Por isso registram-se, em cada entrada, o **endereço completo**, a **versão** do framework a que se referem e a **data de acesso**. Os trechos citados no corpo do trabalho foram conferidos nessa data, na página indicada.
 
 COCKBURN, Alistair. **Hexagonal architecture (ports and adapters)**. [*S. l.*], 2005. Disponível em: https://alistair.cockburn.us/hexagonal-architecture/. Acesso em: 9 jul. 2026.
 

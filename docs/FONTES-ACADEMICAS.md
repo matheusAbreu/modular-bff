@@ -41,6 +41,43 @@
 
 ---
 
+## Regra obrigatória — Documentação oficial das tecnologias
+
+> ⚠️ **Esta regra não é opcional.** Toda afirmação sobre o **comportamento de uma tecnologia empregada no trabalho** — linguagem, *framework*, biblioteca, ferramenta de *build* — **deve** ser confirmada na **documentação oficial** do projeto e **citada**. Não se descreve o funcionamento de um mecanismo a partir de conhecimento tácito, de leitura de código ou de suposição.
+
+**Por que a regra existe.** O trabalho sustenta uma tese arquitetural sobre um mecanismo concreto (`@IfBuildProperty`, do Quarkus Arc). Se o texto afirma o que esse mecanismo faz, a afirmação precisa ter a mesma exigência de verificação que qualquer outra: fonte localizável, conferida e citada. Documentação oficial não é literatura revisada por pares, mas é a **fonte primária** do comportamento de um artefato de software — a mesma autoridade que uma norma técnica tem sobre si mesma.
+
+**Procedimento.**
+
+1. **Localizar a página oficial** do projeto que trata do mecanismo. Preferir o guia de referência à página de marketing ou ao *blog*.
+2. **Conferir a afirmação no texto da fonte**, e não em tutoriais de terceiros, respostas de fórum ou material gerado por IA.
+3. **Registrar a versão** da tecnologia a que a documentação se refere e a **data de acesso** — documentação viva muda sem aviso, e a citação precisa ser reencontrável.
+4. **Citar** no corpo do trabalho e listar a fonte em *Referências*, na seção de fontes complementares (literatura técnica), separada da literatura científica.
+5. **Registrar o link — obrigatório.** Toda documentação consultada **deve** ter seu **endereço completo (URL)** registrado, jamais apenas o nome do guia ou do projeto. Junto do endereço, registram-se a **seção específica** consultada, a **versão** da tecnologia a que a página se refere e a **data de acesso**. Documentação é *fonte viva*: muda sem aviso e sem trocar de endereço, e sem esses três dados a citação não é reencontrável nem auditável.
+   > ⚠️ **O título da seção é dado da fonte, não paráfrase.** Transcrever o cabeçalho **literalmente como aparece na página**, incluindo a numeração, quando houver. Não deduzir, não traduzir e não "melhorar" o título. Se o cabeçalho da seção parecer inadequado ao contexto do trabalho — por exemplo, um trecho sobre um plugin de compilador vivendo sob uma seção de configuração de outra ferramenta de *build* —, **registrar a discrepância** em nota, em vez de corrigir o título.
+6. **Lançar a nota no arquivo de citações — obrigatório.** Todo trecho da documentação utilizado no trabalho **deve** ser transcrito em `docs/case-study/CITACOES_ABNT.md`, no eixo de documentação técnica, com: (a) a **citação direta** no idioma original; (b) a **tradução livre** em português; (c) a **glosa**, explicando o que a passagem sustenta no TCC; e (d) o **link** e a **data de acesso**. Nenhuma afirmação técnica entra no TCC sem essa contrapartida no arquivo de citações.
+7. **Distinguir o documentado do observado.** Se a documentação **não** cobrir o ponto — por exemplo, detalhes internos do empacotamento de um artefato —, o texto **não pode** apresentar a afirmação como documentada. Ela passa a ser **evidência empírica** obtida por inspeção do artefato, e deve ser apresentada como tal, com o procedimento de verificação descrito. Confundir as duas coisas é erro de método. **Registrar também o limite**: uma nota no arquivo de citações deve declarar que a documentação foi consultada e **não** cobre aquele ponto.
+8. **Escolher o guia correspondente à tecnologia efetivamente usada.** Documentações costumam oferecer variantes por ferramenta (Maven e Gradle, por exemplo). Citar o guia que corresponde ao que o projeto usa — citar o outro é erro factual, ainda que o conteúdo pareça equivalente.
+
+**Tecnologias deste trabalho e suas documentações de referência:**
+
+| Tecnologia | Papel no trabalho | Documentação oficial (link obrigatório) | Chamada |
+|---|---|---|---|
+| **Quarkus ArC (CDI)** | `@IfBuildProperty`: o mecanismo de variabilidade | https://quarkus.io/guides/cdi-reference | QUARKUS (2026a) |
+| **Quarkus (extensões)** | Fase de *augmentation*, onde a variabilidade é resolvida | https://quarkus.io/guides/writing-extensions | QUARKUS (2026b) |
+| **Quarkus (Kotlin)** | Plugin `all-open` e classes `final` por padrão | https://quarkus.io/guides/kotlin | QUARKUS (2026c) |
+| **Quarkus (empacotamento)** | Tipo `fast-jar` e diretório de saída `quarkus-app` | https://quarkus.io/guides/gradle-tooling | QUARKUS (2026d) |
+| **Kotlin** | Linguagem; plugin de compilação `all-open` | https://kotlinlang.org/docs/all-open-plugin.html | *(ainda não citado)* |
+| **Hibernate ORM** | Persistência; `database.generation=none` | https://quarkus.io/guides/hibernate-orm | *(ainda não citado)* |
+| **Goose** | Migrações versionadas de schema | https://github.com/pressly/goose | *(ainda não citado)* |
+| **Docker** | Estágio de *builder* e contexto de *build* | https://docs.docker.com/build/ | *(ainda não citado)* |
+
+> ⚠️ **Atenção ao guia correto (passo 8).** O empacotamento é citado pelo guia de **Gradle**, e não pelo de Maven (`maven-tooling`), porque é o Gradle que o protótipo usa. Os dois guias descrevem o `fast-jar`, mas apenas o de Gradle corresponde ao artefato deste trabalho.
+
+> **Limite da documentação, registrado durante a redação (passo 7):** a estrutura interna do artefato `fast-jar` — os diretórios `app/` e `quarkus/` e os arquivos `generated-bytecode.jar` e `transformed-bytecode.jar` — **não está descrita** em nenhuma das páginas oficiais consultadas (`gradle-tooling`, `maven-tooling` e `class-loading-reference`), que apenas registram que o resultado do *build* é o diretório `quarkus-app` e que ele deve ser distribuído por inteiro. As afirmações do trabalho sobre esses arquivos são, portanto, **evidência empírica por inspeção**, e assim são apresentadas no capítulo *Desenvolvimento* (seção 6.8). A nota correspondente está no Eixo 8 de `CITACOES_ABNT.md`.
+
+---
+
 ## 1. Fontes Abertas (acesso livre / gratuito)
 
 ### 1.1 Motores de busca e índices acadêmicos

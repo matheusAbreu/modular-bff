@@ -164,7 +164,7 @@ O achado de 7.2 não enfraquece a contribuição: ele a delimita. A arquitetura 
 
 **Validade externa.** Um único protótipo, um único domínio, um único *framework*. A generalização para outras linguagens, para mecanismos de variabilidade distintos ou para BFFs de maior porte não é sustentada pelos dados. A proporção de rotas suprimidas (7.3) é propriedade deste protótipo, não da arquitetura.
 
-**Escopo da propriedade de segurança.** A segurança por ausência é a primeira linha de defesa, não a única. O protótipo não implementa autenticação, autorização por posse de recurso, limitação de abuso nem mascaramento de dados sensíveis. Registre-se ainda que a configuração de CORS do protótipo é permissiva (`quarkus.http.cors.origins=*`, com métodos não utilizados pelos controllers), o que **contradiz parcialmente** a narrativa de redução de exposição e deve ser corrigido ou explicitamente assumido como limitação da implementação.
+**Escopo da propriedade de segurança.** A segurança por ausência é a primeira linha de defesa, não a única. O protótipo não implementa autenticação, autorização por posse de recurso, limitação de abuso nem mascaramento de dados sensíveis. A política de CORS habilita apenas os verbos atendidos pelos *controllers* e parametriza as origens por variável de ambiente; o padrão coringa é escolha deliberada de um projeto-referência, destinada a facilitar a reprodução dos artefatos, e cabe a cada implantação substituí-lo. Por operar em tempo de execução, o CORS não interfere na propriedade aferida por PP2 e PP3, que diz respeito aos pontos de entrada existentes no artefato.
 
 ---
 
