@@ -130,7 +130,7 @@ Os custos quantitativos por variante:
 | `bff-internal` | `[A PREENCHER]` | `[A PREENCHER]` | `[A PREENCHER]` |
 | `bff-external` | `[A PREENCHER]` | `[A PREENCHER]` | `[A PREENCHER]` |
 
-Espera-se que as diferenças sejam desprezíveis, uma vez que o bytecode das classes é idêntico entre as variantes (seção 7.2.1) e apenas os beans e invocadores gerados diferem. Medir esses valores permanece pertinente, ainda que o resultado esperado seja a equivalência: o objetivo geral do trabalho reivindica ganhos de **segurança**, **resiliência** e **manutenibilidade** — não de tamanho do artefato. Uma eventual equivalência de peso entre as variantes não contraria o objetivo; apenas confirma que a metamorfose atua sobre a superfície exposta, e não sobre o volume entregue. `[A PREENCHER]`
+Espera-se que as diferenças sejam desprezíveis, uma vez que o bytecode das classes é idêntico entre as variantes (seção 7.2.1) e apenas os beans e invocadores gerados diferem. Medir esses valores permanece pertinente, ainda que o resultado esperado seja a equivalência: o objetivo geral do trabalho reivindica ganhos de **segurança** e de **manutenibilidade** — não de tamanho do artefato. Uma eventual equivalência de peso entre as variantes não contraria o objetivo; apenas confirma que a metamorfose atua sobre a superfície exposta, e não sobre o volume entregue. `[A PREENCHER]`
 
 ---
 
@@ -158,7 +158,7 @@ O achado de 7.2 não enfraquece a contribuição: ele a delimita. A arquitetura 
 
 ## 7.8 Ameaças à validade
 
-**Validade de construto.** A contagem de pontos de entrada é não ponderada, enquanto a métrica de referência pondera por dano e custo de acesso (MANADHATA; WING, 2011). A classificação dos DTOs de uso exclusivo como ativos comuns é conservadora e favorece a tese de reuso; a análise de sensibilidade prevista em 7.4 mede o efeito dessa escolha. A **manutenibilidade**, enunciada no objetivo geral, é inferida a partir do reuso e não medida por instrumento próprio; o mesmo vale para a **resiliência**, que o trabalho não afere.
+**Validade de construto.** A contagem de pontos de entrada é não ponderada, enquanto a métrica de referência pondera por dano e custo de acesso (MANADHATA; WING, 2011). A classificação dos DTOs de uso exclusivo como ativos comuns é conservadora e favorece a tese de reuso; a análise de sensibilidade prevista em 7.4 mede o efeito dessa escolha. A **manutenibilidade**, enunciada no objetivo geral, é inferida a partir do reuso e não medida por instrumento próprio. A **resiliência** é enunciada no objetivo como decorrência esperada da menor exposição, e não é aferida por nenhum procedimento deste trabalho.
 
 **Validade interna.** As três variantes foram construídas com `--no-cache`, a partir do mesmo código-fonte, e o contexto de *build* exclui o diretório `build/` local, de modo que o artefato de produção não herda estado da máquina. Persiste a dependência das convenções de nomenclatura do Quarkus na evidência de 7.2.2 — mitigada, quando executada, pela evidência de OpenAPI/HTTP.
 

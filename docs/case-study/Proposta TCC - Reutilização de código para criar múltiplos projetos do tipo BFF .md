@@ -46,7 +46,7 @@ Taibi, Lenarduzzi e Pahl (2018) alertam que o reuso de API deve ser tratado com 
 
 ## Objetivos Geral e Específicos
 
-Este trabalho tem como objetivo apresentar uma proposta de arquitetura de projeto que visa fornecer um melhor aproveitamento de código, na qual múltiplas aplicações são geradas de um mesmo projeto, de forma que se tornem mais seguras, resilientes e de melhor manutenibilidade ao ignorarem os trechos do projeto que não lhes competem. A vantagem reivindicada não é a redução do tamanho do artefato, mas o **reuso**: concentrar em um único ponto o código comum a todas as variantes reduz o esforço de manutenção, ao mesmo tempo que a supressão, em cada artefato, das operações alheias ao seu cliente reduz a exposição.
+Este trabalho tem como objetivo apresentar uma proposta de arquitetura de projeto que visa fornecer um melhor aproveitamento de código, na qual múltiplas aplicações são geradas de um mesmo projeto, de forma que se tornem mais seguras e de melhor manutenibilidade ao ignorarem os trechos do projeto que não lhes competem, com ganho esperado de resiliência decorrente da menor exposição — propriedade que este trabalho não afere. A vantagem reivindicada não é a redução do tamanho do artefato, mas o **reuso**: concentrar em um único ponto o código comum a todas as variantes reduz o esforço de manutenção, ao mesmo tempo que a supressão, em cada artefato, das operações alheias ao seu cliente reduz a exposição.
 
 ## Objetivos específicos
 
@@ -55,9 +55,9 @@ Este trabalho tem como objetivo apresentar uma proposta de arquitetura de projet
 
 ## Organização do Trabalho
 
-Este documento está organizado em sete partes. A **Introdução** contextualiza o leitor na arquitetura de microsserviços, no papel do API Gateway como ponto central de agregação de dados e no surgimento do padrão *Backend for Frontend* (BFF). A **Justificativa** discute as vantagens do BFF frente ao API Gateway e expõe o problema que motiva o trabalho: a dificuldade de reuso de código e o crescente custo de manutenção quando múltiplos BFF atendem a um mesmo contexto. Os **Objetivos** delimitam a meta geral — propor uma arquitetura capaz de gerar múltiplas aplicações a partir de um único código-fonte — e os objetivos específicos que a operacionalizam. O **Referencial Teórico** consolida os conceitos que fundamentam a proposta: microsserviços e BFF, Linhas de Produto de Software e variabilidade em tempo de compilação, superfície de ataque e Arquitetura Hexagonal. Os **Trabalhos Relacionados** posicionam a proposta frente a abordagens alternativas — repositórios separados, *feature flags* em runtime, microsserviços distintos e linhas de produto por composição —, evidenciando a lacuna que ela preenche.
+Este documento está organizado em oito partes. A **Introdução** contextualiza o leitor na arquitetura de microsserviços, no papel do API Gateway como ponto central de agregação de dados e no surgimento do padrão *Backend for Frontend* (BFF). A **Justificativa** discute as vantagens do BFF frente ao API Gateway e expõe o problema que motiva o trabalho: a dificuldade de reuso de código e o crescente custo de manutenção quando múltiplos BFF atendem a um mesmo contexto. Os **Objetivos** delimitam a meta geral — propor uma arquitetura capaz de gerar múltiplas aplicações a partir de um único código-fonte — e os objetivos específicos que a operacionalizam. O **Referencial Teórico** consolida os conceitos que fundamentam a proposta: microsserviços e BFF, Linhas de Produto de Software e variabilidade em tempo de compilação, superfície de ataque e Arquitetura Hexagonal. Os **Trabalhos Relacionados** posicionam a proposta frente a abordagens alternativas — repositórios separados, *feature flags* em runtime, microsserviços distintos e linhas de produto por composição —, evidenciando a lacuna que ela preenche.
 
-O capítulo **Proposta: Arquitetura Metamórfica** apresenta a solução: uma configuração resolvida em tempo de compilação que faz o projeto assumir a forma adequada a cada cliente. Nele, delimita-se a tensão entre especialização e reuso, formula-se a proposta e mostra-se sua concretização no protótipo; a seguir, a *fundamentação* situa a arquitetura no campo das Linhas de Produto de Software e da variabilidade baseada em anotação, e a *segurança por ausência* desenvolve a principal contribuição do método — a redução da superfície de ataque pela eliminação, no artefato, das operações que não competem ao cliente. Por fim, as **Referências** reúnem as fontes utilizadas.
+O capítulo **Proposta: Arquitetura Metamórfica** apresenta a solução: uma configuração resolvida em tempo de compilação que faz o projeto assumir a forma adequada a cada cliente. Nele, delimita-se a tensão entre especialização e reuso, formula-se a proposta e mostra-se sua concretização no protótipo; a seguir, a *fundamentação* situa a arquitetura no campo das Linhas de Produto de Software e da variabilidade baseada em anotação, e a *segurança por ausência* desenvolve a principal contribuição do método — a redução da superfície de ataque pela eliminação, no artefato, das operações que não competem ao cliente. A **Metodologia** descreve como o trabalho foi conduzido: classifica a pesquisa, justifica a adoção da *Design Science Research* como método condutor, formula as quatro perguntas de pesquisa, detalha os procedimentos de avaliação — incluindo as métricas de reuso e a inspeção dos artefatos de produção — e amarra cada propriedade reivindicada a um método de verificação, distinguindo o que é verificado, o que é inferido e o que não é aferido. Por fim, as **Referências** reúnem as fontes utilizadas.
 
 ## Referencial Teórico
 
@@ -233,11 +233,163 @@ Cabe, por fim, delimitar o alcance da estratégia. A segurança por ausência el
 
 A Arquitetura Metamórfica combina duas propriedades que as alternativas usuais não reúnem simultaneamente: **reuso de código-fonte** (domínio, serviços e repositórios compartilhados) e **ausência, no artefato, das operações que não competem ao cliente**. O custo dessa combinação — pipelines e artefatos distintos por variante — e as evidências de reuso, de redução de superfície de ataque e de ausência verificável no binário são objeto do capítulo **Avaliação**, guiado pelas perguntas de pesquisa definidas no capítulo **Metodologia**.
 
+## Metodologia
+
+Este capítulo caracteriza a natureza da pesquisa, justifica a adoção da *Design Science Research* (DSR) como método condutor, formula as perguntas de pesquisa, detalha as etapas percorridas e define os procedimentos de avaliação do artefato proposto. O objetivo é tornar o trabalho **reprodutível** e deixar explícito o encadeamento entre o problema, o artefato construído (a Arquitetura Metamórfica e seu protótipo) e as evidências que sustentam ou refutam suas propriedades.
+
+### 5.1 Classificação da pesquisa
+
+Quanto à sua **natureza**, esta é uma pesquisa **aplicada**, pois se volta à produção de um artefato — uma arquitetura de software e um protótipo funcional — destinado a resolver um problema concreto de engenharia: o reuso de código na construção de múltiplos BFF que atendem a um mesmo contexto de negócio.
+
+Quanto aos **objetivos**, classifica-se como **exploratória e descritiva**: explora uma combinação de conceitos ainda pouco sistematizada na literatura *peer-reviewed* específica sobre BFF, conforme discutido no capítulo **Trabalhos Relacionados** (seção 3.6), e descreve, em detalhe, a arquitetura resultante e seu comportamento.
+
+Quanto à **abordagem**, é predominantemente **qualitativa**, com apoio de **medições quantitativas** na etapa de avaliação: contagem de pontos de entrada por artefato, proporção de código reutilizado e verificação da presença ou ausência de pontos de entrada em cada variante.
+
+Quanto ao **procedimento técnico**, adota-se a **Design Science Research (DSR)** — a pesquisa orientada ao projeto e à avaliação de um artefato —, detalhada na seção seguinte. Embora o paradigma tenha origem no campo de Sistemas de Informação, sua adequação à Engenharia de Software é sustentada por Engström et al. (2020), que observam que boa parte da pesquisa da área visa projetar soluções para problemas práticos em contexto real, ainda que a lente da *design science* seja pouco empregada para enquadrá-la.
+
+### 5.2 Design Science Research como método condutor
+
+A *Design Science Research* é um paradigma de pesquisa cujo produto central é um **artefato** projetado para resolver uma classe de problemas relevantes, avaliado quanto à sua utilidade e ao seu desempenho. Diferentemente de paradigmas puramente descritivos — que buscam explicar *como o mundo é* —, a DSR é prescritiva: preocupa-se com *como o mundo deveria ser* para que um objetivo seja atingido, por meio da construção e da avaliação de artefatos. Peffers et al. (2007) consolidam esse entendimento ao propor um modelo de processo e de avaliação para a pesquisa de *design science*, cujo produto é um artefato projetado e demonstrado.
+
+A escolha da DSR justifica-se porque a contribuição deste trabalho **é, ela própria, um artefato**: a Arquitetura Metamórfica e sua instanciação no protótipo `modular-bff`. Não se trata de observar um fenômeno preexistente, mas de **projetar** uma solução e **demonstrar** que ela entrega as propriedades reivindicadas — reuso sem duplicação e redução da superfície de ataque por construção. Baskerville et al. (2018) discutem o que constitui contribuição aceitável em DSR — o artefato de projeto, a teoria de projeto, ou ambos —, e é sob esse enquadramento que este trabalho posiciona sua contribuição no **artefato**, sem reivindicar formulação de teoria de projeto.
+
+Segundo a taxonomia usual da DSR, os artefatos produzidos aqui são de dois tipos complementares:
+
+| Tipo de artefato | Instância neste trabalho |
+|---|---|
+| **Método** (design/arquitetura) | A **Arquitetura Metamórfica**: variabilidade resolvida em tempo de compilação para derivar artefatos BFF especializados de um único código-fonte. |
+| **Instanciação** (protótipo) | O **`modular-bff`**: implementação em Kotlin/Quarkus que demonstra o método sobre o domínio de pedidos de e-commerce. |
+
+### 5.3 Perguntas de pesquisa
+
+A avaliação do artefato é guiada pelas seguintes perguntas, derivadas do objetivo geral e dos objetivos específicos:
+
+- **PP1 — Reuso:** é possível derivar múltiplos artefatos BFF especializados (interno e externo) a partir de um único código-fonte, **sem duplicar** as regras de negócio, os serviços e os repositórios?
+- **PP2 — Ausência verificável:** a resolução da variabilidade em tempo de compilação garante que o **ponto de entrada** das operações de um modo — o *bean* CDI, o invocador REST e a rota registrada — **não exista no artefato** do outro modo, de forma verificável e não reversível em tempo de execução?
+- **PP3 — Superfície de ataque:** a abordagem metamórfica **reduz o número de pontos de entrada** expostos por artefato, quando comparada a um *build* que contém todos os *controllers*?
+- **PP4 — Custo operacional:** que custos a abordagem impõe, dada a necessidade de um *build*, um *pipeline* e um artefato distintos por variante?
+
+A **PP2** é a pergunta central: é ela que converte a tese de *segurança por ausência*, formulada na seção 4.5, de afirmação teórica em evidência observável no artefato.
+
+A pergunta é formulada sobre o **ponto de entrada**, e não sobre a classe compilada, por coerência com a métrica que fundamenta a tese: Manadhata e Wing (2011) definem a superfície de ataque pelo conjunto de pontos de entrada por onde os dados alcançam o sistema a partir do ambiente, conforme a seção 2.5. Em arquiteturas de microsserviços, é ao grande número de pontos de entrada que Hannousse e Yahiouche (2021) atribuem o agravamento do desafio de segurança. A inspeção dos artefatos, apresentada no capítulo **Avaliação**, mostra que no empacotamento em JVM o bytecode da classe **permanece**, ainda que sem *bean*, sem invocador e sem rota; medir a classe seria, portanto, medir uma grandeza que a métrica adotada não contabiliza.
+
+A **PP4**, por sua vez, não abrange tempo de inicialização nem consumo de memória. Tais grandezas responderiam a "o artefato ficou mais leve?", que não é uma propriedade reivindicada por este trabalho, cujo objetivo geral trata de segurança e de manutenibilidade. Como o bytecode das classes é idêntico entre as variantes, o resultado esperado seria a ausência de diferença. Registra-se apenas o **tamanho do artefato**, com a finalidade de desarmar a suposição de que suprimir rotas encolheria a imagem.
+
+### 5.4 Etapas da pesquisa
+
+O trabalho segue as **seis atividades** do modelo de processo proposto por Peffers et al. (2007) — identificação do problema e motivação, definição dos objetivos de uma solução, projeto e desenvolvimento, demonstração, avaliação e comunicação. Trata-se de estrutura ainda corrente: Baskerville et al. (2018) registram que Peffers e colegas propõem um método e um esboço de processo para conduzir DSR, ao revisarem a literatura de processo da área. As seis atividades mapeiam-se aos capítulos deste trabalho:
+
+1. **Identificação do problema e motivação.** Caracterização do dilema entre especialização e reuso quando múltiplos BFF atendem a um mesmo contexto. *(Introdução e Justificativa.)*
+2. **Definição dos objetivos da solução.** Estabelecimento das propriedades desejadas: gerar múltiplas aplicações de um mesmo código-fonte, mais seguras e de melhor manutenibilidade ao ignorar o que não lhes compete. *(Objetivos.)*
+3. **Projeto e desenvolvimento do artefato.** Concepção da Arquitetura Metamórfica e sua fundamentação em Linhas de Produto de Software, variabilidade por anotação e superfície de ataque. *(Referencial Teórico e Proposta.)*
+4. **Demonstração.** Implementação do protótipo `modular-bff` e geração das variantes a partir do mesmo código-fonte. *(Desenvolvimento.)*
+5. **Avaliação.** Coleta de evidências que respondem às perguntas de pesquisa. *(Avaliação, Resultados e Discussão.)*
+6. **Comunicação.** Registro dos resultados neste trabalho. *(Trabalho como um todo.)*
+
+### 5.5 Procedimentos de avaliação
+
+A avaliação é conduzida pela **inspeção do artefato** e por **medições sobre o código-fonte e os artefatos gerados**. Cada procedimento responde a uma ou mais perguntas de pesquisa.
+
+O objeto de medição é, exclusivamente, o **artefato de produção**: o gerado no estágio de *builder* do `Dockerfile`, a partir do código-fonte e das *flags* de compilação, isolado do estado da máquina do desenvolvedor. As afirmações do trabalho referem-se ao que é **entregue**; medi-las sobre um artefato de desenvolvimento — dependente do diretório de saída local, do cache do sistema de *build* e das variáveis da sessão — não as sustentaria. O *build* local não integra o desenho experimental.
+
+#### 5.5.1 Procedimento experimental
+
+1. **Geração das variantes.** Do mesmo código-fonte, sem qualquer alteração entre os *builds*, produzem-se três artefatos de produção, alternando as *flags* (`BFF_API_INTERNAL_ACTIVE`, `BFF_API_EXTERNAL_ACTIVE`) que controlam a anotação `@IfBuildProperty` dos *controllers*: `default` (ambas `false`), `internal` e `external`. Uma quarta variante, com **ambos os modos ativos**, serve de **linha de base** para as comparações. Os *builds* são feitos sem reaproveitamento de cache.
+2. **Inspeção do ponto de entrada (PP2).** Para cada variante verifica-se, em duas camadas:
+   - **primária** — a rota do outro modo não consta do documento OpenAPI da variante e uma requisição a ela não é atendida;
+   - **corroborativa** — o *bean* CDI e o invocador REST da operação do outro modo não existem no artefato gerado na fase de *augmentation*, enquanto o bytecode da classe permanece no JAR da aplicação.
+
+   A camada primária é a que sustenta a conclusão, por ser independente de convenções internas do *framework*; a corroborativa explica **por que** a rota não existe.
+3. **Contagem de pontos de entrada (PP3).** Enumeram-se as rotas de negócio expostas por variante e comparam-se com a variante de linha de base, que contém todos os *controllers*, enquadrando o resultado pela métrica de superfície de ataque (MANADHATA; WING, 2011) — arrolada por Hannousse e Yahiouche (2021) entre as metodologias correntes de verificação e validação de segurança em arquiteturas de microsserviços. Excluem-se da contagem os endpoints de infraestrutura (`/health`, `/openapi`, `/docs`), presentes em toda variante e alheios à variabilidade. A contagem é **não ponderada**, ao passo que a métrica de referência pondera os pontos de entrada por dano potencial e custo de acesso — aproximação assumida e discutida nas ameaças à validade.
+4. **Medição de reuso (PP1).** Aplicam-se as métricas definidas na seção 5.5.2 sobre o código-fonte de cada variante.
+5. **Custo operacional (PP4).** Registra-se a necessidade de *pipelines* e artefatos distintos por variante — afirmação qualitativa, que decorre da própria arquitetura — e o **tamanho da imagem** de cada variante.
+6. **Contraste com *feature flag* em tempo de execução (opcional).** Reproduz-se a alternativa em runtime e verifica-se que o **ponto de entrada permanece registrado** — a rota consta do documento OpenAPI e responde a requisições, sendo recusada por verificação condicional —, contrastando com a abordagem metamórfica, na qual não há rota a ser atingida.
+
+#### 5.5.2 Métricas de reuso
+
+Duas decisões precedem a escolha das fórmulas. A primeira é **sobre qual objeto se mede**. Não se mede o reuso sobre o bytecode entregue: como o mecanismo de variabilidade suprime o ponto de entrada e não a classe (seção 5.3), todas as classes do projeto estão presentes em qualquer variante, e a medição devolveria trivialmente 100% para todas elas. A medição de reuso é feita sobre o **código-fonte**, que é onde a comunalidade e a variabilidade da linha de produto residem. A ausência no artefato é assunto da PP2, não da PP1.
+
+A segunda é **a granularidade**. Adotam-se duas — linhas de código e classes —, pois Frakes e Terry (1996) observam que a medição de reuso pressupõe definir o nível de abstração dos itens contados, e que um sistema pode ser expresso em termos de módulos, funções ou linhas de código.
+
+**Reuse percent (métrica principal).** Frakes e Terry (1996) catalogam, entre as métricas de *quantidade de reuso*, o *reuse percent*, formulado no contexto industrial e por eles documentado, que reflete o quanto do produto pode ser atribuído a reuso:
+
+`Reuse Percent = RSI / (RSI + SSI) × 100`
+
+onde `RSI` (*reused source instructions*) são as instruções reaproveitadas e `SSI` (*shipped source instructions*) as instruções novas entregues com o produto. O `RSI` é grandeza de uso corrente: Irshad et al. (2016) o empregam, em revisão sistemática com avaliação industrial, para estimar o custo evitado pelo reuso.
+
+No modelo original, `RSI` e `SSI` distinguem código herdado de um repositório corporativo e código escrito para o produto. Neste trabalho, a distinção é **entre a base comum da linha de produto e o adaptador específico da variante**: `RSI` corresponde às linhas dos ativos comuns, presentes e ativos em toda variante, e `SSI` às linhas dos ativos específicos da variante. Trata-se de transposição do mesmo tipo da praticada na seção 2.5 com a distinção método externo × interno de Manadhata e Wing (2011), e o valor obtido não é comparável aos números de reuso industrial reportados na literatura, cuja unidade é o produto, e não a variante.
+
+**Reuse level (métrica estrutural, complementar).** Frakes e Terry (1996) definem, para um item de nível superior composto de itens de nível inferior: `L`, o número total de itens de nível inferior; `E`, o número de itens vindos de um repositório externo; e `M`, o número de itens não externos usados mais de uma vez. Contam-se itens únicos, e não referências. Daí:
+
+`ERL = E / L`   ·   `IRL = M / L`   ·   `TRL = ERL + IRL`
+
+Os três assumem valores entre 0 e 1; quanto mais próximo de 1, maior o reuso, e 0 indica ausência de reuso. São métricas de uso corrente: a revisão sistemática de Chen, Usman e Badampudi (2024), sobre 30 casos industriais, mostra que o *external reuse level* e a *external reuse frequency* permanecem os instrumentos com que estudos empíricos medem o reuso e o relacionam a qualidade, produtividade e esforço. Os resultados que a revisão reúne são, contudo, mistos: ao lado das relações positivas entre reuso e qualidade, um dos casos reporta relação marginalmente negativa entre o `ERL` e a razão esforço por linhas de código.
+
+Na aplicação, o item de nível superior é **cada variante** e os itens de nível inferior são as **classes** nela ativas. Um item é externo quando foi criado para uso geral da linha de produto, e não para aquela variante — critério que decorre da definição de Frakes e Terry (1996), segundo a qual um componente externo é usado pelo item de nível superior, mas foi criado para um item diferente ou para uso geral. O núcleo compartilhado satisfaz esse critério; os *controllers* anotados, não. O `IRL` captura o que o *reuse percent* não vê: o `OrderService` é uma classe única consumida pelos três *controllers*.
+
+Adotam-se as duas métricas porque medem coisas distintas. O *reuse percent* responde quanto do produto é reaproveitado, em volume de código; o *reuse level*, quão reaproveitada é a estrutura, contando itens únicos. Uma variante poderia exibir *reuse percent* elevado apenas por conter poucas linhas específicas, sem compartilhamento estrutural real. Frakes e Kang (2005) registram que a medição de reuso é área em que muito mais trabalho é necessário, o que recomenda triangulação em vez de um único número.
+
+**Classificação dos ativos.** São **comuns** o domínio, os serviços, os repositórios, os DTOs, a configuração e o `OrderGeneralController`, que não carrega anotação de variabilidade e está ativo em toda variante. São **específicos** o `OrderExternalController` e o `OrderInternalController`. Alguns DTOs servem a um só modo, mas são classificados como comuns por não carregarem anotação e permanecerem ativos em toda variante; a escolha é conservadora, pois amplia o denominador comum e favorece a tese de reuso, e seu efeito é reportado como análise de sensibilidade. A contagem abrange apenas o código-fonte principal, excluídos testes, código gerado, migrações e configuração, e considera linhas físicas descontadas linhas em branco e comentários.
+
+#### 5.5.3 Ambiente e ferramentas
+
+Para garantir a **reprodutibilidade**, registram-se as versões e ferramentas do ambiente de referência:
+
+| Item | Especificação |
+|---|---|
+| Linguagem / plataforma | Kotlin 2.4.0 · JVM 21 |
+| Framework | Quarkus 3.37.0 (mecanismo `@IfBuildProperty` do Quarkus Arc) |
+| Geração dos artefatos de produção | Docker, sem reaproveitamento de cache |
+| Inspeção de artefato | Listagem do conteúdo dos JAR no interior de cada imagem |
+| Contagem de linhas de código | Contador que distinga comentários, com a versão registrada |
+| Persistência | PostgreSQL + Hibernate ORM · migrações versionadas |
+
+Não se registram sistema operacional nem especificação de *hardware*: nenhuma das medições é sensível a eles. As grandezas aferidas — presença de pontos de entrada, contagem de rotas, proporção de código e tamanho de imagem — são propriedades dos artefatos, e não do ambiente que os executa. Cada medição registra os comandos exatos e as *flags* utilizadas, de modo que um terceiro possa repetir o experimento e obter os mesmos artefatos.
+
+### 5.6 Quadro de amarração
+
+O quadro a seguir liga cada objetivo específico e cada pergunta de pesquisa ao método de verificação e ao capítulo que apresentará a evidência.
+
+| Objetivo / Pergunta | Método de verificação | Evidência esperada | Capítulo |
+|---|---|---|---|
+| Apresentar conceitualmente a Arquitetura Metamórfica | Fundamentação teórica e posicionamento na literatura | Arquitetura descrita e ancorada em referências consolidadas | Referencial Teórico · Proposta |
+| Apresentar um protótipo conceito | Implementação e demonstração do `modular-bff` | Protótipo funcional com as variantes reproduzíveis | Desenvolvimento |
+| **PP1 — Reuso** | *Reuse percent* e *reuse level* sobre o código-fonte (seção 5.5.2) | Proporção de reuso quantificada | Avaliação |
+| **PP2 — Ausência do ponto de entrada** | Ausência da rota no documento OpenAPI e no atendimento HTTP; ausência de *bean* e invocador no artefato de *augmentation* | Ponto de entrada do outro modo inexistente na variante | Avaliação |
+| **PP3 — Superfície de ataque** | Contagem não ponderada de rotas de negócio por variante, contra a linha de base | Redução mensurável de pontos de entrada | Avaliação |
+| **PP4 — Custo operacional** | Registro dos *pipelines* e artefatos exigidos; tamanho da imagem por variante | Custo estrutural explicitado | Avaliação |
+
+#### 5.6.1 Propriedades reivindicadas sem método de verificação
+
+O objetivo geral reivindica aplicações mais **seguras** e de melhor **manutenibilidade**, com ganho esperado de **resiliência**. O quadro acima verifica a primeira. As demais exigem declaração explícita, sob pena de o trabalho afirmar o que não verificou:
+
+| Propriedade | Situação |
+|---|---|
+| Segurança | **Verificada**, no recorte da superfície de ataque (PP2, PP3). Não abrange autenticação, autorização, limitação de abuso nem mascaramento de dados, conforme delimitado na seção 4.5. |
+| Manutenibilidade | **Inferida, não medida.** O trabalho afere o reuso (PP1), que é seu antecedente: concentrar o código comum em um único ponto reduz o esforço de manutenção (TAIBI; LENARDUZZI; PAHL, 2018), relação que Chen, Usman e Badampudi (2024) observam em casos industriais, com evidência mista. Não se mede esforço de alteração nem densidade de defeitos. |
+| Resiliência | **Não aferida.** Nenhum procedimento deste capítulo a verifica. O objetivo geral a enuncia como decorrência esperada da menor exposição, e é assim que deve ser lida. |
+
+A distinção entre propriedade verificada, inferida e não aferida é parte do método, e não uma concessão feita no capítulo de resultados.
+
+### 5.7 Ameaças à validade
+
+Por se tratar de pesquisa baseada em um único artefato, a discussão das **ameaças à validade** — protótipo e domínio únicos, escopo delimitado da segurança por ausência e escolha das métricas — é desenvolvida no capítulo **Avaliação, Resultados e Discussão**.
+
 ## Referências
 
 Referências científicas utilizadas na fundamentação, no padrão ABNT (NBR 6023):
 
+BASKERVILLE, Richard; BAIYERE, Abayomi; GREGOR, Shirley; HEVNER, Alan; ROSSI, Matti. Design science research contributions: finding a balance between artifact and theory. **Journal of the Association for Information Systems**, [*s. l.*], v. 19, n. 5, p. 358-376, 2018. DOI: 10.17705/1jais.00495.
+
 BAUM, David; SIXTUS, Christina; VOGELSBERG, Lisa; EISENECKER, Ulrich. Understanding conditional compilation through integrated representation of variability and source code. In: INTERNATIONAL SYSTEMS AND SOFTWARE PRODUCT LINE CONFERENCE, 23., 2019, Paris. **Proceedings** [...]. New York: ACM, 2019. p. 1-4. DOI: 10.1145/3307630.3342387.
+
+CHEN, Xingru; USMAN, Muhammad; BADAMPUDI, Deepika. Understanding and evaluating software reuse costs and benefits from industrial cases: a systematic literature review. **Information and Software Technology**, [*s. l.*], v. 171, art. 107451, 2024. DOI: 10.1016/j.infsof.2024.107451.
+
+ENGSTRÖM, Emelie; STOREY, Margaret-Anne; RUNESON, Per; HÖST, Martin; BALDASSARRE, Maria Teresa. How software engineering research aligns with design science: a review. **Empirical Software Engineering**, [*s. l.*], v. 25, p. 2630-2660, 2020. DOI: 10.1007/s10664-020-09818-7.
+
+FRAKES, William B.; KANG, Kyo. Software reuse research: status and future. **IEEE Transactions on Software Engineering**, [*s. l.*], v. 31, n. 7, p. 529-536, 2005. DOI: 10.1109/TSE.2005.85.
+
+FRAKES, William; TERRY, Carol. Software reuse: metrics and models. **ACM Computing Surveys**, [*s. l.*], v. 28, n. 2, p. 415-435, 1996. DOI: 10.1145/234528.234531.
 
 HANNOUSSE, Abdelhakim; YAHIOUCHE, Salima. Securing microservices and microservice architectures: a systematic mapping study. **Computer Science Review**, [*s. l.*], v. 41, art. 100415, 2021. DOI: 10.1016/j.cosrev.2021.100415.
 
@@ -245,11 +397,15 @@ HORCAS, José Miguel; PINTO, Mónica; FUENTES, Lidia. Empirical analysis of the 
 
 HUNSEN, Claus; ZHANG, Bo; SIEGMUND, Janet; KÄSTNER, Christian; LESSENICH, Olaf; BECKER, Martin; APEL, Sven. Preprocessor-based variability in open-source and industrial software systems: an empirical study. **Empirical Software Engineering**, [*s. l.*], v. 21, n. 2, p. 449-482, 2016. DOI: 10.1007/s10664-015-9360-1.
 
+IRSHAD, Mohsin; PETERSEN, Kai; TORKAR, Richard; AFZAL, Wasif. Capturing cost avoidance through reuse: systematic literature review and industrial evaluation. In: INTERNATIONAL CONFERENCE ON EVALUATION AND ASSESSMENT IN SOFTWARE ENGINEERING, 20., 2016, Limerick. **Proceedings** [...]. New York: ACM, 2016. p. 1-12. DOI: 10.1145/2915970.2915989.
+
 MANADHATA, Pratyusa K.; WING, Jeannette M. An attack surface metric. **IEEE Transactions on Software Engineering**, [*s. l.*], v. 37, n. 3, p. 371-386, 2011. DOI: 10.1109/TSE.2010.60.
 
 MARTIN, Robert C. **Clean architecture**: a craftsman's guide to software structure and design. Boston: Prentice Hall, 2017.
 
 PAHL, Claus; JAMSHIDI, Pooyan. Microservices: a systematic mapping study. In: INTERNATIONAL CONFERENCE ON CLOUD COMPUTING AND SERVICES SCIENCE, 6., 2016. **Proceedings** [...]. Setúbal: SciTePress, 2016. v. 1, p. 137-146. DOI: 10.5220/0005785501370146.
+
+PEFFERS, Ken; TUUNANEN, Tuure; ROTHENBERGER, Marcus A.; CHATTERJEE, Samir. A design science research methodology for information systems research. **Journal of Management Information Systems**, [*s. l.*], v. 24, n. 3, p. 45-77, 2007. DOI: 10.2753/MIS0742-1222240302.
 
 TAIBI, Davide; LENARDUZZI, Valentina; PAHL, Claus. Architectural patterns for microservices: a systematic mapping study. In: INTERNATIONAL CONFERENCE ON CLOUD COMPUTING AND SERVICES SCIENCE, 8., 2018. **Proceedings** [...]. Setúbal: SciTePress, 2018. p. 221-232. DOI: 10.5220/0006798302210232.
 

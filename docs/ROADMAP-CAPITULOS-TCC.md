@@ -56,7 +56,7 @@ O que **falta** para transformar a proposta num TCC completo:
 - ~~Referencial Teórico como capítulo próprio~~ → **implementado no TCC** (arquivo original `Proposta TCC …md`, como capítulo *Referencial Teórico* antes da Proposta). Rascunho de trabalho mantido em `REFERENCIAL-TEORICO.md`.
 - ~~Trabalhos Relacionados~~ → **implementado no TCC** (arquivo original `Proposta TCC …md`, como capítulo antes da Proposta). Rascunho de trabalho mantido em `TRABALHOS-RELACIONADOS.md`.
 - ~~Proposta: Arquitetura Metamórfica (capítulo redigido)~~ → **implementado no TCC** (seções 4.1–4.6), substituindo a redação preliminar. Rascunho de trabalho mantido em `PROPOSTA-ARQUITETURA-METAMORFICA.md`.
-- ~~Metodologia~~ → **rascunho concluído** em `METODOLOGIA.md`.
+- ~~Metodologia~~ → **implementado no TCC** (seções 5.1–5.7), absorvendo o método de reuso de `METRICA-REUSO.md` na seção 5.5.2. Rascunhos mantidos como registro de trabalho.
 - ~~Desenvolvimento / Implementação do Protótipo~~ → **rascunho concluído** em `DESENVOLVIMENTO.md`.
 - ~~Avaliação, Resultados e Discussão~~ → **rascunho iniciado** em `AVALIACAO.md`, com os resultados de PP2 e PP3 já coletados e os demais marcados como `[A PREENCHER]`.
 - Conclusão e Trabalhos Futuros.
@@ -181,7 +181,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 2. ✅ Referencial Teórico — **implementado no TCC** (`Proposta TCC …md`); rascunho de trabalho em `REFERENCIAL-TEORICO.md`
 3. ✅ Trabalhos Relacionados — **implementado no TCC** (`Proposta TCC …md`); rascunho de trabalho em `TRABALHOS-RELACIONADOS.md`
 4. ✅ Proposta: Arquitetura Metamórfica — **implementado no TCC** (seções 4.1–4.6); rascunho de trabalho em `PROPOSTA-ARQUITETURA-METAMORFICA.md`
-5. 🟡 Metodologia — rascunho em `METODOLOGIA.md`
+5. ✅ Metodologia — **implementado no TCC** (seções 5.1–5.7); rascunho de trabalho em `METODOLOGIA.md` e `METRICA-REUSO.md`
 6. 🟡 Desenvolvimento / Implementação do Protótipo — rascunho em `DESENVOLVIMENTO.md`
 7. 🟡 Avaliação, Resultados e Discussão — rascunho em `AVALIACAO.md`
 8. ⬜ Conclusão e Trabalhos Futuros
@@ -301,7 +301,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 1. [x] **Promover o Referencial Teórico a capítulo** — **implementado no TCC** (`Proposta TCC …md`); *Fundamentação teórica* da Proposta já desduplicada (passou a remeter ao novo capítulo).
 2. [x] **Escrever Trabalhos Relacionados** a partir da tabela comparativa do `CASE_STUDY.md` — **implementado no TCC** (`Proposta TCC …md`).
 2b. [x] **Implementar a Proposta** — rascunho `PROPOSTA-ARQUITETURA-METAMORFICA.md` transposto para o TCC (seções 4.1–4.6), com as figuras preservadas e os cabeçalhos normalizados.
-3. [x] **Definir a Metodologia (DSR)** e amarrar cada objetivo específico a um método de verificação — rascunho em `METODOLOGIA.md`.
+3. [x] **Definir a Metodologia (DSR)** e amarrar cada objetivo específico a um método de verificação — **implementado no TCC** (seções 5.1–5.7), com as citações de DSR resolvidas (Peffers, Baskerville, Engström).
 4. [x] **Redigir o Desenvolvimento** com trechos de código, `application.properties` e comandos de *build* — rascunho em `DESENVOLVIMENTO.md`.
 5. [x] **Executar a Avaliação** — experimento 1 (inspeção do artefato) executado nas três variantes de produção; resultados em `AVALIACAO.md` (seções 7.2 e 7.3). O achado obrigou a reformular a tese: ver a pendência crítica da seção 1.1.
 6. [ ] **Coletar métricas** de reuso e de superfície de ataque (experimentos 2 e 3) — o método de cálculo do reuso está definido em `METRICA-REUSO.md`; falta executá-lo.

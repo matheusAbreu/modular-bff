@@ -2,7 +2,7 @@
 
 > 🟡 **Rascunho de método.** Define **como** a pergunta de pesquisa **PP1 — Reuso** será respondida no capítulo de Avaliação: qual métrica se adota, de qual literatura ela vem, como os artefatos do protótipo são classificados e qual o procedimento de coleta. **Não contém resultados** — os números são produzidos na execução e registrados na Avaliação.
 >
-> **Situação no TCC:** este conteúdo **não permanece como documento próprio no trabalho final**. Ao ser implementado, ele é absorvido pelo capítulo de **Metodologia**, junto aos *Procedimentos de Avaliação* (`METODOLOGIA.md`, seção 5), que hoje apenas anuncia a medição de reuso sem definir a métrica. O rascunho separado existe só enquanto o método está em elaboração; a fonte da verdade passa a ser o TCC, conforme o *modus operandi* do `ROADMAP-CAPITULOS-TCC.md`.
+> ✅ **Implementado no TCC** — absorvido pelo capítulo *Metodologia* do arquivo `Proposta TCC …md`, na seção **5.5.2 Métricas de reuso**. **A fonte da verdade passa a ser o TCC**; este documento é mantido apenas como registro de trabalho, e as notas de atribuição de fontes (seção 5) seguem valendo para quem for redigir a Avaliação.
 >
 > **Convenções:** citações no sistema autor-data (ABNT NBR 10520). As fontes foram obtidas e verificadas segundo o *modus operandi* de `docs/FONTES-ACADEMICAS.md`; o registro completo está em `REFERENCIAS_CIENTIFICAS.md` (seção 8) e as citações diretas em `CITACOES_ABNT.md` (Eixo 6).
 

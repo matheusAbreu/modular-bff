@@ -1,6 +1,8 @@
 # Metodologia
 
-> **Situação no TCC:** capítulo a ser inserido após a *Proposta: Arquitetura Metamórfica* (Cap. 4) e antes do *Desenvolvimento* (Cap. 6), conforme o sumário-alvo do `ROADMAP-CAPITULOS-TCC.md`. Descreve **como** o trabalho foi conduzido e **como** a proposta será avaliada, amarrando cada objetivo específico a um método de verificação.
+> ✅ **Implementado no TCC** — transposto para o arquivo `Proposta TCC …md` como capítulo *Metodologia* (seções 5.1–5.7), entre a *Proposta* e as *Referências*. **A fonte da verdade passa a ser o TCC**; este documento é mantido apenas como registro de trabalho.
+>
+> Diferenças aplicadas na transposição: o método de reuso de `METRICA-REUSO.md` foi **absorvido** na seção 5.5.2; as remissões por caminho de arquivo viraram referências de capítulo/seção; as seções foram renumeradas para 5.x; as seis referências novas entraram na lista do TCC; e a *Organização do Trabalho* passou a descrever **oito partes**.
 
 Este capítulo caracteriza a natureza da pesquisa, justifica a adoção da *Design Science Research* (DSR) como método condutor, formula as perguntas de pesquisa, detalha as etapas percorridas e define os procedimentos de avaliação do artefato proposto. O objetivo é tornar o trabalho **reprodutível** e deixar explícito o encadeamento entre o problema, o artefato construído (a Arquitetura Metamórfica e seu protótipo) e as evidências que sustentam ou refutam suas propriedades.
 
@@ -55,7 +57,7 @@ A avaliação do artefato é guiada pelas seguintes perguntas, derivadas do obje
 O trabalho segue as **seis atividades** do modelo de processo DSRM proposto por Peffers et al. (2007) — identificação do problema e motivação, definição dos objetivos de uma solução, projeto e desenvolvimento, demonstração, avaliação e comunicação. Trata-se de estrutura ainda corrente: Baskerville et al. (2018) registram que Peffers e colegas "propõem um método e um esboço de processo para conduzir DSR", ao revisarem a literatura de processo da área. As seis atividades são aqui mapeadas aos capítulos do TCC:
 
 1. **Identificação do problema e motivação.** Caracterização do dilema entre especialização e reuso quando múltiplos BFF atendem a um mesmo contexto. *(Introdução e Justificativa.)*
-2. **Definição dos objetivos da solução.** Estabelecimento das propriedades desejadas: gerar múltiplas aplicações de um mesmo código-fonte, mais seguras, resilientes e de melhor manutenibilidade ao ignorar o que não lhes compete. *(Objetivos.)*
+2. **Definição dos objetivos da solução.** Estabelecimento das propriedades desejadas: gerar múltiplas aplicações de um mesmo código-fonte, mais seguras e de melhor manutenibilidade ao ignorar o que não lhes compete. *(Objetivos.)*
 3. **Projeto e desenvolvimento do artefato.** Concepção da Arquitetura Metamórfica e sua fundamentação em Linhas de Produto de Software, variabilidade por anotação e superfície de ataque. *(Proposta e Desenvolvimento.)*
 4. **Demonstração.** Implementação do protótipo `modular-bff` e geração dos artefatos interno e externo a partir do mesmo código-fonte. *(Desenvolvimento.)*
 5. **Avaliação.** Coleta de evidências que respondem às perguntas de pesquisa — inspeção do binário, contagem de pontos de entrada e medição de reuso. *(Avaliação, Resultados e Discussão.)*
@@ -125,7 +127,7 @@ O objetivo geral reivindica aplicações mais **seguras**, **resilientes** e de 
 |---|---|
 | Segurança | **Verificada**, no recorte da superfície de ataque (PP2, PP3). Não abrange autenticação, autorização, limitação de abuso nem mascaramento de dados. |
 | Manutenibilidade | **Inferida, não medida.** O trabalho afere o **reuso** (PP1), que é seu antecedente: concentrar o código comum em um único ponto reduz o esforço de manutenção (TAIBI; LENARDUZZI; PAHL, 2018), relação que Chen, Usman e Badampudi (2024) observam em casos industriais — com a ressalva de que a evidência ali reunida é mista. Não se mede esforço de alteração nem densidade de defeitos. |
-| Resiliência | **Não aferida.** Nenhum procedimento deste capítulo a verifica. A propriedade deve ser retirada do objetivo geral ou apresentada como decorrência esperada, jamais como resultado. |
+| Resiliência | **Não aferida.** Nenhum procedimento deste capítulo a verifica. O objetivo geral a enuncia como **decorrência esperada** da menor exposição, e é assim que deve ser lida — nunca como resultado. |
 
 A distinção entre propriedade verificada, inferida e não aferida é parte do método, e não uma concessão feita no capítulo de resultados.
 
@@ -137,7 +139,9 @@ Por se tratar de pesquisa baseada em um único artefato, a discussão das **amea
 
 ---
 
-> ### 📌 Pendências restantes
-> - **Absorver o método de reuso.** O conteúdo de `METRICA-REUSO.md` — métricas, fontes, classificação dos ativos e coleta — deve ser incorporado à seção 5 quando o capítulo for implementado no TCC; o rascunho separado então se encerra.
-> - **Fundamentação metodológica:** ✅ resolvida. As seis atividades estão ancoradas em PEFFERS et al. (2007), com corroboração recente de BASKERVILLE et al. (2018) quanto ao processo e de ENGSTRÖM et al. (2020) quanto à adequação da DSR à Engenharia de Software. As referências 7.1, 7.4 e 7.5 de `REFERENCIAS_CIENTIFICAS.md` permanecem **não verificadas** e não são citadas.
-> - **Resiliência no objetivo geral.** A seção 6.1 registra que a propriedade não é aferida por nenhum procedimento. Decidir, na revisão do TCC, entre retirá-la do objetivo ou apresentá-la como decorrência esperada.
+> ### 📌 Registro de fechamento
+> - **Absorver o método de reuso:** ✅ feito — `METRICA-REUSO.md` foi incorporado à seção 5.5.2 do TCC.
+> - **Fundamentação metodológica:** ✅ resolvida. As seis atividades estão ancoradas em PEFFERS et al. (2007), com corroboração de BASKERVILLE et al. (2018) quanto ao processo e de ENGSTRÖM et al. (2020) quanto à adequação da DSR à Engenharia de Software. As referências 7.1, 7.4 e 7.5 de `REFERENCIAS_CIENTIFICAS.md` permanecem **não verificadas** e não são citadas.
+> - **Resiliência no objetivo geral:** ✅ decidida — mantida como **decorrência esperada** da menor exposição, explicitamente não aferida (seção 5.6.1 do TCC).
+>
+> **Follow-ups editoriais (no TCC):** as seções 5.3, 5.5 e 5.7 remetem aos capítulos *Desenvolvimento* e *Avaliação*, ainda não implementados; as remissões passam a valer quando esses capítulos entrarem.
