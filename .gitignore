@@ -42,3 +42,4 @@ nb-configuration.xml
 .certs/
 
 .vscode/settings.json
+**/__pycache__/

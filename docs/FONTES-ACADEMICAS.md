@@ -67,6 +67,7 @@
 | **Quarkus (extensões)** | Fase de *augmentation*, onde a variabilidade é resolvida | https://quarkus.io/guides/writing-extensions | QUARKUS (2026b) |
 | **Quarkus (Kotlin)** | Plugin `all-open` e classes `final` por padrão | https://quarkus.io/guides/kotlin | QUARKUS (2026c) |
 | **Quarkus (empacotamento)** | Tipo `fast-jar` e diretório de saída `quarkus-app` | https://quarkus.io/guides/gradle-tooling | QUARKUS (2026d) |
+| **Quarkus (OpenAPI / Swagger UI)** | Geração do contrato a partir da API; `swagger-ui.always-include` | https://quarkus.io/guides/openapi-swaggerui | QUARKUS (2026e) |
 | **Kotlin** | Linguagem; plugin de compilação `all-open` | https://kotlinlang.org/docs/all-open-plugin.html | *(ainda não citado)* |
 | **Hibernate ORM** | Persistência; `database.generation=none` | https://quarkus.io/guides/hibernate-orm | *(ainda não citado)* |
 | **Goose** | Migrações versionadas de schema | https://github.com/pressly/goose | *(ainda não citado)* |

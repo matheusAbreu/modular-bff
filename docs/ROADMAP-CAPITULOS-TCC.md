@@ -12,6 +12,27 @@
 >
 > **Arquivo final do TCC:** `docs/case-study/Proposta TCC - Reutilização de código para criar múltiplos projetos do tipo BFF .md`
 
+### ⚠️ Regra dos scripts transpostos — fidelidade entre código e número
+
+> **Todo script já transposto para o TCC que sofrer edição obriga a revisão do documento.** Sem exceção, e antes de qualquer outra tarefa.
+
+Os scripts de `docs/case-study/scripts/` vão para o TCC **por inteiro**, como blocos de código em apêndice (ver o `README.md` daquele diretório). Disso decorre um vínculo que é fácil romper sem perceber: **o bloco publicado precisa ser o código que produziu os números publicados.**
+
+A armadilha é concreta. Um script é transposto; semanas depois, corrige-se nele um defeito, muda-se um critério, acrescenta-se uma verificação. O TCC passa então a exibir um código que **não gerou** a tabela que o acompanha — e um leitor que o execute obterá outros valores, ou nenhum. O trabalho perde exatamente aquilo que os apêndices existem para dar: a possibilidade de reconstruir a medição.
+
+**Procedimento obrigatório ao editar um script já transposto:**
+
+1. **Reexecutar** o script e colher os números novamente.
+2. **Confrontar** com os valores publicados no capítulo. Se divergirem, os números do capítulo estão errados — não o script.
+3. **Atualizar**, na mesma passagem: (a) o bloco de código no apêndice; (b) as tabelas e afirmações do capítulo que dele dependem; (c) a leitura da saída, no `README.md` dos scripts; (d) o *Histórico de correções*, se a edição corrigiu um defeito.
+4. **Reavaliar as ameaças à validade**, quando a edição alterar o método — e não apenas a implementação.
+
+**Corolário — congelamento.** A partir do início da transposição de um capítulo, os scripts que ele publica ficam **congelados**: só se editam por defeito que invalide um número, e nunca por conveniência ou estilo. Melhoria que não muda resultado algum espera o trabalho ser entregue.
+
+**Por que a regra existe.** Durante a coleta da Avaliação, três scripts foram editados após a primeira execução — por defeitos de contagem, por critério de conferência errado e por dado de teste inconsistente. Cada edição mudou números que já haviam sido escritos no capítulo. Enquanto o capítulo era rascunho, o custo foi baixo; depois de transposto, seria a publicação de um código que não corresponde ao resultado.
+
+---
+
 ### Convenções de redação (valem para todos os capítulos)
 
 - **3ª pessoa acadêmica.** Vedadas construções em 1ª pessoa ("proponho", "analisamos", "vemos", "temos"); usar "propõe-se", "observa-se", "este trabalho propõe".
@@ -63,9 +84,11 @@ O que **falta** para transformar a proposta num TCC completo:
 
 ---
 
-## 1.1 ⛔ Pendência crítica — a tese afirma mais do que o artefato demonstra
+## 1.1 ✅ Achado resolvido — a tese, reancorada no ponto de entrada
 
-> **Estado:** aberta. **Bloqueia:** o capítulo de Avaliação (experimento 1 / PP2) e, por consequência, a redação definitiva da *segurança por ausência*. **Descrição única:** esta seção é a **fonte da verdade** sobre o assunto; os demais pontos do repositório que tocam a tese devem **remeter a ela**, nunca reexpor o problema.
+> **Estado:** **resolvida** em 9 jul. 2026. A análise do artefato de produção foi executada e a reformulação da tese foi propagada ao TCC e aos rascunhos ativos. **Descrição única:** esta seção é a **fonte da verdade** sobre o assunto; os demais pontos do repositório que tocam a tese devem **remeter a ela**, nunca reexpor o problema.
+>
+> **Permanece aberto** apenas o item 3 do encaminhamento (investigar o *build* nativo), que não bloqueia nenhum capítulo.
 
 ### O que foi observado
 
@@ -140,24 +163,26 @@ A tese **sobrevive, mas está enunciada de forma mais forte do que o artefato de
 | Não há *bean* CDI, não há *invoker* REST, não há rota registrada; nenhuma configuração de runtime reativa o endpoint | ✅ **Verdadeira e verificável** no `generated-bytecode.jar` |
 | A classe do controller "não foi compilada", "não é compilada no artefato", "não existe no binário", "sequer é compilada nele" | ❌ **Falsa ao pé da letra** — o bytecode da classe permanece no `app/*.jar`, inerte e inalcançável |
 
-Trechos que hoje sustentam a afirmação falsa. A correção depende do que a análise do artefato de produção revelar — se ela confirmar o mesmo comportamento, todos passam à formulação do item 1 do encaminhamento:
+O risco acadêmico era concreto: um leitor que executasse o comando publicado no próprio trabalho veria o controller do outro modo listado, e a evidência central da contribuição ficaria desmentida pelo próprio procedimento.
 
-- `Proposta TCC …md` — seção 4.5, primeiro item da lista ("a classe que a declara **não foi compilada** nele") e último parágrafo da 4.5 ("garante-se que tais operações **sequer sejam compiladas** nele").
-- `Proposta TCC …md` — seções 2.4 e 3.2 ("ele **deixa de existir** no artefato final"; "ela simplesmente **não é compilada**"); mesmos trechos nos rascunhos `REFERENCIAL-TEORICO.md` (2.4) e `TRABALHOS-RELACIONADOS.md` (3.2, 3.3).
-- `PROPOSTA-ARQUITETURA-METAMORFICA.md` — seções 4.2, 4.5.
-- `DESENVOLVIMENTO.md` — seção 6.5 ("a classe **não é compilada** no artefato") e o procedimento da 6.8.
-- `CASE_STUDY.md` — seções 3 ("o endpoint simplesmente **não existe no binário**"), 10 (procedimento e saída esperada) e 11.
-- `REFERENCIAS_CIENTIFICAS.md` (3.3) e `CITACOES_ABNT.md` (glosa do Eixo 3) — glosas que repetem "não existe no binário".
+### Encaminhamento — situação de cada item
 
-O risco acadêmico é concreto: um leitor que execute o comando publicado no próprio trabalho verá o controller do outro modo listado, e a evidência central da contribuição fica desmentida pelo próprio procedimento.
+0. ✅ **Repetir a análise sobre o artefato de produção.** **Feito.** As três variantes foram geradas por `make container/build/variants` e inspecionadas por `make artifact/analysis`; o resultado está transcrito acima, em *Confirmação sobre o artefato de produção*. O empacotamento de produção é o mesmo `fast-jar` do *build* local, o que explica a coincidência de comportamento.
+1. ✅ **Reancorar a tese no *ponto de entrada*, não na classe.** **Aplicado ao TCC** (seções 2.4, 3.2, 3.3, 3.5, 4.2, 4.5, 4.6) e ao `CASE_STUDY.md` (seções 3, 10, 11). A formulação vigente é "o artefato não contém o ponto de entrada: não há *bean*, invocador nem rota registrada". Isso preserva integralmente o argumento de superfície de ataque de MANADHATA; WING (2011), cuja unidade de medida é o **ponto de entrada**, e não a classe — o que torna a formulação corrigida **mais aderente** à métrica citada do que a original.
+2. ✅ **Trocar o procedimento de verificação.** **Feito** em `CASE_STUDY.md` (10), `DESENVOLVIMENTO.md` (6.8) e no TCC (5.5.1 e 6.8): a inspeção recai sobre `quarkus/generated-bytecode.jar`, filtrando por `_Bean` e `quarkusrestinvoker`, e a evidência **primária** passa a ser a ausência da rota no documento OpenAPI e no atendimento HTTP — independente de convenções do framework.
+3. 🔭 **Investigar o *build* nativo** (`-Dquarkus.native.enabled=true`): a *dead code elimination* do GraalVM possivelmente elimina também o bytecode da classe, o que restauraria a versão forte da tese — desta vez de forma literalmente verdadeira. **Decidido em 10 jul. 2026: fora do escopo deste trabalho**, registrado como **trabalho futuro** na Avaliação (seção 7.2.4) e a ser retomado no capítulo *Conclusão e Trabalhos Futuros*. Nenhuma afirmação do trabalho depende do resultado: a propriedade reivindicada está estabelecida no empacotamento em JVM, que é o que o protótipo entrega.
+4. ✅ **Registrar o achado como resultado**, não como erratum. **Feito** em `AVALIACAO.md` (7.2.3): a distinção entre "classe presente e inerte" e "ponto de entrada ausente" é o tipo de precisão que o capítulo de Avaliação existe para produzir, e o contraste com a *feature flag* em runtime permanece intacto (lá o ponto de entrada **existe e responde**).
 
-### Encaminhamento proposto (a decidir)
+### Onde a correção foi aplicada
 
-0. **Repetir a análise sobre o artefato de produção.** Gerar as três variantes pelo `Dockerfile` (alvos `make container/build/*`) e inspecionar cada imagem com `make artifact/entrypoints/*`. É o passo que converte a observação acima — feita no artefato de depuração — em evidência publicável, e é pré-requisito dos itens seguintes. O empacotamento de produção pode diferir do local (modo `fast-jar` versus *uber-jar*, ausência de resíduos do `build/` da máquina), e a redação final deve descrever o que o artefato entregue de fato contém.
-1. **Reancorar a tese no *ponto de entrada*, não na classe.** Substituir "o endpoint não existe no binário" por formulação do tipo "o artefato não contém o ponto de entrada: não há *bean*, *invoker* nem rota registrada". Isso preserva integralmente o argumento de superfície de ataque de MANADHATA; WING (2011), cuja unidade de medida é o **ponto de entrada**, e não a classe — o que, a rigor, torna a formulação corrigida **mais aderente** à métrica citada do que a original.
-2. **Trocar o procedimento de verificação** em `CASE_STUDY.md` (10), `DESENVOLVIMENTO.md` (6.8) e `METODOLOGIA.md` (5.1/5.2): inspecionar `quarkus/generated-bytecode.jar` filtrando por `_Bean` e `quarkusrestinvoker`, e não `app/*.jar`.
-3. **Investigar o *build* nativo** (`-Dquarkus.native.enabled=true`): a *dead code elimination* do GraalVM possivelmente elimina também o bytecode da classe, o que restauraria a versão forte da tese — desta vez de forma literalmente verdadeira. **Hipótese não testada**; se confirmada, vira uma seção da Avaliação e um argumento adicional. Se refutada, a versão do item 1 é a definitiva.
-4. **Registrar o achado como resultado**, não como erratum: a distinção entre "classe presente e inerte" e "ponto de entrada ausente" é exatamente o tipo de precisão que o capítulo de Avaliação existe para produzir, e o contraste com a *feature flag* em runtime permanece intacto (lá o ponto de entrada **existe e responde**).
+| Documento | Situação |
+|---|---|
+| `Proposta TCC …md` (2.4, 3.2, 3.3, 3.5, 4.2, 4.3, 4.5, 4.6) | ✅ Corrigido |
+| `CASE_STUDY.md` (3, 10, 11) | ✅ Corrigido |
+| `DESENVOLVIMENTO.md` (6.5, 6.8), `METODOLOGIA.md` (5.3, 5.5) | ✅ Já corrigidos antes desta rodada |
+| `AVALIACAO.md` (7.2) | ✅ O achado **é** o resultado registrado |
+| `REFERENCIAL-TEORICO.md` (2.4), `TRABALHOS-RELACIONADOS.md` (3.2, 3.3), `PROPOSTA-ARQUITETURA-METAMORFICA.md` (4.2, 4.5) | ⬜ **Não corrigidos, por decisão:** são rascunhos já implementados no TCC, cuja fonte da verdade passou a ser o TCC (ver seção 5, *Natureza dos arquivos*). Ficam como registro histórico. |
+| `REFERENCIAS_CIENTIFICAS.md` (5.1), `CITACOES_ABNT.md` (glosa do Eixo 3) | ⬜ **Pendente:** as glosas ainda repetem "não existe no binário". Corrigir na próxima passagem pelas referências. |
 
 > **Nota de escopo:** os artefatos analisados devem ser os de **produção** (imagem Docker), não os do *build* de desenvolvimento — ver a seção *Builds de análise* logo abaixo.
 
@@ -232,11 +257,11 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 > - **Figuras definitivas:** as cinco imagens continuam sendo os *placeholders* originais; produzir os diagramas finais (ver checklist, item 9). Restam também dois `[Trocar imagem]` na Introdução (`image1`, `image2`).
 > - ~~**Sobreposição 4.5 × 2.5:** a *segurança por ausência* reintroduz a superfície de ataque, já desenvolvida na seção 2.5.~~ → **resolvido** (follow-up (b) da seção 3.1). A 2.5 é a **base teórica** e permaneceu **intocada**; a 4.5 é a **solução** e passou a **retomar a 2.5 ponto a ponto**, em lista de quatro itens — superfície como conjunto de pontos de entrada; métrica em nível de projeto; distinção método externo × interno transposta ao negócio; microsserviços e ameaça interna —, mostrando a correspondência de cada um no artefato, sem redefinir os conceitos. Aplicadas também as *Convenções de redação* (registro neutro): removidas as frases que reforçavam a qualidade do estudo, na 4.5 e na 4.1.
 > - **Remissões antecipadas:** as seções 4.3 e 4.6 remetem aos capítulos *Desenvolvimento*, *Metodologia* e *Avaliação*, ainda não implementados no TCC. As remissões passam a valer quando esses capítulos entrarem.
-> - **Cabeçalhos vazios:** sobraram dois `###` sem título entre a *Justificativa* e os *Objetivos* (resquício do documento original) — remover na revisão final.
+> - ~~**Cabeçalhos vazios:** sobraram dois `###` sem título entre a *Justificativa* e os *Objetivos*.~~ → **resolvido:** removidos, e os *Objetivos* passaram a `## Objetivos` com `### Objetivo geral` e `### Objetivos específicos`.
 
-### 3.3 Metodologia — 🟡 rascunho concluído
+### 3.3 Metodologia — ✅ implementado no TCC
 
-> **Status:** capítulo rascunhado em `docs/case-study/METODOLOGIA.md` (classificação da pesquisa, DSR como método, 4 perguntas de pesquisa, 6 etapas DSR mapeadas aos capítulos, procedimentos de avaliação, ambiente/ferramentas e quadro de amarração objetivo→método→evidência). **Pendência:** integrar as citações de DSR (refs 7.1–7.5 de `REFERENCIAS_CIENTIFICAS.md`, ainda em *análise pendente*) e reancorar as "seis atividades" em Peffers et al. (2007).
+> **Status:** implementado no TCC (seções 5.1–5.7), absorvendo o método de reuso de `METRICA-REUSO.md` na seção 5.5.2. Rascunho de trabalho mantido em `METODOLOGIA.md`. **Pendência de citações de DSR resolvida:** as seis atividades estão ancoradas em Peffers et al. (2007), com corroboração de Baskerville et al. (2018) quanto ao processo e de Engström et al. (2020) quanto à adequação da DSR à Engenharia de Software. As referências 7.1, 7.4 e 7.5 de `REFERENCIAS_CIENTIFICAS.md` permanecem **não verificadas** e, por isso, **não são citadas**.
 
 - **Objetivo:** descrever como o trabalho foi conduzido e como a proposta será avaliada.
 - **Abordagem recomendada:** **Design Science Research (DSR)** — pesquisa que produz e avalia um *artefato* (a arquitetura + o protótipo) para resolver um problema real. Alternativa: estudo de caso / prova de conceito.
@@ -248,9 +273,9 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 - **Próximos passos:** ler as referências de DSR reunidas na seção 7 de `REFERENCIAS_CIENTIFICAS.md` e inserir as citações no texto; as perguntas de pesquisa PP1–PP4 já estão definidas.
 - **Pronto quando:** cada objetivo específico tiver um método de verificação associado. ✅
 
-### 3.4 Desenvolvimento / Implementação do Protótipo — 🟡 rascunho concluído
+### 3.4 Desenvolvimento / Implementação do Protótipo — ✅ implementado no TCC
 
-> **Status:** capítulo rascunhado em `docs/case-study/DESENVOLVIMENTO.md` e **revisado** após a pendência crítica da seção 1.1: a seção 6.5 passou a enunciar a ausência do *ponto de entrada* (e não da classe), e a 6.8 substituiu o procedimento de inspeção pelo do artefato de produção, em duas camadas. Atualizados também os alvos do `Makefile` (seção 6.6), o vocabulário de variantes e linha de base, e o job de CI. As remissões a `CASE_STUDY.md` foram convertidas: a 6.1 remete à seção 5.5.3 e as 6.2 e 6.4 absorveram o conteúdo (entidades, estados do `OrderStatus`, escopo das migrações). **Pendência única:** substituir os cinco marcadores `🖼️ [FIGURA A INSERIR]` pelas imagens definitivas — camadas hexagonais, modelo de domínio, ciclo de vida do pedido, schema do banco e fluxo de *build*.
+> **Status:** implementado no TCC (seções 6.1–6.8), com as afirmações técnicas ancoradas na documentação oficial do Quarkus. Rascunho de trabalho mantido em `docs/case-study/DESENVOLVIMENTO.md`, **revisado** após o achado da seção 1.1: a seção 6.5 passou a enunciar a ausência do *ponto de entrada* (e não da classe), e a 6.8 substituiu o procedimento de inspeção pelo do artefato de produção, em duas camadas. Atualizados também os alvos do `Makefile` (seção 6.6), o vocabulário de variantes e linha de base, e o job de CI. As remissões a `CASE_STUDY.md` foram convertidas: a 6.1 remete à seção 5.5.3 e as 6.2 e 6.4 absorveram o conteúdo (entidades, estados do `OrderStatus`, escopo das migrações). **Pendência única:** substituir os cinco marcadores `🖼️ [FIGURA A INSERIR]` pelas imagens definitivas — camadas hexagonais, modelo de domínio, ciclo de vida do pedido, schema do banco e fluxo de *build*.
 >
 > **Decisões registradas:** o CORS teve os métodos restringidos aos verbos atendidos e as origens parametrizadas por ambiente, mantendo o coringa `*` como padrão — escolha deliberada de projeto-referência, para facilitar a reprodução. As demais melhorias de código sinalizadas (`init.sh`, `countOrders`, `@Transactional` em leituras) foram **descartadas**: são pormenores sem efeito sobre a segurança por ausência ou sobre qualquer medição. O método das métricas de reuso migrou para a Metodologia (seção 5.5.2).
 
@@ -274,11 +299,11 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 
 - **Objetivo:** demonstrar, com dados, que a arquitetura entrega o que promete.
 - **Experimentos/medições sugeridos:**
-  1. **Ausência verificável de endpoints** — construir o artefato externo e o interno e inspecionar o JAR (`jar tf` / `unzip -l | grep adapters/api/v1`), mostrando que o controller do outro modo **não existe** no binário. É a prova direta da tese (procedimento já descrito no `CASE_STUDY.md`, seção 10).
+  1. ✅ **Ausência verificável do ponto de entrada** — gerar as variantes de produção e verificar, em duas camadas, que o *bean*, o invocador e a rota do outro modo não foram registrados (o bytecode da classe, esse, permanece). **Executado**; resultados em `AVALIACAO.md` (7.2). O procedimento vigente está no `CASE_STUDY.md`, seção 10. Resta a evidência primária — OpenAPI e resposta HTTP por variante (`AVALIACAO.md`, 7.9, itens 1 e 2).
   2. **Redução da superfície de ataque** — quantificar os pontos de entrada expostos por artefato (nº de rotas/endpoints) e comparar com um *build* que contém todos os controllers; enquadrar com a métrica de superfície de ataque (MANADHATA; WING, 2011).
   3. **Reuso de código** — medir a proporção de código compartilhado (domínio, serviços, repositórios) vs. especializado (controllers, DTOs) — LOC ou nº de classes —, sustentando o ganho de reuso.
-  4. **Custo operacional** — registrar que a abordagem exige *pipelines*/artefatos distintos; opcionalmente medir tamanho do artefato, tempo de *startup* e memória por variante.
-  5. **(Opcional) Comparação com *feature flag* em runtime** — evidenciar que, na alternativa em runtime, o endpoint permanece no binário (reproduzir e inspecionar).
+  4. **Custo operacional** — resposta **qualitativa**, sem medição: multiplicação de pipelines e artefatos; perda da reconfiguração em runtime (o preço exato da PP2); crescimento combinatório (`k` flags → até `2^k` variantes); custo de verificação — inclusive a lacuna de o CI validar a variante de linha de base, que não é entregue; e rastreabilidade da variante em produção. **Tamanho, *startup* e memória foram descartados**: o trabalho não reivindica leveza, e a equivalência entre variantes é dedutível do resultado da PP2.
+  5. ❌ **Comparação com *feature flag* em runtime** — **descartado como experimento** (10 jul. 2026). A presença do ponto de entrada é propriedade **definidora** da abordagem em runtime, não hipótese a testar; construir uma quinta variante para constatá-la nada acrescentaria. O contraste passa a ser **argumentativo**, ancorado nas três evidências da PP2 (*bean*, OpenAPI, atendimento HTTP). Registrado como escolha de escopo na Avaliação, seção 7.6.
 - **Discussão:** relacionar os números aos objetivos; retomar o contraste segurança por ausência × por proteção.
 - **Apoio:** refs 5.1, 5.2 (segurança/superfície de ataque), 3.1b (variabilidade em sistemas reais), 4.1–4.3 (feature toggles).
 - **Pronto quando:** cada afirmação da Proposta (reuso, segurança, ausência no binário) tiver um resultado que a confirme ou refute.
@@ -293,7 +318,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 - **Objetivo:** retomar objetivos × resultados e apontar continuidade.
 - **Conteúdo sugerido:**
   - Síntese: a arquitetura reusou código sem duplicação e reduziu a superfície de ataque por construção.
-  - **Trabalhos futuros:** metamorfose que atinge camadas mais profundas (domínio/repositórios) — a ideia de granularidade mais grossa/composição descrita em `CITACOES_ABNT.md` (Eixo 3); automação da geração de *pipelines* por variante; aplicação a outro domínio; medição de segurança em produção; integração das camadas complementares (JWT/OAuth2, rate limiting).
+  - **Trabalhos futuros:** **verificar a forma forte da tese no *build* nativo** (a *dead code elimination* do GraalVM elimina o bytecode da classe inalcançável? — ver seção 1.1, item 3, e Avaliação 7.2.4); metamorfose que atinge camadas mais profundas (domínio/repositórios) — a ideia de granularidade mais grossa/composição descrita em `CITACOES_ABNT.md` (Eixo 3); automação da geração de *pipelines* por variante; **executar a suíte de testes contra cada variante entregue**, e não apenas contra a linha de base (lacuna registrada na Avaliação 7.5.1); aplicação a outro domínio; medição de segurança em produção; integração das camadas complementares (JWT/OAuth2, rate limiting).
 - **Pronto quando:** cada objetivo específico for explicitamente respondido.
 
 ---
@@ -305,15 +330,20 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 2b. [x] **Implementar a Proposta** — rascunho `PROPOSTA-ARQUITETURA-METAMORFICA.md` transposto para o TCC (seções 4.1–4.6), com as figuras preservadas e os cabeçalhos normalizados.
 3. [x] **Definir a Metodologia (DSR)** e amarrar cada objetivo específico a um método de verificação — **implementado no TCC** (seções 5.1–5.7), com as citações de DSR resolvidas (Peffers, Baskerville, Engström).
 4. [x] **Redigir o Desenvolvimento** com trechos de código, `application.properties` e comandos de *build* — **implementado no TCC** (seções 6.1–6.8), com citação da documentação oficial do Quarkus e cinco marcadores de figura pendentes.
-5. [x] **Executar a Avaliação** — experimento 1 (inspeção do artefato) executado nas três variantes de produção; resultados em `AVALIACAO.md` (seções 7.2 e 7.3). O achado obrigou a reformular a tese: ver a pendência crítica da seção 1.1.
-6. [ ] **Coletar métricas** de reuso e de superfície de ataque (experimentos 2 e 3) — o método de cálculo do reuso está definido em `METRICA-REUSO.md`; falta executá-lo.
-7. [ ] **Escrever Resultados/Discussão e Ameaças à Validade**.
+5. [x] **Executar a Avaliação** — experimento 1 (inspeção do artefato) executado nas três variantes de produção; resultados em `AVALIACAO.md` (seções 7.2 e 7.3). O achado obrigou a reformular a tese: ver a seção 1.1.
+5b. [x] **Propagar a reformulação da tese** ao TCC e ao `CASE_STUDY.md` — ver a tabela *Onde a correção foi aplicada* (seção 1.1).
+6. [ ] **Coletar métricas** de reuso e de superfície de ataque (experimentos 2 e 3). **Em curso.** O *reuse percent* em LOC já foi coletado (`scripts/metrica-reuso.py`).
+6b. [ ] ⚠️ **Reescrever a seção 5.5.2 do TCC.** A primeira coleta mostrou que o *reuse level* **não serve** a este objeto: o `IRL` é nulo por construção, o `ERL` é redundante com o *reuse percent* e quase insensível à duplicação que deveria detectar, e o par *external/internal* da métrica é homônimo — sem relação — dos modos interno/externo do protótipo. A métrica foi **abandonada** e substituída por contagem em **granularidade de método**, por alcançabilidade a partir dos pontos de entrada. Método novo em `METRICA-REUSO.md`, seção 6. Consequências para as *Referências*: sai Frakes e Kang (2005); Chen, Usman e Badampudi (2024) deixa de sustentar a vigência do *reuse level* e permanece apenas na seção 5.6.1; Frakes e Terry (1996) permanece.
+7. [ ] **Escrever Resultados/Discussão e Ameaças à Validade** e **implementar a Avaliação no TCC** (capítulo 7).
+7b. [ ] ⚠️ **Transpor os scripts para dentro do TCC, como blocos de código.** Ao implementar a Avaliação, os scripts de `docs/case-study/scripts/` (`metrica-reuso.py` e `grafo-metodos.py`) devem ser **integrados por inteiro ao documento** — em apêndice, se longos —, e não apenas referenciados por caminho de arquivo. O TCC é autocontido: quem o lê sem acesso ao repositório precisa poder reconstruir cada medição. Os blocos reproduzem os scripts **tal como executados** para produzir os números publicados; se um script mudar após a coleta, ou os números são refeitos, ou o texto exibirá código que não gerou o que afirma. Regra detalhada no `README.md` daquele diretório.
 8. [ ] **Concluir** com trabalhos futuros.
-9. [ ] **Produzir as figuras** (o `CASE_STUDY.md` traz os textos; faltam os diagramas — inclusive substituir os placeholders `[Trocar imagem]` da proposta).
+9. [ ] **Produzir as figuras** (o `CASE_STUDY.md` traz os textos; faltam os diagramas — inclusive substituir os placeholders `[Trocar imagem]` da proposta e os cinco `[FIGURA A INSERIR]` do Desenvolvimento). **Acrescentar legenda e numeração ABNT** ("Figura N — …" + fonte) às sete imagens, hoje inseridas sem legenda.
+10. [ ] **Corrigir as glosas** de `REFERENCIAS_CIENTIFICAS.md` (5.1) e `CITACOES_ABNT.md` (Eixo 3), que ainda repetem "não existe no binário".
+11. [ ] **(Opcional)** Testar o *build* nativo — item 3 do encaminhamento da seção 1.1.
 
-> **Sugestão de ordem de execução:** 1 → 5 (o experimento de inspeção do JAR dá o resultado mais forte com o menor esforço e ajuda a calibrar todo o resto) → 3/4 → 2 → 6/7 → 8 → 9.
+> **Progresso (9 jul. 2026):** capítulos 1 a 6 **implementados no TCC** — Introdução, Referencial Teórico, Trabalhos Relacionados, Proposta, Metodologia e Desenvolvimento. O experimento 1 foi executado sobre as três variantes de produção e a reformulação da tese daí decorrente já está propagada ao TCC e ao `CASE_STUDY.md`. A **Avaliação** existe como rascunho (`AVALIACAO.md`) com PP2 e PP3 respondidas; PP1 e PP4 aguardam coleta. A **Conclusão** não foi iniciada.
 >
-> **Progresso:** **Referencial Teórico**, **Trabalhos Relacionados** e **Proposta** já **implementados no TCC**; **Metodologia** e **Desenvolvimento** seguem em rascunho, prontos para transposição. **Próximo alvo:** implementar Metodologia e Desenvolvimento (a Metodologia depende de resolver a pendência das citações de DSR — ver 3.3) e, em paralelo, executar o experimento 1 (inspeção do JAR), que prova a tese central com o menor esforço.
+> **Próximo alvo:** item 6 — executar a coleta de PP1 (reuso) e PP4 (tamanho de imagem), preenchendo os marcadores `[A PREENCHER]` de `AVALIACAO.md`. Em seguida, item 7: fechar Resultados/Discussão e transpor o capítulo para o TCC.
 
 ---
 
@@ -321,7 +351,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 
 - **Consistência de citações:** manter a convenção autor-data alinhada entre a Proposta e os documentos de apoio (atenção às versões de registro vs. preprint de 5.1 e 5.2, já anotadas em `REFERENCIAS_CIENTIFICAS.md`).
 - **Convenções de redação:** consolidadas no *modus operandi*, no início deste documento. Já aplicadas ao arquivo do TCC.
-- **Natureza dos arquivos `*.md` em `docs/case-study/`:** cada um é o **rascunho de um capítulo** do TCC — **não** uma versão concorrente dele nem um documento a "coexistir" com ele. Ao ser implementado pelo *modus operandi*, o rascunho **substitui** a redação correspondente no TCC, e a **fonte da verdade passa a ser o TCC**. Vale para `PROPOSTA-ARQUITETURA-METAMORFICA.md` (já implementado), `REFERENCIAL-TEORICO.md` e `TRABALHOS-RELACIONADOS.md` (já implementados), e para `METODOLOGIA.md` e `DESENVOLVIMENTO.md` (pendentes).
+- **Natureza dos arquivos `*.md` em `docs/case-study/`:** cada um é o **rascunho de um capítulo** do TCC — **não** uma versão concorrente dele nem um documento a "coexistir" com ele. Ao ser implementado pelo *modus operandi*, o rascunho **substitui** a redação correspondente no TCC, e a **fonte da verdade passa a ser o TCC**. Já implementados: `REFERENCIAL-TEORICO.md`, `TRABALHOS-RELACIONADOS.md`, `PROPOSTA-ARQUITETURA-METAMORFICA.md`, `METODOLOGIA.md`, `METRICA-REUSO.md` e `DESENVOLVIMENTO.md`. Pendente: `AVALIACAO.md`. **Consequência:** correções posteriores vão para o TCC; os rascunhos já implementados ficam como registro histórico e **podem divergir** — é o caso da formulação da tese, corrigida no TCC e não nos rascunhos.
 - **Não duplicar o estudo de caso:** o `CASE_STUDY.md` é insumo; o capítulo de Desenvolvimento deve resumi-lo e referenciá-lo, não copiá-lo.
 - **Escopo da segurança:** manter sempre explícito que a segurança por ausência é a *primeira linha de defesa*, não a única.
 - **Reprodutibilidade:** registrar versões e comandos exatos para que a avaliação seja repetível.

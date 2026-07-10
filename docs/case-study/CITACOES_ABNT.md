@@ -296,6 +296,50 @@ A evidência, contudo, não é unânime:
 
 ---
 
+### DEVANBU; KARSTU; MELO; THOMAS (1996) — granularidade de função e reuso medido por chamadas
+
+> "c_j = A software component (module, class, **function**, subsystem). With a superscript `e`, `c^e` refers to an external component, which existed independently of the system in which it is being used." (DEVANBU et al., 1996, p. 3).
+>
+> *Tradução livre:* "c_j = Um componente de software (módulo, classe, **função**, subsistema). Com o sobrescrito `e`, `c^e` refere-se a um componente externo, que existia independentemente do sistema em que é usado."
+
+> "we are concerned with the development of an indirect internal measurement of R_b, the reuse benefit of a system S, from the product, by searching the source code of S for instances of language-based reuse such as **subroutine calls**." (DEVANBU et al., 1996, p. 3).
+>
+> *Tradução livre:* "ocupamo-nos do desenvolvimento de uma medida interna indireta de R_b, o benefício de reuso de um sistema S, a partir do produto, buscando no código-fonte de S instâncias de reuso baseado em linguagem, tais como **chamadas de sub-rotina**."
+
+> "Cu(S_1, c_1) = The number of times component c_1 is used in a system S_1." (DEVANBU et al., 1996, p. 3).
+>
+> *Tradução livre:* "Cu(S_1, c_1) = O número de vezes que o componente c_1 é usado em um sistema S_1."
+
+*Glosa:* autoriza duas decisões do **Reuse per Method** (ver `METRICA-REUSO.md`, seção 7): contar em granularidade de **função/método**, e ler reuso a partir das **chamadas** presentes no código. Nenhuma das duas é invenção deste trabalho.
+
+> "It is certainly possible to write the same program in ways that can artificially inflate internal measures of reuse. Thus, one can artificially insert function invocations into the different branches of a conditional […] In most cases, it is infeasible to detect occurrences of spurious inflation." (DEVANBU et al., 1996, p. 6).
+>
+> *Tradução livre:* "É certamente possível escrever o mesmo programa de maneiras que inflem artificialmente as medidas internas de reuso. Assim, pode-se inserir artificialmente invocações de função nos diferentes ramos de uma condicional […] Na maioria dos casos, é inviável detectar ocorrências de inflação espúria."
+
+*Glosa:* citada **contra** o próprio instrumento, e não a favor. A contagem de métodos alcançáveis é sensível à granularidade com que o código foi decomposto em funções; a advertência entra nas **ameaças à validade** do capítulo de Avaliação. Reportar a ressalva da fonte é condição para usá-la.
+
+---
+
+### PONTA; PLATE; SABETTA (2018) — alcançabilidade de métodos a partir dos pontos de entrada
+
+> "We define a *program construct* (or simply *construct*) as a structural element of the source code characterized by a *type* (e.g., package, class, constructor, **method**), a *language* […] and a *unique identifier*." (PONTA; PLATE; SABETTA, 2018, seção II-A).
+>
+> *Tradução livre:* "Definimos um *construto de programa* (ou simplesmente *construto*) como um elemento estrutural do código-fonte caracterizado por um *tipo* (por exemplo, pacote, classe, construtor, **método**), uma *linguagem* […] e um *identificador único*."
+
+> "R_ai represents the set of all constructs, either part of application a or its bundled library i, that are found reachable starting from the application a and thus can be potentially executed. Static analysis is performed by using a static analyzer to compute a **graph of all library constructs reachable from the application constructs**." (PONTA; PLATE; SABETTA, 2018, seção II-D).
+>
+> *Tradução livre:* "R_ai representa o conjunto de todos os construtos, sejam da aplicação a ou de sua biblioteca embarcada i, que são encontrados alcançáveis a partir da aplicação a e que, portanto, podem ser potencialmente executados. A análise estática é realizada usando um analisador estático para computar um **grafo de todos os construtos de biblioteca alcançáveis a partir dos construtos da aplicação**."
+
+> "The reachable body stability […] considers the reachable share of a library, i.e., the set of dynamically and/or statically reachable library constructs. Given the total number of constructs of S_i reachable from the application, it measures the **ratio** of those that are contained as-is […] also in S_j." (PONTA; PLATE; SABETTA, 2018, seção III).
+>
+> *Tradução livre:* "A estabilidade do corpo alcançável […] considera a parcela alcançável de uma biblioteca, isto é, o conjunto de construtos de biblioteca alcançáveis dinâmica e/ou estaticamente. Dado o número total de construtos de S_i alcançáveis a partir da aplicação, ela mede a **razão** daqueles que estão contidos tal como estão […] também em S_j."
+
+*Glosa:* é o precedente revisado por pares da **técnica** do Reuse per Method — contagem em granularidade de método, alcançabilidade computada por **grafo de chamadas a partir dos pontos de entrada**, e **razões definidas sobre o conjunto alcançável**. O artigo enquadra o problema como consequência do **reuso** de bibliotecas e liga alcançabilidade a **explorabilidade**, que é o vínculo entre PP1 e PP3 neste trabalho.
+
+⚠️ **Limite de atribuição.** Os autores medem estabilidade de bibliotecas entre versões, **não** reuso entre variantes de um mesmo código-fonte; e o texto verificado fala em *exploitability*, **não** em "superfície de ataque" — termo que permanece ancorado em MANADHATA; WING (2011). Não atribuir à fonte mais do que ela afirma.
+
+---
+
 ## Eixo 7 — Design Science Research (fundamento do método)
 
 > Trechos conferidos nos PDFs `docs/refs/7.2`, `7.3` e `7.6`. As páginas são as do periódico.
@@ -390,6 +434,26 @@ E a afirmação decisiva para a tese — a irreversibilidade em tempo de execuç
 *Glosa:* sustenta a caracterização do artefato na seção 6.8. Adota-se o guia de **Gradle**, e não o de Maven, por ser o sistema de *build* do protótipo — exigência do passo 8 do procedimento de `FONTES-ACADEMICAS.md`.
 
 > ⚠️ **Limite da documentação (passo 7 do procedimento).** A **estrutura interna** do diretório `quarkus-app` — os subdiretórios `app/` e `quarkus/` e os arquivos `generated-bytecode.jar` e `transformed-bytecode.jar` — **não é descrita** em nenhuma das páginas oficiais consultadas: `gradle-tooling` e `maven-tooling` apenas registram que o resultado do *build* é o diretório `quarkus-app`, e `class-loading-reference` (https://quarkus.io/guides/class-loading-reference, acesso em 9 jul. 2026) trata dos carregadores de classe, não do layout físico. As afirmações do trabalho sobre esses arquivos são, portanto, **evidência empírica por inspeção**, e o TCC as apresenta como tais na seção 6.8, com os comandos que as reproduzem.
+
+---
+
+### QUARKUS (2026e) — geração do contrato OpenAPI e do Swagger UI
+
+> "Quarkus provides the SmallRye OpenAPI extension compliant with the MicroProfile OpenAPI specification in order to generate your API OpenAPI v3 specification." (QUARKUS, 2026e, seção *Expose OpenAPI Specifications*).
+>
+> *Tradução livre:* "O Quarkus fornece a extensão SmallRye OpenAPI, em conformidade com a especificação MicroProfile OpenAPI, a fim de gerar a especificação OpenAPI v3 da sua API."
+
+> "Swagger UI is a great tool permitting to visualize and interact with your APIs. The UI is automatically generated from your OpenAPI specification." (QUARKUS, 2026e, seção *Use Swagger UI for development*).
+>
+> *Tradução livre:* "O Swagger UI é uma excelente ferramenta que permite visualizar suas APIs e interagir com elas. A interface é gerada automaticamente a partir da sua especificação OpenAPI."
+
+> "If you want to make it available in production too, you can include the following configuration in your `application.properties`: `quarkus.swagger-ui.always-include=true`. This is a build time property, it cannot be changed at runtime." (QUARKUS, 2026e, seção *Use Swagger UI for development*).
+>
+> *Tradução livre:* "Se você quiser torná-lo disponível também em produção, pode incluir a seguinte configuração no seu `application.properties`: `quarkus.swagger-ui.always-include=true`. Esta é uma propriedade de tempo de compilação; não pode ser alterada em tempo de execução."
+
+*Glosa:* sustenta a seção 7.2.4 da Avaliação. As duas primeiras passagens estabelecem o encadeamento — a especificação é gerada a partir da API, e a interface é gerada a partir da especificação —, do qual decorre que documento e interface são **artefatos derivados da mesma variabilidade** que produz o executável, e não documentação mantida à parte. A terceira sustenta a nota de escopo de segurança da seção 7.8: o protótipo publica o contrato em produção, por escolha deliberada de projeto-referência, e essa exposição é ela própria decidida em tempo de compilação.
+
+⚠️ **Limite de atribuição.** A documentação **não** afirma que a especificação é gerada a partir dos *endpoints efetivamente registrados* — o que a distinguiria de uma geração a partir do código-fonte. Essa é **evidência empírica** deste trabalho, obtida por inspeção do documento em cada variante (seção 7.2.3), e como tal é apresentada. A documentação tampouco emite advertência de segurança sobre expor o Swagger UI em produção; a observação da seção 7.8 é do autor, e não da fonte.
 
 ---
 

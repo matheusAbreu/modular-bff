@@ -64,12 +64,14 @@ modular-bff.api.mode.external.enable=${BFF_API_EXTERNAL_ACTIVE:false}
 
 #### Por que "Metamórfico"?
 
-O artefato final gerado pelo build **muda de forma** dependendo dos valores presentes **em tempo de compilação** — não em runtime. O endpoint simplesmente não existe no binário se a flag não estiver ativa. Isso é fundamentalmente diferente de uma condicional `if` no código: não há rota registrada, nenhum bean CDI instanciado, nenhuma superfície de ataque presente.
+O artefato final gerado pelo build **muda de forma** dependendo dos valores presentes **em tempo de compilação** — não em runtime. Se a flag não estiver ativa, o endpoint não tem **ponto de entrada** no artefato: nenhuma rota registrada, nenhum bean CDI, nenhum invocador REST. Isso é fundamentalmente diferente de uma condicional `if` no código, na qual a rota existe e responde.
+
+> **Precisão necessária.** A anotação atua na fase de *augmentation*, posterior à compilação. O bytecode da classe do controller **permanece** no JAR da aplicação, inerte e inalcançável; o que não é gerado é o ponto de entrada. A distinção está desenvolvida na seção 11 e é a formulação que o TCC adota.
 
 ```
-Build com BFF_API_INTERNAL_ACTIVE=true  →  artefato contém PATCH /v1/order/.../status
-Build com BFF_API_EXTERNAL_ACTIVE=true  →  artefato contém POST  /v1/order/create
-Build padrão (ambos false)              →  nenhum dos dois existe
+Build com BFF_API_INTERNAL_ACTIVE=true  →  artefato expõe PATCH /v1/order/.../status
+Build com BFF_API_EXTERNAL_ACTIVE=true  →  artefato expõe POST  /v1/order/create
+Build padrão (ambos false)              →  nenhuma das duas rotas é registrada
 ```
 
 Isso implica que **deploys internos e externos requerem pipelines CI/CD distintos**, gerando artefatos diferentes a partir do mesmo código-fonte.
@@ -214,40 +216,47 @@ make debug/build     # Gera o artefato JAR de desenvolvimento/depuração
 
 ### Inspecionar a estrutura do artefato gerado
 
-O Quarkus gera um layout de artefato próprio em `build/quarkus-app/`. Para listar o conteúdo do JAR da aplicação:
+> **O artefato a inspecionar é o de produção** — a imagem gerada pelo `Dockerfile`, não o resultado de `make debug/build`. O build local depende do estado da máquina (diretório `build/`, cache do Gradle, variáveis da sessão) e não sustenta afirmação alguma sobre o que é entregue.
 
-**Com `unzip`** (requer apenas o pacote `unzip`):
+Gere as três variantes e inspecione-as:
+
 ```bash
-# Listar todas as entradas do JAR principal
-unzip -l build/quarkus-app/app/modular-bff-1.0.0-SNAPSHOT.jar
-
-# Filtrar apenas as classes do projeto
-unzip -l build/quarkus-app/app/modular-bff-1.0.0-SNAPSHOT.jar | grep "edu/uerj"
-
-# Filtrar apenas os controllers
-unzip -l build/quarkus-app/app/modular-bff-1.0.0-SNAPSHOT.jar | grep "adapters/api/v1"
+make container/build/variants   # bff-default, bff-internal, bff-external
+make artifact/analysis          # inspeciona as três lado a lado
 ```
 
-**Com `jar tf`** (requer JDK completo — pacote `java-devel`):
+A inspeção ocorre em **duas camadas**, e é essencial não confundi-las.
+
+**Camada 1 — classes compiladas (`app/*.jar`).** Contém a saída bruta do compilador Kotlin, anterior à fase de *augmentation*. As **três** classes de controller aparecem em **qualquer** variante:
+
 ```bash
-# Listar todas as entradas do JAR principal
-jar tf build/quarkus-app/app/modular-bff-1.0.0-SNAPSHOT.jar
-
-# Filtrar apenas as classes do projeto
-jar tf build/quarkus-app/app/modular-bff-1.0.0-SNAPSHOT.jar | grep "edu/uerj"
-
-# Filtrar apenas os controllers
-jar tf build/quarkus-app/app/modular-bff-1.0.0-SNAPSHOT.jar | grep "adapters/api/v1"
+jar tf /deployments/app/*.jar | grep "adapters/api/v1"
 ```
 
-Isso permite verificar **quais controllers foram compilados** no artefato, validando o efeito do Design Metamórfico. Por exemplo, em um build com `BFF_API_INTERNAL_ACTIVE=false`, a classe `OrderInternalController` não aparecerá na saída:
-
 ```
-# Saída esperada com BFF_API_EXTERNAL_ACTIVE=true e BFF_API_INTERNAL_ACTIVE=false
-edu/uerj/adapters/api/v1/OrderGeneralController.class
 edu/uerj/adapters/api/v1/OrderExternalController.class
-# OrderInternalController ausente — não existe no binário
+edu/uerj/adapters/api/v1/OrderGeneralController.class
+edu/uerj/adapters/api/v1/OrderInternalController.class   ← presente mesmo com a flag em false
 ```
+
+**Camada 2 — pontos de entrada (`quarkus/generated-bytecode.jar`).** Contém os beans CDI e invocadores REST efetivamente registrados na *augmentation*. É **aqui** que a metamorfose é observável:
+
+```bash
+jar tf /deployments/quarkus/generated-bytecode.jar | grep -E "adapters/api/v1/.*(_Bean|quarkusrestinvoker)"
+```
+
+```
+# Saída com BFF_API_EXTERNAL_ACTIVE=true e BFF_API_INTERNAL_ACTIVE=false
+OrderExternalController_Bean.class                                ✓
+OrderExternalController$quarkusrestinvoker$createOrder…           ✓
+OrderGeneralController_Bean.class                                 ✓
+OrderGeneralController$quarkusrestinvoker$getOrderById…           ✓
+OrderGeneralController$quarkusrestinvoker$listOrders…             ✓
+# OrderInternalController_Bean.class                              AUSENTE
+# OrderInternalController$quarkusrestinvoker$updateStatusOrder…   AUSENTE
+```
+
+Essa camada é **corroborativa**: os sufixos `_Bean` e `$quarkusrestinvoker$` são convenções internas do Quarkus, sujeitas a mudança entre versões. A evidência **primária** da ausência é a rota não constar do documento OpenAPI da variante e não ser atendida por HTTP — verificação independente do framework.
 
 ---
 
@@ -255,9 +264,11 @@ edu/uerj/adapters/api/v1/OrderExternalController.class
 
 ### Tese Central
 
-> *"A forma mais segura de proteger um endpoint é garantir que ele não exista no binário implantado."*
+> *"A forma mais segura de proteger um endpoint é garantir que ele não exista, como ponto de entrada, no binário implantado."*
 
-O Design Metamórfico não é apenas uma decisão de modularidade — é uma **estratégia de segurança estrutural**. Ao eliminar endpoints no momento do build, o projeto elimina também todas as classes de vulnerabilidade associadas a eles: não há rota para atacar, nenhum bean CDI para explorar, nenhuma misconfiguration possível que ressuscite o endpoint acidentalmente.
+O Design Metamórfico não é apenas uma decisão de modularidade — é uma **estratégia de segurança estrutural**. Ao suprimir o ponto de entrada no momento do build, o projeto elimina as classes de vulnerabilidade associadas a ele: não há rota para atacar, nenhum bean CDI para explorar, nenhuma misconfiguration possível que ressuscite o endpoint acidentalmente.
+
+> **O que "não existe" significa aqui.** O bytecode da classe do controller **permanece** no `app/*.jar` de todas as variantes — a anotação `@IfBuildProperty` age na *augmentation*, não sobre o compilador. O que não existe é o **ponto de entrada**: bean, invocador e rota. Essa é a unidade que a métrica de superfície de ataque de Manadhata e Wing (2011) contabiliza, de modo que a formulação corrigida é **mais aderente** à métrica citada do que a original. A classe remanescente segue carregável por reflexão; a segurança por ausência elimina a via de entrada, não promete a remoção física do bytecode em empacotamento JVM.
 
 Isso contrasta com a abordagem mais comum de **segurança por proteção**, onde o endpoint existe mas tenta se defender com camadas de autenticação, rate limiting e validação. A segurança por proteção é válida, mas é inerentemente mais frágil — cada camada pode ser contornada, mal configurada ou vulnerável a um CVE futuro.
 
@@ -268,9 +279,9 @@ Isso contrasta com a abordagem mais comum de **segurança por proteção**, onde
 | Abordagem | Reuso de código | Segurança | Complexidade operacional |
 |---|---|---|---|
 | Repositórios separados | ❌ Código duplicado | 🟡 Separação física, mas manutenção divergente | 🟡 Dois repos, dois pipelines |
-| Runtime feature flag (`if enabled`) | ✅ Mesmo código | 🔴 Endpoint **existe** no binário — vulnerável a misconfiguration | 🟢 Um artefato, variável de ambiente |
+| Runtime feature flag (`if enabled`) | ✅ Mesmo código | 🔴 Ponto de entrada **registrado** no binário — vulnerável a misconfiguration | 🟢 Um artefato, variável de ambiente |
 | Microsserviços distintos | ❌ Duplicação de domínio | 🟡 Separação real, mas custo operacional alto | 🔴 Infraestrutura distribuída |
-| **Design Metamórfico** | ✅ Mesmo código-fonte | ✅ Endpoint **não existe** no binário implantado | 🟡 Pipelines distintos por artefato |
+| **Design Metamórfico** | ✅ Mesmo código-fonte | ✅ Ponto de entrada **não registrado** no binário implantado | 🟡 Pipelines distintos por artefato |
 
 A diferença crítica em relação ao **runtime feature flag** merece destaque. Considere o cenário em que `BFF_API_INTERNAL_ACTIVE` é implementado como uma verificação em runtime:
 
@@ -285,9 +296,9 @@ fun updateStatus(...): Response {
 }
 ```
 
-Nesse modelo, o endpoint existe no binário externo. Uma variável de ambiente mal configurada, um bug na lógica de verificação, ou uma vulnerabilidade no framework de configuração seriam suficientes para expor a operação de atualização de status a clientes externos.
+Nesse modelo, o endpoint está registrado no binário externo e responde — ainda que para recusar. Uma variável de ambiente mal configurada, um bug na lógica de verificação, ou uma vulnerabilidade no framework de configuração seriam suficientes para expor a operação de atualização de status a clientes externos.
 
-Com `@IfBuildProperty`, esse cenário é impossível por construção — não há código para ser ativado acidentalmente.
+Com `@IfBuildProperty`, esse cenário é impossível por construção — não há rota para ser atingida nem bean para ser ativado acidentalmente.
 
 ---
 
@@ -320,7 +331,7 @@ A mesma regra de negócio em `OrderService.createOrder()` serve o cliente extern
 
 | Responsabilidade | Resolvida pelo Design Metamórfico? |
 |---|---|
-| Endpoint de um modo não existir no outro artefato | ✅ Sim — por construção |
+| Ponto de entrada de um modo não existir no outro artefato | ✅ Sim — por construção |
 | Autenticação do solicitante | ❌ Requer implementação de JWT/OAuth2 |
 | Autorização por ownership de recurso (IDOR) | ❌ Requer validação no serviço ou filtro |
 | Proteção contra abuso (rate limiting) | ❌ Requer API Gateway ou middleware |

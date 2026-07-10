@@ -5,6 +5,8 @@
 > ✅ **Implementado no TCC** — absorvido pelo capítulo *Metodologia* do arquivo `Proposta TCC …md`, na seção **5.5.2 Métricas de reuso**. **A fonte da verdade passa a ser o TCC**; este documento é mantido apenas como registro de trabalho, e as notas de atribuição de fontes (seção 5) seguem valendo para quem for redigir a Avaliação.
 >
 > **Convenções:** citações no sistema autor-data (ABNT NBR 10520). As fontes foram obtidas e verificadas segundo o *modus operandi* de `docs/FONTES-ACADEMICAS.md`; o registro completo está em `REFERENCIAS_CIENTIFICAS.md` (seção 8) e as citações diretas em `CITACOES_ABNT.md` (Eixo 6).
+>
+> ⚠️ **Método revisado em 10 jul. 2026, após a primeira coleta.** O *reuse level* foi **abandonado** e substituído por uma medição em **granularidade de método**, por alcançabilidade a partir dos pontos de entrada. As seções 1 a 4 abaixo descrevem o método **anterior** e são mantidas como registro; **a seção 6 é a que vale**. A seção 5.5.2 do TCC ainda descreve o método anterior e precisa ser reescrita (ver `ROADMAP-CAPITULOS-TCC.md`).
 
 ---
 
@@ -120,3 +122,158 @@ A classificação abaixo é a **decisão de método** e deve ser publicada junto
 > **Limites de atribuição.** Irshad et al. (2016) aplicam o `RSI` a um modelo de **custo evitado**, não à razão `RSI/(RSI+SSI)`; Chen, Usman e Badampudi (2024) tratam do `reuse level`, não do `reuse percent`. A fórmula do `reuse percent` permanece ancorada em Frakes e Terry (1996). Não atribuir a nenhuma das duas fontes recentes mais do que elas afirmam.
 >
 > **Pendência.** Obter o texto de Poulin et al. (1993), *The business case for software reuse*, IBM Systems Journal, v. 32, n. 4, p. 567-594, para citar a fórmula na fonte primária. Enquanto isso, **não atribuir a Poulin et al. nada além do que Frakes e Terry (1996) registram**.
+
+---
+
+## 6. Revisão do método (10 jul. 2026) — do *reuse level* à contagem de métodos
+
+> Esta seção **substitui** as seções 2.2, 2.3 e 3 no que toca ao *reuse level*. O **reuse percent** (seção 2.1) permanece válido e continua sendo a métrica de volume, agora em duas granularidades.
+
+### 6.1 Por que o *reuse level* foi abandonado
+
+A primeira coleta produziu os números do *reuse level* e, com eles, três problemas que só se tornam visíveis depois de calculados. Nenhum é erro de cálculo: são consequências da métrica aplicada corretamente a este objeto.
+
+**a) O `IRL` é nulo por construção, e a justificativa publicada é falsa.** Frakes e Terry (1996) definem `M` como o número de itens **não externos** usados mais de uma vez. Sob a classificação declarada — item externo é o "criado para uso geral da linha de produto" —, o `OrderService` e todo o núcleo compartilhado são **externos**. O único item não externo de cada variante é o seu *controller* anotado, que é ponto de entrada e não é consumido por ninguém. Logo `M = 0`, `IRL = 0` e `TRL = ERL`, em toda variante. A frase da seção 2.2 (e da seção 5.5.2 do TCC) segundo a qual "o `IRL` captura que o `OrderService` é consumido pelos três *controllers*" é **falsa sob a própria classificação que o texto declara**: o `OrderService` está em `E`, e o `IRL` não olha para `E`.
+
+**b) O `ERL` é redundante com o *reuse percent*.** Um afirma que 95,17% das **linhas** da variante externa são comuns; o outro, que 97,7% de suas **classes** são comuns. É a mesma proposição medida com régua diferente, e ambas são dominadas pelo mesmo fato: apenas dois arquivos carregam anotação de variabilidade. A triangulação invocada em 2.3 pressupõe que as métricas possam **discordar**; aqui elas não podem discordar de modo informativo.
+
+**c) O `ERL` é quase insensível ao fenômeno que deveria vigiar.** A PP1 pergunta se as variantes são derivadas **sem duplicar** regras de negócio. Se cada variante tivesse seu próprio `OrderService`, `L` passaria de 44 a 45 e o `ERL` cairia de 0,977 para 0,956 — dois pontos percentuais para um colapso arquitetural. Uma métrica que mal reage à falha que investiga não sustenta a conclusão.
+
+**d) Homonímia com o vocabulário do trabalho.** Em Frakes e Terry, *external* e *internal* qualificam a **origem de um componente** (veio, ou não, de um repositório de reuso fora do produto). Neste trabalho, *externo* e *interno* qualificam o **tipo de cliente** atendido — o consumidor do serviço e o funcionário da empresa. São homônimos sem relação. Um leitor que encontre "External Reuse Level" num capítulo sobre "cliente externo" será induzido a supor que uma coisa mede a outra.
+
+**Consequência para o texto.** Cai a citação de Frakes e Kang (2005), hoje usada apenas para justificar a triangulação. A citação de Chen, Usman e Badampudi (2024) **sai** do argumento de vigência do *reuse level* e **permanece** onde ancora a relação entre reuso e manutenibilidade (seção 5.6.1 do TCC). Frakes e Terry (1996) permanece, sustentando o *reuse percent*.
+
+### 6.2 O que entra no lugar: reuso por alcançabilidade a partir do ponto de entrada
+
+Mede-se o reuso em **granularidade de método**, tomando como raiz cada **ponto de entrada** do artefato. A escolha tem três fundamentos.
+
+**É granularidade prevista pela fonte.** Frakes e Terry (1996) observam que a medição de reuso pressupõe definir o nível de abstração dos itens contados, e que um sistema pode ser expresso em termos de módulos, **funções** ou linhas de código. Método é nível legítimo, não invenção deste trabalho.
+
+**É a unidade que a tese já usa.** Manadhata e Wing (2011) definem a superfície de ataque pelo conjunto de **pontos de entrada**. Partir do *controller* e perguntar o que ele torna alcançável mede reuso (PP1) sobre o mesmo objeto conceitual com que se mede exposição (PP3).
+
+**É sensível à falha que investiga.** Se as variantes duplicassem a regra de negócio, o conjunto de métodos **exclusivos** de cada uma deixaria de conter apenas o método do *controller* e passaria a conter todo o fluxo de negócio. A métrica desabaria — como deve.
+
+### 6.3 Desenho da medição
+
+**Objeto.** O **grafo de chamadas** entre métodos declarados em `edu.uerj`, extraído do bytecode compilado (`build/classes/kotlin/main`) por análise estática das instruções de invocação.
+
+**Por que sobre o bytecode, sem contradizer a seção 1(a).** Aquela decisão vetava medir reuso pela **presença** de classes no artefato entregue — que é trivialmente total, em qualquer variante, como o experimento da PP2 estabeleceu. Aqui não se mede presença, e sim **alcançabilidade a partir do ponto de entrada**, que varia. E há uma consequência do achado da PP2 que simplifica a coleta: como o bytecode é **idêntico** nas três variantes, não é necessário construir três artefatos. O grafo é construído uma vez, e **a variante é definida por seu conjunto de raízes**.
+
+**Raízes.** Os métodos de endpoint de cada *controller*:
+
+| *Controller* | Raízes | Presente em |
+|---|---|---|
+| `OrderGeneralController` | `getOrderById`, `listOrders` | toda variante |
+| `OrderExternalController` | `createOrder` | `external`, linha de base |
+| `OrderInternalController` | `updateStatusOrder` | `internal`, linha de base |
+
+**Conjuntos.** Seja `R(c)` o fecho transitivo dos métodos alcançáveis a partir das raízes do *controller* `c`. Então:
+
+```
+R(default)  = R(geral)
+R(internal) = R(geral) ∪ R(interno)
+R(external) = R(geral) ∪ R(externo)
+```
+
+O **específico** de uma variante é o conjunto de métodos que **só ela** alcança; o **comum** é o restante de `R(variante)`. Daí, em granularidade de método:
+
+```
+Reuse Percent(v) = |comum(v)| / |R(v)| × 100
+```
+
+**Escopo da contagem — decisão de método.** Contam-se **apenas os métodos declarados no projeto**. Ficam de fora:
+
+- os métodos sintetizados pelo compilador Kotlin — acessores de propriedade, `equals`, `hashCode`, `toString`, `copy`, `componentN` das *data classes*, pontes de argumento padrão (`$default`) e acessores sintéticos (`access$`);
+- todo método cujo proprietário esteja fora de `edu.uerj` (Jakarta, Hibernate, biblioteca-padrão). Tais chamadas são **folhas** do grafo: registram-se, mas não se percorrem.
+
+A razão é substantiva, e não de conveniência: os acessores das entidades e dos DTOs são numerosos e dominariam a contagem, deslocando a medida de **lógica reusada** para **estrutura de dados percorrida**. O reuso que a tese reivindica é o das regras de negócio.
+
+### 6.4 Ameaças à validade próprias desta medição
+
+Registram-se no capítulo de Avaliação, junto às demais:
+
+- **Análise estática.** O grafo não observa **reflexão**, e resolve o **despacho dinâmico** de forma conservadora: uma chamada por `invokeinterface` ou `invokevirtual` sobre um supertipo é atribuída ao proprietário declarado na instrução, não ao alvo efetivo em execução.
+- **Injeção e *proxying*.** As chamadas que CDI e JPA realizam por *proxy* não aparecem no bytecode do chamador. Nos fluxos medidos isso não altera o resultado — os *controllers* invocam o serviço diretamente, e o serviço invoca os repositórios diretamente —, mas o limite deve ser declarado.
+- **Fronteira do grafo.** Métodos de *framework* não são percorridos; portanto a medida é de reuso **dos ativos próprios**, e não do sistema em execução.
+- **Sensibilidade à decisão de escopo.** A exclusão dos métodos sintetizados é uma escolha; reportar, em paralelo, a contagem que os inclui, como análise de sensibilidade.
+
+### 6.5 Procedimento de coleta
+
+Executado pelos scripts versionados em `docs/case-study/scripts/` (ver o `README.md` daquele diretório, que registra propósito, requisitos, invocação exata e leitura da saída de cada um).
+
+1. Compilar o projeto e confirmar que o bytecode está atualizado em relação ao fonte.
+2. Extrair o grafo de chamadas com `javap -c -p` sobre `build/classes/kotlin/main`, restringindo os arestas a proprietários em `edu.uerj`.
+3. Calcular o fecho transitivo a partir das raízes de cada *controller*.
+4. Derivar `comum` e `específico` por variante e calcular o *reuse percent* em granularidade de método.
+5. Repetir incluindo os métodos sintetizados (análise de sensibilidade).
+6. Registrar a versão exata das ferramentas (`cloc`, JDK) e os comandos.
+
+O *reuse percent* em **linhas de código** (seção 2.1) permanece como a métrica da **PP1**, coletado por `metrica-reuso.py`.
+
+---
+
+## 7. Reuse per Method — instrumento da PP3
+
+> **Nomenclatura.** A medição em granularidade de método chama-se **Reuse per Method**. A designação provisória "*reuse percent* por método" foi abandonada: ela sugeria uma variante do *reuse percent* de Frakes e Terry (1996), quando se trata de grandeza distinta, com objeto e finalidade próprios.
+>
+> **Realocação.** O Reuse per Method **não** responde à PP1 e foi movido para a **PP3**. A justificativa está em 7.1.
+
+### 7.1 Por que o Reuse per Method não serve à PP1
+
+Ressalva imprescindível, sob pena de o número ser lido ao contrário.
+
+**Ele não mede duplicação.** Um método alcançável apenas pelo modo externo — `OrderService.createOrder`, por exemplo — **não está duplicado**: é declarado uma única vez e pertence exclusivamente àquele fluxo. Que a variante externa exiba Reuse per Method de 61,54% **não** significa que 38,46% do seu código esteja replicado alhures. Significa que pouco mais de um terço dos métodos que ela torna alcançáveis são privativos do seu fluxo de negócio — o que é **especialização**, exatamente o que um BFF deve fazer.
+
+**O que ele mede é a sobreposição dos fluxos**: que fração dos métodos alcançáveis a partir dos pontos de entrada de uma variante também é alcançável a partir dos de outra. Responde a "quanto os modos compartilham em execução", e não a "quanto de código foi reaproveitado em vez de reescrito".
+
+**Limite lógico.** A alcançabilidade **não pode**, em princípio, provar ausência de duplicação: duas cópias de uma mesma regra, em classes diferentes, seriam dois nós distintos no grafo, e a métrica não as reconheceria como cópias. Prova de não duplicação exige detecção de clones ou inspeção estrutural — não análise de alcance.
+
+**A PP1, portanto, é respondida por dois instrumentos, e nenhum é o Reuse per Method:**
+
+1. o **reuse percent em LOC** (seção 2.1) — quanto do código de uma variante não foi escrito para ela: 94,82% na interna, 95,17% na externa;
+2. o **fato estrutural**, verificável por inspeção: existe **um** `OrderService`, declarado uma vez, cujos métodos `createOrder` e `updateStatus` são alcançados por *controllers* distintos; existe **um** conjunto de repositórios e **um** domínio, sem anotação de variabilidade. Nenhuma validação, cálculo ou fluxo é reescrito por variante.
+
+### 7.2 Por que o Reuse per Method serve à PP3
+
+A PP3 pergunta se a abordagem **reduz o número de pontos de entrada** expostos por artefato. A contagem de rotas responde, mas responde pouco: dizer que a variante externa expõe três rotas em vez de quatro não dimensiona o que cada rota carrega atrás de si.
+
+O Reuse per Method converte a contagem de rotas em contagem de **lógica exposta**. Suprimir o *controller* interno do artefato externo não retira apenas uma rota: torna **inalcançáveis a partir da rede** os cinco métodos que estavam atrás dela — `OrderInternalController.updateStatusOrder`, `OrderService.updateStatus`, `Order.checkOrderStatus`, `OrderStatus.getById` e `OrderStatus.getByDescription`.
+
+| Variante | Métodos alcançáveis | Suprimidos frente à linha de base | Reuse per Method |
+|---|---|---|---|
+| `bff-default` | 7 | 11 (61,1%) | 100% |
+| `bff-internal` | 13 | 5 (27,8%) | 61,54% |
+| `bff-external` | 13 | 5 (27,8%) | 61,54% |
+| linha de base | 18 | — | — |
+
+**Aderência à métrica de referência.** Manadhata e Wing (2011) definem a superfície de ataque pelos **pontos de entrada** e ponderam-nos por dano potencial. A contagem de rotas é não ponderada, e a ponderação integral exigiria estimar dano e custo por rota — o que não se faz. O Reuse per Method oferece uma aproximação intermediária e defensável: **o número de métodos próprios que cada ponto de entrada torna alcançáveis** é um indicador do que está ao alcance de quem atinge aquela rota. Não é a ponderação de Manadhata e Wing, e não deve ser apresentado como tal; é uma grandeza adicional, na mesma unidade conceitual — o alcance a partir do ambiente.
+
+**O que isso acrescenta à tese.** A *segurança por ausência* reivindica que a operação alheia ao cliente não exista no artefato dele. O Reuse per Method mostra que a supressão **não para no ponto de entrada**: a lógica de negócio atrás dele perde caminho a partir do ambiente. Não há rota, não há *bean*, não há invocador — e, por consequência, não há caminho até `OrderService.updateStatus`.
+
+**Ressalva simétrica, que acompanha toda a tese.** A classe permanece no artefato e segue carregável por reflexão, conforme estabelecido na PP2. "Inalcançável" significa aqui **sem caminho a partir de qualquer ponto de entrada registrado** — a definição de superfície de ataque adotada —, e não remoção física do bytecode.
+
+### 7.3 Achados incidentais da coleta
+
+Dois fatos que o grafo revelou e que merecem registro na Avaliação:
+
+- **`OrderRepository.save` é o único método alcançável pelos dois modos de escrita e por nenhum modo de leitura.** É reuso estrutural aparecendo no dado, sem ter sido procurado: a porta de saída de escrita é uma só, partilhada por `createOrder` e `updateStatus`.
+- **A simetria das variantes.** Interna e externa alcançam 13 métodos cada, com 5 exclusivos cada. A simetria não foi imposta pelo método; decorre do protótipo.
+
+### 7.4 Fundamentação — ✅ resolvida (10 jul. 2026)
+
+A busca prevista foi executada segundo o *modus operandi* de `docs/FONTES-ACADEMICAS.md` e localizou **duas fontes revisadas por pares, ambas verificadas no texto integral**, que sustentam o Reuse per Method. O instrumento continua sendo **derivado**, e não métrica consagrada — mas nenhuma de suas duas operações é invenção deste trabalho.
+
+**a) A granularidade de método e a medição de reuso por chamadas — Devanbu et al. (1996).** No artigo do ICSE, a definição de componente inclui explicitamente a função: `c_j` é "*a software component (module, class, **function**, subsystem)*". E o método de medição é declaradamente baseado em invocações: mede-se o benefício de reuso "*searching the source code of S for instances of language-based reuse such as **subroutine calls***", com `Cu(S, c)` designando o **número de vezes** que o componente `c` é usado no sistema `S`. Contar métodos e ler reuso a partir de chamadas é, portanto, prática documentada em literatura revisada por pares.
+
+**b) A alcançabilidade a partir dos pontos de entrada — Ponta, Plate e Sabetta (2018).** No artigo do ICSME, um **construto de programa** é "*a structural element of the source code characterized by a type (e.g., package, class, constructor, **method**)*". A análise estática computa `R_ai`, "*the set of all constructs […] that are found reachable starting from the application a*", por meio de "*a graph of all library constructs reachable from the application constructs*". Os autores definem ainda métricas — como a *Reachable Body Stability* — que são **razões calculadas sobre o conjunto de construtos alcançáveis**, exatamente a forma do Reuse per Method. E o artigo trata o problema como consequência do **reuso** de bibliotecas, ligando alcançabilidade a **explorabilidade**.
+
+**Delimitação das atribuições — o que cada fonte não diz.**
+
+| Fonte | Sustenta | **Não** sustenta |
+|---|---|---|
+| Devanbu et al. (1996) | granularidade de função; reuso medido por chamadas | alcançabilidade a partir de pontos de entrada |
+| Ponta, Plate e Sabetta (2018) | grafo de alcançabilidade desde pontos de entrada; razões sobre o conjunto alcançável; vínculo com explorabilidade | reuso entre variantes de um mesmo código-fonte; o termo "superfície de ataque" (que permanece ancorado em MANADHATA; WING, 2011) |
+
+**Ameaça à validade que a própria fonte impõe.** Devanbu et al. (1996) advertem que medidas internas de reuso podem ser **artificialmente infladas**: "*one can artificially insert function invocations into the different branches of a conditional*", e "*in most cases, it is infeasible to detect occurrences of spurious inflation*". A advertência recai sobre o Reuse per Method: a contagem de métodos alcançáveis é sensível à granularidade com que o código foi decomposto em funções, e um domínio decomposto em métodos menores produziria números diferentes sem qualquer mudança de comportamento. Isso **deve** constar das ameaças à validade do capítulo de Avaliação.
+
+Registro das fontes em `REFERENCIAS_CIENTIFICAS.md` (itens 8.5 e 5.4) e citações diretas em `CITACOES_ABNT.md`.
