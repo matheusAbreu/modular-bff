@@ -204,7 +204,7 @@ O termo *metamórfica* descreve essa propriedade: o artefato final **muda de for
 A proposta foi materializada em um protótipo funcional — um BFF de domínio de e-commerce escrito em **Kotlin** sobre o framework **Quarkus**. Nele, a variabilidade em tempo de compilação é obtida com a anotação `@IfBuildProperty` (do Quarkus Arc), aplicada aos controladores de cada modo:
 
 * um **controlador de leitura** permanece sempre presente, em qualquer artefato;
-* os controladores das operações **interna** (atualização de status de entrega) e **externa** (criação de pedido) são **incluídos ou removidos** do artefato conforme a configuração selecionada no *build*.
+* os controladores das operações **interna** (atualização de status de entrega) e **externa** (criação de pedido) **têm, ou não têm, ponto de entrada** no artefato, conforme a configuração selecionada no *build*: quando a propriedade não está ativa, nenhum *bean*, invocador ou rota é gerado para eles.
 
 Assim, de um mesmo código-fonte derivam-se artefatos distintos — interno e externo —, cada um contendo apenas as operações que lhe competem, enquanto domínio, serviços e repositórios permanecem **compartilhados** entre todas as variantes. Os detalhes de implementação, a ligação entre a anotação e as variáveis de ambiente, o pipeline de *build* por artefato e o procedimento de verificação, por inspeção do artefato de produção, são apresentados no capítulo **Desenvolvimento**.
 
@@ -222,7 +222,7 @@ A formulação merece precisão, porque dela depende o que o trabalho pode afirm
 
 Retomam-se, a seguir, os pontos estabelecidos na seção 2.5, indicando a correspondência de cada um no artefato proposto:
 
-* **A superfície é feita de pontos de entrada.** Se cada rota REST exposta é um ponto de entrada, então suprimir a rota **reduz** a superfície, em vez de apenas defendê-la. O artefato externo não expõe a rota de atualização de status porque nenhum *bean*, invocador ou rota foi gerado para o *controller* que a declara — e nenhuma configuração de tempo de execução é capaz de reativá-la. A ausência é **verificável**: basta inspecionar o artefato, como demonstra o capítulo **Avaliação**.
+* **A superfície é feita de pontos de entrada.** Se cada rota REST exposta é um ponto de entrada, então suprimir a rota **reduz** a superfície, em vez de apenas defendê-la. O artefato externo não expõe a rota de atualização de status porque nenhum *bean*, invocador ou rota foi gerado para o *controller* que a declara — e nenhuma configuração de tempo de execução é capaz de reativá-la. A ausência é **verificável** sobre o artefato entregue: a rota não consta do contrato que a variante publica, e uma requisição a ela não alcança manipulador algum. É o que estabelece o capítulo **Avaliação**.
 * **A métrica opera em nível de projeto** e pode ser empregada deliberadamente por projetistas (MANADHATA; WING, 2011). A arquitetura acolhe esse convite: a redução da exposição vira **decisão de projeto** — qual variante compilar —, e não parâmetro de *deploy*.
 * **A distinção método externo × interno, transposta ao negócio.** Os *controllers* interno e externo materializam os dois públicos, e as propriedades de *build* decidem qual deles tem ponto de entrada em cada artefato. A fronteira, que na formulação original é uma propriedade **observada** do código, torna-se aqui **imposta** pela compilação: a operação interna não é apenas inacessível no artefato externo — ela não é alcançável por via alguma que a superfície de ataque contabilize.
 * **Microsserviços multiplicam pontos de entrada**, e a literatura subatende a ameaça de origem interna (HANNOUSSE; YAHIOUCHE, 2021). A separação de modos responde às duas observações: reduz os pontos de entrada de cada artefato e trata a fronteira interno/externo como decisão de compilação, em vez de confiança depositada numa verificação de tempo de execução. Em lugar de esperar que o artefato externo saiba recusar operações internas, garante-se que tais operações não tenham por onde ser invocadas nele.
@@ -565,7 +565,7 @@ A implicação é central: deploys interno e externo exigem **pipelines e artefa
 
 ### 6.8 Reprodução dos artefatos
 
-O efeito da metamorfose é **verificável por inspeção do artefato de produção** — a imagem gerada pelo `Dockerfile`, e não o resultado do *build* local. A distinção importa para a PP2, cuja afirmação recai sobre o que é **entregue**, conforme o quadro de objetos de medição da seção 5.5.
+O efeito da metamorfose é **verificável sobre o artefato de produção** — a imagem gerada pelo `Dockerfile`, e não o resultado do *build* local. A distinção importa para a PP2, cuja afirmação recai sobre o que é **entregue**, conforme o quadro de objetos de medição da seção 5.5.
 
 O protótipo é empacotado no tipo `fast-jar`, que a documentação registra como o padrão do Quarkus e cujo resultado é um diretório `quarkus-app`; para executar o artefato, "é necessário ter todo o conteúdo do diretório `quarkus-app`", pois a ausência de qualquer arquivo impede a aplicação de iniciar ou de funcionar corretamente (QUARKUS, 2026d). A **estrutura interna** desse diretório — a separação entre o JAR da aplicação e os artefatos produzidos na *augmentation* — **não é descrita na documentação oficial**; o que se afirma a seguir decorre da inspeção direta dos artefatos gerados, e é reprodutível pelos comandos apresentados.
 
