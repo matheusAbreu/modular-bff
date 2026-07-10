@@ -66,31 +66,66 @@ db/wait: ## Wait for the database container to be ready
 	done
 	@echo "$(DB_NAME) está pronto!"
 
-build: deps/kotlin ## Build the application 
+debug/build: deps/kotlin ## Build the application locally, for development and debugging
 ifeq ($(OS),Windows_NT)
 	gradlew.bat clean quarkusBuild -xtest
 else
 	./gradlew clean quarkusBuild -xtest
 endif
 
-container/build: ## Build the application in a Docker container	
+container/build: ## Build the production image with both API modes active
 	docker build \
 	--build-arg BFF_API_EXTERNAL_ACTIVE=true \
 	--build-arg BFF_API_INTERNAL_ACTIVE=true \
 	-t $(DOCKER_TAG):$(DOCKER_APP_VERSION) \
 	--no-cache -f ./config/docker/Dockerfile .
 
-container/build/external: ## Build the application in a Docker container	
+container/build/default: ## Build the production image with neither internal nor external routes
+	docker build \
+	--build-arg BFF_API_EXTERNAL_ACTIVE=false \
+	--build-arg BFF_API_INTERNAL_ACTIVE=false \
+	-t $(DOCKER_TAG)-default:$(DOCKER_APP_VERSION) \
+	--no-cache -f ./config/docker/Dockerfile .
+
+container/build/external: ## Build the production image with only the external routes
 	docker build \
 	--build-arg BFF_API_EXTERNAL_ACTIVE=true \
+	--build-arg BFF_API_INTERNAL_ACTIVE=false \
 	-t $(DOCKER_TAG)-external:$(DOCKER_APP_VERSION) \
 	--no-cache -f ./config/docker/Dockerfile .
 
-container/build/internal: ## Build the application in a Docker container	
+container/build/internal: ## Build the production image with only the internal routes
 	docker build \
+	--build-arg BFF_API_EXTERNAL_ACTIVE=false \
 	--build-arg BFF_API_INTERNAL_ACTIVE=true \
 	-t $(DOCKER_TAG)-internal:$(DOCKER_APP_VERSION) \
 	--no-cache -f ./config/docker/Dockerfile .
+
+container/build/variants: container/build/default container/build/internal container/build/external ## Build the three production variants analysed by the TCC
+
+define inspect_variant
+	@echo ""
+	@echo "═══ $(1):$(DOCKER_APP_VERSION) ═══"
+	@echo "--- classes compiladas em app/*.jar ---"
+	@docker run --rm --entrypoint sh $(1):$(DOCKER_APP_VERSION) -c \
+		'jar tf /deployments/app/*.jar | grep "adapters/api/v1/.*\.class$$" | sort' \
+		|| echo "    (nenhuma)"
+	@echo "--- pontos de entrada em quarkus/generated-bytecode.jar ---"
+	@docker run --rm --entrypoint sh $(1):$(DOCKER_APP_VERSION) -c \
+		'jar tf /deployments/quarkus/generated-bytecode.jar | grep -E "adapters/api/v1/.*(_Bean|quarkusrestinvoker)" | sort' \
+		|| echo "    (nenhum)"
+endef
+
+artifact/entrypoints/default: ## Inspect the default production artifact (no internal/external routes)
+	$(call inspect_variant,$(DOCKER_TAG)-default)
+
+artifact/entrypoints/internal: ## Inspect the internal production artifact
+	$(call inspect_variant,$(DOCKER_TAG)-internal)
+
+artifact/entrypoints/external: ## Inspect the external production artifact
+	$(call inspect_variant,$(DOCKER_TAG)-external)
+
+artifact/analysis: artifact/entrypoints/default artifact/entrypoints/internal artifact/entrypoints/external ## Inspect the three production variants side by side
 
 container/run:  ## Run the application in a Docker container in default mode
 	docker run  --name=$(DOCKER_TAG) \

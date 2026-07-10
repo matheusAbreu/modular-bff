@@ -81,4 +81,4 @@ jobs:
         env:
           BFF_API_EXTERNAL_ACTIVE: true
           BFF_API_INTERNAL_ACTIVE: true
-        run: make build
+        run: make debug/build
