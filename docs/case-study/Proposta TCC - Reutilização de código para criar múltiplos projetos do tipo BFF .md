@@ -245,7 +245,7 @@ Quanto à sua **natureza**, esta é uma pesquisa **aplicada**, pois se volta à 
 
 Quanto aos **objetivos**, classifica-se como **exploratória e descritiva**: explora uma combinação de conceitos ainda pouco sistematizada na literatura *peer-reviewed* específica sobre BFF, conforme discutido no capítulo **Trabalhos Relacionados** (seção 3.6), e descreve, em detalhe, a arquitetura resultante e seu comportamento.
 
-Quanto à **abordagem**, é predominantemente **qualitativa**, com apoio de **medições quantitativas** na etapa de avaliação: contagem de pontos de entrada por artefato, proporção de código reutilizado e verificação da presença ou ausência de pontos de entrada em cada variante.
+Quanto à **abordagem**, é predominantemente **qualitativa**, com apoio de **medições quantitativas** na etapa de avaliação: verificação da presença ou ausência do ponto de entrada em cada variante, contagem das rotas e da lógica que cada artefato torna alcançável, e proporção de código reutilizado.
 
 Quanto ao **procedimento técnico**, adota-se a **Design Science Research (DSR)** — a pesquisa orientada ao projeto e à avaliação de um artefato —, detalhada na seção seguinte. Embora o paradigma tenha origem no campo de Sistemas de Informação, sua adequação à Engenharia de Software é sustentada por Engström et al. (2020), que observam que boa parte da pesquisa da área visa projetar soluções para problemas práticos em contexto real, ainda que a lente da *design science* seja pouco empregada para enquadrá-la.
 
@@ -282,7 +282,7 @@ A **PP4**, por sua vez, não abrange tamanho de artefato, tempo de inicializaç�
 O trabalho segue as **seis atividades** do modelo de processo proposto por Peffers et al. (2007) — identificação do problema e motivação, definição dos objetivos de uma solução, projeto e desenvolvimento, demonstração, avaliação e comunicação. Trata-se de estrutura ainda corrente: Baskerville et al. (2018) registram que Peffers e colegas propõem um método e um esboço de processo para conduzir DSR, ao revisarem a literatura de processo da área. As seis atividades mapeiam-se aos capítulos deste trabalho:
 
 1. **Identificação do problema e motivação.** Caracterização do dilema entre especialização e reuso quando múltiplos BFF atendem a um mesmo contexto. *(Introdução e Justificativa.)*
-2. **Definição dos objetivos da solução.** Estabelecimento das propriedades desejadas: gerar múltiplas aplicações de um mesmo código-fonte, mais seguras e de melhor manutenibilidade ao ignorar o que não lhes compete. *(Objetivos.)*
+2. **Definição dos objetivos da solução.** Estabelecimento das propriedades desejadas: gerar múltiplas aplicações de um mesmo código-fonte, mais seguras e de melhor manutenibilidade ao **suprimirem** o que não lhes compete. *(Objetivos.)*
 3. **Projeto e desenvolvimento do artefato.** Concepção da Arquitetura Metamórfica e sua fundamentação em Linhas de Produto de Software, variabilidade por anotação e superfície de ataque. *(Referencial Teórico e Proposta.)*
 4. **Demonstração.** Implementação do protótipo `modular-bff` e geração das variantes a partir do mesmo código-fonte. *(Desenvolvimento.)*
 5. **Avaliação.** Coleta de evidências que respondem às perguntas de pesquisa. *(Avaliação, Resultados e Discussão.)*
@@ -290,18 +290,34 @@ O trabalho segue as **seis atividades** do modelo de processo proposto por Peffe
 
 ### 5.5 Procedimentos de avaliação
 
-A avaliação é conduzida pela **inspeção do artefato** e por **medições sobre o código-fonte e os artefatos gerados**. Cada procedimento responde a uma ou mais perguntas de pesquisa.
+A avaliação é conduzida pela **inspeção do artefato**, pela **execução das variantes** e por **medições sobre o código-fonte e o bytecode compilado**. Cada procedimento responde a uma ou mais perguntas de pesquisa.
 
-O objeto de medição é, exclusivamente, o **artefato de produção**: o gerado no estágio de *builder* do `Dockerfile`, a partir do código-fonte e das *flags* de compilação, isolado do estado da máquina do desenvolvedor. As afirmações do trabalho referem-se ao que é **entregue**; medi-las sobre um artefato de desenvolvimento — dependente do diretório de saída local, do cache do sistema de *build* e das variáveis da sessão — não as sustentaria. O *build* local não integra o desenho experimental.
+**Sobre qual objeto se mede.** Não há um objeto único, e postular que houvesse seria erro de método. Cada pergunta recai sobre o objeto em que reside a propriedade que ela investiga, segundo uma regra única: **mede-se onde a propriedade existe.**
+
+| Pergunta | Objeto medido | Por quê |
+|---|---|---|
+| **PP2** — ausência do ponto de entrada | **Artefato de produção**, e sua execução | A afirmação é sobre o que é **entregue**. Medi-la sobre um *build* local — dependente do diretório de saída, do cache do sistema de *build* e das variáveis da sessão — não a sustentaria. |
+| **PP3** — rotas expostas | **Artefato de produção**, em execução | A superfície de ataque é a do que se implanta. |
+| **PP3** — lógica alcançável | **Bytecode compilado** | O bytecode é **idêntico** entre as variantes; o que distingue uma variante é o conjunto de pontos de entrada registrados, isto é, o conjunto de raízes do grafo de chamadas. Medir sobre o artefato de produção devolveria, para todas, o mesmo grafo. |
+| **PP1** — reuso | **Código-fonte** | A comunalidade e a variabilidade da linha de produto residem no fonte. No bytecode entregue, todas as classes estão presentes em toda variante, e a medição devolveria trivialmente 100%. |
+| **PP4** — custo | **A arquitetura**, por inspeção | Os custos decorrem do modo de derivação dos artefatos, e não de grandeza aferível em qualquer um deles. |
+
+A ausência do ponto de entrada é propriedade do artefato entregue, e só nele pode ser verificada; o reuso é propriedade do código escrito, e só nele pode ser quantificado. Confundir os dois objetos produziria, num caso, afirmação sobre o que não se entrega; no outro, um resultado trivialmente igual a 100%. A consequência dessa escolha para a validade — as medições de PP1 e da lógica alcançável recaem sobre artefatos do ambiente de desenvolvimento — é discutida no capítulo **Avaliação**.
+
+O **artefato de produção** é, aqui, o gerado no estágio de *builder* do `Dockerfile`, a partir do código-fonte e das *flags* de compilação, isolado do estado da máquina do desenvolvedor.
 
 #### 5.5.1 Procedimento experimental
 
 1. **Geração das variantes.** Do mesmo código-fonte, sem qualquer alteração entre os *builds*, produzem-se três artefatos de produção, alternando as *flags* (`BFF_API_INTERNAL_ACTIVE`, `BFF_API_EXTERNAL_ACTIVE`) que controlam a anotação `@IfBuildProperty` dos *controllers*: `default` (ambas `false`), `internal` e `external`. Uma quarta variante, com **ambos os modos ativos**, serve de **linha de base** para as comparações. Os *builds* são feitos sem reaproveitamento de cache.
-2. **Inspeção do ponto de entrada (PP2).** Para cada variante verifica-se, em duas camadas:
-   - **primária** — a rota do outro modo não consta do documento OpenAPI da variante e uma requisição a ela não é atendida;
-   - **corroborativa** — o *bean* CDI e o invocador REST da operação do outro modo não existem no artefato gerado na fase de *augmentation*, enquanto o bytecode da classe permanece no JAR da aplicação.
+2. **Inspeção do ponto de entrada (PP2).** Cada variante é executada em contêiner, contra uma base de dados migrada e populada, e verificada em três camadas, de estatuto desigual:
 
-   A camada primária é a que sustenta a conclusão, por ser independente de convenções internas do *framework*; a corroborativa explica **por que** a rota não existe.
+   - **primária — o contrato publicado.** A rota do outro modo **não consta** do documento OpenAPI da variante. É o critério que sustenta a conclusão, por independer de convenções internas do *framework* e ser observável por qualquer cliente do artefato. Verifica-se, ademais, que a interface do Swagger é servida e busca aquele documento, do que decorre — por projeção, e não por nova medição — que ela não pode exibir rota que o contrato não contenha.
+   - **corroborativa — o atendimento HTTP.** Requisita-se, em cada variante, a rota de negócio de cada modo, registrando o status.
+   - **explicativa — o bytecode gerado.** O *bean* CDI e o invocador REST da operação do outro modo não existem no artefato produzido na fase de *augmentation*, enquanto o bytecode da classe permanece no JAR da aplicação. Esta camada explica **por que** a rota não existe; as duas primeiras estabelecem **que** ela não existe.
+
+   **Derivação dos alvos.** Nenhuma requisição de escrita incide sobre alvo fixado de antemão. Antes de emiti-las, lista-se os pedidos da própria variante e deles se derivam: um pedido e uma entrega existentes, com um avanço de status admitido pela regra de negócio; e um pedido novo válido, com cliente, endereço e contato reais e um SKU cujo preço unitário coincide com o do catálogo. Assim, a rota exposta responde com a **efetivação** da operação, e não com a recusa de uma requisição malformada — o que converte a evidência de negativa em positiva. A base de dados **populada** é, portanto, pré-condição do experimento, e a coleta **altera o estado dela**, o que é o próprio sinal de que as rotas expostas cumprem o que declaram.
+
+   **Leitura do status HTTP.** O status é corroborativo, e não decisivo, por duas razões independentes. Primeira: a ausência de rota manifesta-se como `404` **ou** `405`, conforme outro *endpoint* registrado capture a URI requisitada — quando o casamento ocorre com um recurso atendido por outro método, o servidor responde `405`. Segunda: o `404` é ambíguo, pois tanto significa "não há rota" quanto "há rota, e o recurso pedido não existe" — ambiguidade que a derivação dos alvos elimina, ao garantir a existência do recurso. Um procedimento que verificasse a supressão pela expectativa de `404` produziria falso negativo no primeiro caso e falso positivo no segundo.
 3. **Contagem de pontos de entrada e da lógica alcançável (PP3).** Enumeram-se as rotas de negócio expostas por variante e comparam-se com a variante de linha de base, que contém todos os *controllers*, enquadrando o resultado pela métrica de superfície de ataque (MANADHATA; WING, 2011) — arrolada por Hannousse e Yahiouche (2021) entre as metodologias correntes de verificação e validação de segurança em arquiteturas de microsserviços. Excluem-se da contagem os endpoints de infraestrutura (`/health`, `/openapi`, `/docs`), presentes em toda variante e alheios à variabilidade. A contagem é **não ponderada**, ao passo que a métrica de referência pondera os pontos de entrada por dano potencial e custo de acesso — aproximação assumida e discutida nas ameaças à validade. Complementa-se a contagem de rotas com o **Reuse per Method**, definido na seção 5.5.3, que quantifica os métodos próprios que cada variante torna alcançáveis a partir da rede.
 4. **Medição de reuso (PP1).** Aplica-se o *reuse percent*, definido na seção 5.5.2, sobre o código-fonte de cada variante, acompanhado da evidência estrutural ali descrita.
 5. **Custo operacional (PP4).** Enumeram-se os custos que decorrem da própria arquitetura, verificáveis por inspeção e sem medição: a multiplicação de *pipelines*, artefatos e implantações; a perda da reconfiguração em tempo de execução, que é o preço exato da propriedade aferida pela PP2; o crescimento combinatório do número de variantes; o custo de verificação de cada artefato derivado; e a rastreabilidade da variante em produção. Nenhuma grandeza de desempenho ou de peso é aferida, conforme a delimitação da seção 5.3.
@@ -358,12 +374,19 @@ Para garantir a **reprodutibilidade**, registram-se as versões e ferramentas do
 | Linguagem / plataforma | Kotlin 2.4.0 · JVM 21 |
 | Framework | Quarkus 3.37.0 (mecanismo `@IfBuildProperty` do Quarkus Arc) |
 | Geração dos artefatos de produção | Docker, sem reaproveitamento de cache |
+| Execução das variantes (PP2, PP3) | Um contêiner por variante, contra PostgreSQL migrado e **populado** |
 | Inspeção de artefato | Listagem do conteúdo dos JAR no interior de cada imagem |
+| Interrogação do contrato e das rotas (PP2) | Requisições HTTP a `/openapi`, `/docs` e às rotas de negócio de cada modo |
 | Contagem de linhas de código (PP1) | `cloc` 2.08 — desconta linhas em branco e comentários |
-| Extração do grafo de chamadas (PP3) | `javap` 21.0.11, sobre o bytecode compilado; roteiro em Python 3.14.6 |
+| Extração do grafo de chamadas (PP3) | `javap` 21.0.11, sobre o bytecode compilado |
+| Programas de coleta | Python 3.14.6 — os três reproduzidos no **Apêndice A** |
 | Persistência | PostgreSQL + Hibernate ORM · migrações versionadas |
 
-Não se registram sistema operacional nem especificação de *hardware*: nenhuma das medições é sensível a eles. As grandezas aferidas — presença de pontos de entrada, contagem de rotas, lógica alcançável e proporção de código — são propriedades dos artefatos e do código-fonte, e não do ambiente que os executa. É condição que decorre da delimitação da seção 5.3: nenhuma grandeza de desempenho é medida, e por isso nenhuma medição depende da máquina em que se executa. Cada medição registra os comandos exatos e as *flags* utilizadas, de modo que um terceiro possa repetir o experimento e obter os mesmos artefatos.
+Não se registram sistema operacional nem especificação de *hardware*: nenhuma das medições é sensível a eles. As grandezas aferidas — presença de pontos de entrada, contagem de rotas, lógica alcançável e proporção de código — são propriedades dos artefatos e do código-fonte, e não da máquina que os executa. É condição que decorre da delimitação da seção 5.3: nenhuma grandeza de desempenho é medida, e por isso nenhuma medição depende do ambiente de execução.
+
+Uma dependência, porém, existe e cabe declará-la: a corroboração por HTTP da PP2 **depende do estado da base de dados**, que deve conter pedidos sobre os quais as operações de escrita possam incidir. Mais que isso, a coleta **altera esse estado** — cada execução efetiva um avanço de status e cria pedidos novos. Não é defeito do procedimento, e sim o que evidencia que as rotas expostas produzem efeito; é, contudo, condição de reprodução, e uma repetição do experimento parte de uma base repovoada.
+
+Os comandos exatos, os pré-requisitos e a leitura da saída de cada medição constam do **Apêndice A**, que reproduz por inteiro os três programas empregados, de modo que um terceiro possa repetir o experimento e obter os mesmos resultados.
 
 ### 5.6 Quadro de amarração
 
@@ -374,7 +397,7 @@ O quadro a seguir liga cada objetivo específico e cada pergunta de pesquisa ao 
 | Apresentar conceitualmente a Arquitetura Metamórfica | Fundamentação teórica e posicionamento na literatura | Arquitetura descrita e ancorada em referências consolidadas | Referencial Teórico · Proposta |
 | Apresentar um protótipo conceito | Implementação e demonstração do `modular-bff` | Protótipo funcional com as variantes reproduzíveis | Desenvolvimento |
 | **PP1 — Reuso** | *Reuse percent* sobre o código-fonte e evidência estrutural de não duplicação (seção 5.5.2) | Proporção de reuso quantificada; serviço, repositórios e domínio declarados uma única vez | Avaliação |
-| **PP2 — Ausência do ponto de entrada** | Ausência da rota no documento OpenAPI e no atendimento HTTP; ausência de *bean* e invocador no artefato de *augmentation* | Ponto de entrada do outro modo inexistente na variante | Avaliação |
+| **PP2 — Ausência do ponto de entrada** | Ausência da rota no contrato publicado pela variante (critério primário); atendimento HTTP sobre alvos derivados da própria variante (corroborativo); ausência de *bean* e invocador no artefato de *augmentation* (explicativo) — seção 5.5.1, passo 2 | Ponto de entrada do outro modo inexistente na variante, e contrato que o não anuncia | Avaliação |
 | **PP3 — Superfície de ataque** | Contagem não ponderada de rotas de negócio por variante, contra a linha de base, e *Reuse per Method* (seção 5.5.3) | Redução mensurável de pontos de entrada e da lógica por eles alcançável | Avaliação |
 | **PP4 — Custo operacional** | Enumeração qualitativa dos custos decorrentes da arquitetura, por inspeção (seção 5.5.1, passo 5) | Custo estrutural explicitado, incluindo a rigidez em tempo de execução como contrapartida da PP2 | Avaliação |
 

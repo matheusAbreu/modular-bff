@@ -145,3 +145,109 @@ Por se tratar de pesquisa baseada em um único artefato, a discussão das **amea
 > - **Resiliência no objetivo geral:** ✅ decidida — mantida como **decorrência esperada** da menor exposição, explicitamente não aferida (seção 5.6.1 do TCC).
 >
 > **Follow-ups editoriais (no TCC):** as seções 5.3, 5.5 e 5.7 remetem aos capítulos *Desenvolvimento* e *Avaliação*, ainda não implementados; as remissões passam a valer quando esses capítulos entrarem.
+
+---
+
+## 8. Auditoria: divergências entre a Metodologia publicada e a Avaliação executada
+
+> **Data:** 10 jul. 2026, após a implementação do capítulo de Avaliação no TCC (seções 7.1–7.8) e do Apêndice A.
+>
+> **Conclusão da auditoria:** ⚠️ **a Metodologia do TCC (capítulo 5) NÃO descrevia mais o que a Avaliação de fato fez.** Havia uma contradição **interna ao capítulo 5** e seis lacunas de procedimento.
+>
+> ✅ **Corrigido no TCC em 10 jul. 2026.** As sete divergências abaixo foram sanadas no capítulo 5, que é a fonte da verdade. Esta seção é mantida como registro da auditoria e do que foi alterado.
+
+### 8.1 ⛔ Contradição interna — o objeto de medição
+
+**Onde:** TCC, seção 5.5, parágrafo de abertura.
+
+O texto afirma:
+
+> "O objeto de medição é, **exclusivamente**, o **artefato de produção** […] O *build* local não integra o desenho experimental."
+
+Isso é **falso** para duas das quatro perguntas, e o próprio capítulo 5 o desmente duas subseções adiante:
+
+| Onde | O que diz | Conflito |
+|---|---|---|
+| 5.5.2 | "A medição de reuso é feita sobre o **código-fonte**" | O código-fonte não é o artefato de produção |
+| 5.5.3 | "grafo de chamadas […] por análise estática do **bytecode compilado**" | O bytecode compilado localmente não é o artefato de produção |
+
+A Avaliação já corrigiu o ponto: a seção 7.1 declara o objeto **por pergunta**, sob a regra "mede-se onde a propriedade existe" — PP2 e a contagem de rotas da PP3 recaem sobre o artefato de produção em execução; o *Reuse per Method* recai sobre o bytecode compilado (porque a variante é definida pelo conjunto de raízes, e o bytecode é idêntico entre variantes); a PP1 recai sobre o código-fonte; a PP4 sobre a arquitetura, por inspeção.
+
+**Correção — ✅ aplicada.** O parágrafo de 5.5 foi substituído por um quadro que declara o objeto **por pergunta**, sob a regra "mede-se onde a propriedade existe", com a consequência para a validade remetida ao capítulo de Avaliação.
+
+### 8.2 O estatuto das duas camadas de evidência da PP2 mudou
+
+**Onde:** TCC, seção 5.5.1, passo 2.
+
+O texto coloca **OpenAPI e HTTP juntos** na camada "primária". A Avaliação hierarquizou: **o critério primário é a ausência da rota no documento OpenAPI**; o status HTTP é **corroborativo** (seção 7.2.3). A mudança não é cosmética — decorre de dois achados da coleta, ambos ausentes da Metodologia:
+
+1. **A rota suprimida devolve `404` *ou* `405`.** A URI `/v1/order/create` casa com o template `/v1/order/{orderId}`, atendido apenas por `GET`; na ausência do *controller* externo, o `POST` encontra o recurso e não o método. Verificar esperando `404` produziria **falso negativo**.
+2. **O `404` é ambíguo.** Significa "não há rota" **ou** "há rota, e o recurso não existe". Sobre recurso inexistente, produziria **falso positivo** numa rota exposta.
+
+O passo 2 da Metodologia diz apenas "uma requisição a ela não é atendida", formulação que **não distingue** nenhum desses casos.
+
+**Correção — ✅ aplicada.** O passo 2 passou a ter **três camadas de estatuto desigual** — primária (contrato publicado), corroborativa (atendimento HTTP) e explicativa (bytecode gerado) — e um parágrafo *Leitura do status HTTP* que registra os dois status e as duas razões da ambiguidade.
+
+### 8.3 O procedimento de derivação dos alvos não está descrito
+
+**Onde:** TCC, seção 5.5.1, passo 2 — ausente.
+
+A Avaliação (7.2.3) estabelece que **nenhum alvo de escrita é fixado de antemão**: antes das requisições, lista-se os pedidos da própria variante e deriva-se dela um pedido e uma entrega existentes, com avanço de status legítimo, e um pedido novo válido, com cliente, endereço, contato e SKU cujo preço coincide com o do catálogo. É o que permite obter `201` e `202` — evidência **positiva** de que a operação se completa — em lugar da mera recusa de requisições malformadas.
+
+Nada disso consta da Metodologia, que assim descreve um experimento mais fraco do que o executado.
+
+**Correção — ✅ aplicada.** O passo 2 ganhou o parágrafo *Derivação dos alvos*, que descreve a extração do pedido, da entrega, do avanço de status e do pedido novo a partir da listagem da própria variante, e declara a base populada como pré-condição.
+
+### 8.4 A verificação do contrato publicado não estava prevista
+
+**Onde:** TCC, seção 5.5.1 — ausente; seção 5.6, linha da PP2 — ausente.
+
+A Avaliação inclui a seção **7.2.4**, que verifica, em cada variante, que a interface do Swagger é servida e busca o documento OpenAPI, estabelecendo a relação de **projeção** entre interface e contrato, e daí a propriedade de a documentação metamorfosear junto com o artefato. A verificação foi executada e citada (QUARKUS, 2026e), mas **não é prevista por procedimento algum** do capítulo 5.
+
+**Correção — ✅ aplicada.** Optou-se por **incorporar ao método**: a camada primária do passo 2 inclui agora a verificação de que a interface do Swagger é servida e busca o documento, e o quadro de amarração (5.6) menciona o contrato que não anuncia a rota suprimida.
+
+### 8.5 O ambiente de execução da PP2 não consta
+
+**Onde:** TCC, seção 5.5.4 (tabela).
+
+A tabela cobre a geração dos artefatos, a inspeção dos JAR, `cloc` e `javap`. Não cobre o que a PP2 de fato exigiu:
+
+- execução de **cada variante em contêiner**, contra um **PostgreSQL migrado e populado**;
+- a **base de dados populada** como pré-condição do experimento — sem pedidos reais, o `PATCH` devolveria `404` por ausência de recurso, e o status seria ambíguo;
+- Python como linguagem de **todos** os programas de coleta, e não apenas do roteiro do grafo.
+
+**Correção — ✅ aplicada.** A tabela de 5.5.4 ganhou as linhas *Execução das variantes*, *Interrogação do contrato e das rotas* e *Programas de coleta*; os comandos exatos passaram a ser remetidos ao **Apêndice A**.
+
+### 8.6 A afirmação de insensibilidade ao ambiente ficou forte demais
+
+**Onde:** TCC, seção 5.5.4, último parágrafo.
+
+O texto afirma que "nenhuma das medições é sensível" ao sistema operacional e ao *hardware*, porque as grandezas são propriedades dos artefatos. A conclusão permanece verdadeira quanto a SO e *hardware*, mas a coleta da PP2 introduziu uma dependência que o texto não registra: **o resultado depende do estado da base de dados**, e a própria coleta **muta esse estado** — cada execução avança a entrega alvo dois estados e cria dois pedidos.
+
+Não é defeito: a mutação é o que prova que as rotas expostas fazem o que prometem. Mas é condição de reprodutibilidade, e cabe declará-la.
+
+**Correção — ✅ aplicada.** A afirmação sobre SO e *hardware* permaneceu; acrescentou-se parágrafo declarando a dependência do estado da base e que **a coleta o altera**, sendo isso o que evidencia que as rotas expostas produzem efeito.
+
+### 8.7 Resíduo do objetivo geral
+
+**Onde:** TCC, seção 5.4, atividade 2.
+
+O texto ainda diz "mais seguras e de melhor manutenibilidade **ao ignorar** o que não lhes compete". O objetivo geral foi corrigido para **"ao suprimirem"** — o artefato não ignora a operação alheia em tempo de execução; ele não a contém. O verbo antigo descreve a *feature flag*, não a metamorfose.
+
+**Correção — ✅ aplicada.** Na 5.4, "ao ignorar" virou "ao **suprimirem**". Corrigiu-se também a 5.1, que ainda falava em medir "presença ou ausência de **classes**".
+
+---
+
+### 8.8 Síntese
+
+| # | Divergência | Gravidade |
+|---|---|---|
+| 8.1 | 5.5 afirma objeto de medição único; 5.5.2 e 5.5.3 o contradizem | ⛔ **Contradição interna** |
+| 8.2 | Hierarquia OpenAPI × HTTP e os status `404`/`405` ausentes | 🔴 Método descreve experimento mais fraco |
+| 8.3 | Derivação dos alvos de escrita não descrita | 🔴 Método descreve experimento mais fraco |
+| 8.4 | Verificação do Swagger como projeção não prevista | 🟡 Procedimento executado sem previsão |
+| 8.5 | Ambiente da PP2 (contêiner, banco populado) ausente da tabela | 🟡 Reprodutibilidade incompleta |
+| 8.6 | "Insensível ao ambiente" ignora estado da base e mutação | 🟡 Afirmação forte demais |
+| 8.7 | "ao ignorar" em vez de "ao suprimirem" | 🟢 Resíduo de redação |
+
+**Todas corrigidas no TCC em 10 jul. 2026.** Nenhuma invalidava um resultado: todas eram do tipo *o método publicado descreve menos, ou coisa diversa, do que a execução realizou* — e três delas (8.2, 8.3, 8.5) descrevem um experimento **mais fraco** do que o efetivamente conduzido, o que é o pior tipo de erro nesta direção: subestima a própria evidência e impede que um terceiro a reproduza.
