@@ -90,7 +90,7 @@ O que **falta** para transformar a proposta num TCC completo:
 - ~~Metodologia~~ → **implementado no TCC** (seções 5.1–5.7), absorvendo o método de reuso de `METRICA-REUSO.md` na seção 5.5.2. Rascunhos mantidos como registro de trabalho.
 - ~~Desenvolvimento / Implementação do Protótipo~~ → **implementado no TCC** (seções 6.1–6.8), com as afirmações técnicas ancoradas na documentação oficial do Quarkus. Rascunho mantido como registro de trabalho.
 - ~~Avaliação, Resultados e Discussão~~ → **implementado no TCC** (seções 7.1–7.8), com todas as medições executadas e os três programas de coleta reproduzidos no **Apêndice A**. Rascunho mantido como registro de trabalho.
-- Conclusão e Trabalhos Futuros.
+- ~~Conclusão e Trabalhos Futuros~~ → **implementado no TCC** (seções 8.1–8.5). Rascunho mantido como registro de trabalho.
 
 ---
 
@@ -219,7 +219,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 5. ✅ Metodologia — **implementado no TCC** (seções 5.1–5.7); rascunho de trabalho em `METODOLOGIA.md` e `METRICA-REUSO.md`
 6. ✅ Desenvolvimento / Implementação do Protótipo — **implementado no TCC** (seções 6.1–6.8); rascunho de trabalho em `DESENVOLVIMENTO.md`
 7. ✅ Avaliação, Resultados e Discussão — **implementado no TCC** (seções 7.1–7.8) + **Apêndice A**; rascunho de trabalho em `AVALIACAO.md`
-8. ⬜ Conclusão e Trabalhos Futuros
+8. ✅ Conclusão e Trabalhos Futuros — **implementado no TCC** (seções 8.1–8.5); rascunho em `CONCLUSAO.md`
 9. ✅ Referências
 
 > Observação: *Justificativa*, *Objetivos* e *Organização do Trabalho* permanecem como seções da Introdução (ou como capítulo introdutório), conforme o modelo da instituição.
@@ -346,17 +346,17 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 6b. [x] ⚠️ **Reescrever a seção 5.5.2 do TCC** — **feito**. O *reuse level* foi abandonado e substituído pelo **Reuse per Method** (nova seção 5.5.3, com a de ambiente renumerada para 5.5.4). A primeira coleta mostrou que o *reuse level* **não serve** a este objeto: o `IRL` é nulo por construção, o `ERL` é redundante com o *reuse percent* e quase insensível à duplicação que deveria detectar, e o par *external/internal* da métrica é homônimo — sem relação — dos modos interno/externo do protótipo. A métrica foi **abandonada** e substituída por contagem em **granularidade de método**, por alcançabilidade a partir dos pontos de entrada. Método novo em `METRICA-REUSO.md`, seção 6. Consequências para as *Referências*: sai Frakes e Kang (2005); Chen, Usman e Badampudi (2024) deixa de sustentar a vigência do *reuse level* e permanece apenas na seção 5.6.1; Frakes e Terry (1996) permanece.
 7. [x] **Escrever Resultados/Discussão e Ameaças à Validade** e **implementar a Avaliação no TCC** — feito (seções 7.1–7.8). A seção 7.9 do rascunho (*Evidências pendentes*) não foi transposta: era nota de trabalho.
 7b. [x] ⚠️ **Transpor os scripts para dentro do TCC, como blocos de código** — feito, no **Apêndice A**; os três estão congelados.
-7c. [ ] **Revisar o capítulo 7 no arquivo final** (passo 3 do *modus operandi*): conferir duplicações com o Desenvolvimento, coesão das transições e numeração das remissões internas.
+7c. [x] **Revisar o capítulo 7 no arquivo final** — feito. Todas as remissões internas conferidas; a seção 6.8 foi realinhada (falava em "duas camadas" e atribuía a si o insumo de PP1/PP3, o que é falso); a tabela da 6.5 passou a declarar-se como projeto ("por construção"), remetendo a verificação empírica à 7.2.
 7d. [ ] **Numerar e legendar as figuras** conforme a ABNT ("Figura N — …" + fonte) — vale para as nove `[FIGURA A INSERIR]` e as duas `[Trocar imagem]` da Introdução.
 7e. [x] ⛔ **Corrigir a Metodologia (capítulo 5) do TCC** — **feito em 10 jul. 2026**; as sete divergências da auditoria foram sanadas e o registro está em `METODOLOGIA.md`, seção 8. Originalmente: Auditoria de 10 jul. 2026 (lista completa em `METODOLOGIA.md`, seção 8): **uma contradição interna e seis lacunas**. A mais grave — a seção 5.5 declara que o objeto de medição é "exclusivamente o artefato de produção", ao passo que a 5.5.2 mede o **código-fonte** e a 5.5.3 mede o **bytecode compilado**; o capítulo se desmente a si mesmo, e a seção 7.1 da Avaliação já adota a formulação correta (objeto por pergunta). Faltam ainda: a hierarquia entre OpenAPI (primário) e HTTP (corroborativo); os status `404`/`405` e a ambiguidade do `404`; a derivação dos alvos de escrita a partir da listagem; a verificação do Swagger como projeção do contrato (seção 7.2.4); o ambiente de execução da PP2 (contêiner e banco populado); e a ressalva de que a coleta da PP2 **muta** o estado da base. **Três dessas lacunas descrevem um experimento mais fraco do que o executado.** Nenhuma invalida resultado.
-8. [ ] **Concluir** com trabalhos futuros.
+8. [x] **Concluir** com trabalhos futuros — **implementado no TCC** (seções 8.1–8.5). Rascunho em `CONCLUSAO.md`.
 9. [ ] **Produzir as figuras** (o `CASE_STUDY.md` traz os textos; faltam os diagramas — inclusive substituir os placeholders `[Trocar imagem]` da proposta e os cinco `[FIGURA A INSERIR]` do Desenvolvimento). **Acrescentar legenda e numeração ABNT** ("Figura N — …" + fonte) às sete imagens, hoje inseridas sem legenda.
 10. [ ] **Corrigir as glosas** de `REFERENCIAS_CIENTIFICAS.md` (5.1) e `CITACOES_ABNT.md` (Eixo 3), que ainda repetem "não existe no binário".
 11. [ ] **(Opcional)** Testar o *build* nativo — item 3 do encaminhamento da seção 1.1.
 
 > **Progresso (9 jul. 2026):** capítulos 1 a 6 **implementados no TCC** — Introdução, Referencial Teórico, Trabalhos Relacionados, Proposta, Metodologia e Desenvolvimento. O experimento 1 foi executado sobre as três variantes de produção e a reformulação da tese daí decorrente já está propagada ao TCC e ao `CASE_STUDY.md`. A **Avaliação** existe como rascunho (`AVALIACAO.md`) com PP2 e PP3 respondidas; PP1 e PP4 aguardam coleta. A **Conclusão** não foi iniciada.
 >
-> **Próximo alvo:** item 8 — a **Conclusão e Trabalhos Futuros**, único capítulo ainda ausente. Em paralelo, itens 7c/7d e 9 (revisão do capítulo 7 no arquivo final e produção das figuras).
+> **Próximo alvo:** as **figuras** (itens 7d e 9) — última pendência estrutural. **Todos os capítulos estão implementados no TCC**, do 1 ao 8, mais Referências e Apêndice A.
 
 ---
 

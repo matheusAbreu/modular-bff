@@ -53,11 +53,11 @@ Este trabalho tem como objetivo apresentar uma proposta de arquitetura de projet
 
 ## Organização do Trabalho
 
-Este documento está organizado em dez partes, seguidas de um apêndice. A **Introdução** contextualiza o leitor na arquitetura de microsserviços, no papel do API Gateway como ponto central de agregação de dados e no surgimento do padrão *Backend for Frontend* (BFF). A **Justificativa** discute as vantagens do BFF frente ao API Gateway e expõe o problema que motiva o trabalho: a dificuldade de reuso de código e o crescente custo de manutenção quando múltiplos BFF atendem a um mesmo contexto. Os **Objetivos** delimitam a meta geral — propor uma arquitetura capaz de gerar múltiplas aplicações a partir de um único código-fonte — e os objetivos específicos que a operacionalizam. O **Referencial Teórico** consolida os conceitos que fundamentam a proposta: microsserviços e BFF, Linhas de Produto de Software e variabilidade em tempo de compilação, superfície de ataque e Arquitetura Hexagonal. Os **Trabalhos Relacionados** posicionam a proposta frente a abordagens alternativas — repositórios separados, *feature flags* em runtime, microsserviços distintos e linhas de produto por composição —, evidenciando a lacuna que ela preenche.
+Este documento está organizado em onze partes, seguidas de um apêndice. A **Introdução** contextualiza o leitor na arquitetura de microsserviços, no papel do API Gateway como ponto central de agregação de dados e no surgimento do padrão *Backend for Frontend* (BFF). A **Justificativa** discute as vantagens do BFF frente ao API Gateway e expõe o problema que motiva o trabalho: a dificuldade de reuso de código e o crescente custo de manutenção quando múltiplos BFF atendem a um mesmo contexto. Os **Objetivos** delimitam a meta geral — propor uma arquitetura capaz de gerar múltiplas aplicações a partir de um único código-fonte — e os objetivos específicos que a operacionalizam. O **Referencial Teórico** consolida os conceitos que fundamentam a proposta: microsserviços e BFF, Linhas de Produto de Software e variabilidade em tempo de compilação, superfície de ataque e Arquitetura Hexagonal. Os **Trabalhos Relacionados** posicionam a proposta frente a abordagens alternativas — repositórios separados, *feature flags* em runtime, microsserviços distintos e linhas de produto por composição —, evidenciando a lacuna que ela preenche.
 
 O capítulo **Proposta: Arquitetura Metamórfica** apresenta a solução: uma configuração resolvida em tempo de compilação que faz o projeto assumir a forma adequada a cada cliente. Nele, delimita-se a tensão entre especialização e reuso, formula-se a proposta e mostra-se sua concretização no protótipo; a seguir, a *fundamentação* situa a arquitetura no campo das Linhas de Produto de Software e da variabilidade baseada em anotação, e a *segurança por ausência* desenvolve a principal contribuição do método — a redução da superfície de ataque pela eliminação, no artefato, das operações que não competem ao cliente. A **Metodologia** descreve como o trabalho foi conduzido: classifica a pesquisa, justifica a adoção da *Design Science Research* como método condutor, formula as quatro perguntas de pesquisa, detalha os procedimentos de avaliação — incluindo as métricas de reuso e a inspeção dos artefatos de produção — e amarra cada propriedade reivindicada a um método de verificação, distinguindo o que é verificado, o que é inferido e o que não é aferido. O **Desenvolvimento** apresenta o protótipo `modular-bff` como demonstração da arquitetura: sua organização em camadas hexagonais, o domínio, o serviço compartilhado que materializa o reuso, o mecanismo metamórfico de ativação condicional dos *controllers* em tempo de compilação, o pipeline de *build* por artefato e o procedimento de reprodução das variantes.
 
-A **Avaliação, Resultados e Discussão** confronta as afirmações da Proposta com as evidências colhidas sobre os artefatos: estabelece que o ponto de entrada da operação alheia a um cliente não existe no artefato dele — nem como *bean*, nem no contrato publicado, nem no atendimento HTTP —, enquanto a classe compilada permanece; quantifica a redução da superfície de ataque, em rotas e na lógica que cada rota torna alcançável; mede o reuso entre as variantes; explicita o custo da abordagem, cuja contrapartida é a perda da reconfiguração em tempo de execução; e delimita, ao final, as ameaças à validade e o alcance de cada afirmação. As **Referências** reúnem as fontes utilizadas. O **Apêndice A** reproduz, por inteiro, os três programas que produziram os valores da Avaliação, de modo que qualquer medição possa ser refeita por um terceiro.
+A **Avaliação, Resultados e Discussão** confronta as afirmações da Proposta com as evidências colhidas sobre os artefatos: estabelece que o ponto de entrada da operação alheia a um cliente não existe no artefato dele — nem como *bean*, nem no contrato publicado, nem no atendimento HTTP —, enquanto a classe compilada permanece; quantifica a redução da superfície de ataque, em rotas e na lógica que cada rota torna alcançável; mede o reuso entre as variantes; explicita o custo da abordagem, cuja contrapartida é a perda da reconfiguração em tempo de execução; e delimita, ao final, as ameaças à validade e o alcance de cada afirmação. A **Conclusão e Trabalhos Futuros** retoma os objetivos frente ao que foi estabelecido, separa o que a pesquisa verificou do que apenas inferiu ou não aferiu, e enumera as continuações que dela decorrem — entre elas a verificação da forma forte da tese no *build* nativo e a extensão da metamorfose às camadas inferiores. As **Referências** reúnem as fontes utilizadas. O **Apêndice A** reproduz, por inteiro, os três programas que produziram os valores da Avaliação, de modo que qualquer medição possa ser refeita por um terceiro.
 
 ## Referencial Teórico
 
@@ -504,6 +504,8 @@ A distinção é deliberada e coerente com a métrica que fundamenta a proposta:
 | `internal` | General + Internal | `PATCH /v1/order/{orderId}/delivery/{deliveryId}/{newStatus}` |
 | linha de base (ambas `true`) | General + External + Internal | ambos |
 
+A tabela declara o que o mecanismo produz **por construção**. Que os artefatos entregues de fato se comportem assim é afirmação empírica, verificada no capítulo **Avaliação** (seção 7.2).
+
 A fundamentação teórica dessa técnica — variabilidade por anotação em tempo de compilação e Linhas de Produto de Software — está no capítulo **Referencial Teórico**, seções 2.3 e 2.4; a leitura de segurança, na seção 2.5.
 
 ### 6.6 Configuração e pipeline de build por artefato
@@ -563,11 +565,13 @@ A implicação é central: deploys interno e externo exigem **pipelines e artefa
 
 ### 6.8 Reprodução dos artefatos
 
-O efeito da metamorfose é **verificável por inspeção do artefato de produção** — a imagem gerada pelo `Dockerfile`, e não o resultado do *build* local, que não integra o desenho experimental, conforme a seção 5.5.
+O efeito da metamorfose é **verificável por inspeção do artefato de produção** — a imagem gerada pelo `Dockerfile`, e não o resultado do *build* local. A distinção importa para a PP2, cuja afirmação recai sobre o que é **entregue**, conforme o quadro de objetos de medição da seção 5.5.
 
 O protótipo é empacotado no tipo `fast-jar`, que a documentação registra como o padrão do Quarkus e cujo resultado é um diretório `quarkus-app`; para executar o artefato, "é necessário ter todo o conteúdo do diretório `quarkus-app`", pois a ausência de qualquer arquivo impede a aplicação de iniciar ou de funcionar corretamente (QUARKUS, 2026d). A **estrutura interna** desse diretório — a separação entre o JAR da aplicação e os artefatos produzidos na *augmentation* — **não é descrita na documentação oficial**; o que se afirma a seguir decorre da inspeção direta dos artefatos gerados, e é reprodutível pelos comandos apresentados.
 
-A verificação ocorre em duas camadas, e importa distinguir onde cada uma atua. O JAR da aplicação contém o bytecode produzido pelo compilador Kotlin e, portanto, **as três classes de *controller* em qualquer variante**:
+A inspeção do artefato recai sobre **dois** dos seus arquivos, e importa distinguir onde cada um atua. Ela constitui a camada **explicativa** da verificação da PP2, na terminologia da seção 5.5.1: mostra *por que* a rota não existe. As camadas que estabelecem *que* ela não existe — o contrato publicado e o atendimento HTTP — exigem executar a variante, e são apresentadas no capítulo **Avaliação**.
+
+O JAR da aplicação contém o bytecode produzido pelo compilador Kotlin e, portanto, **as três classes de *controller* em qualquer variante**:
 
 ```bash
 jar tf /deployments/app/*.jar | grep "adapters/api/v1"
@@ -582,9 +586,7 @@ jar tf /deployments/quarkus/generated-bytecode.jar | grep "adapters/api/v1"
 # o OrderInternalController_Bean e seu invocador NÃO existem.
 ```
 
-O alvo `make artifact/analysis` executa essa inspeção nas três variantes. A camada corroborativa acima explica **por que** a rota não existe; a evidência primária — a ausência da rota no documento OpenAPI e no atendimento HTTP — independe de convenções internas do *framework* e é apresentada no capítulo **Avaliação**.
-
-Esse procedimento é o insumo direto da PP2 e a base para as medições de superfície de ataque (PP3) e de reuso (PP1), definidas no capítulo **Metodologia**.
+Essa inspeção é o insumo da camada explicativa da PP2. Convém, porém, delimitar o que ela **não** fundamenta: a contagem de rotas da PP3 exige a variante em execução; o *Reuse per Method* recai sobre o bytecode compilado, e não sobre a imagem; e a medição de reuso da PP1 recai sobre o código-fonte. Cada pergunta é medida no objeto em que sua propriedade reside, conforme a seção 5.5.
 
 ## Avaliação, Resultados e Discussão
 
@@ -908,6 +910,84 @@ As medições de 7.3.2 e 7.4 recaem sobre o **código-fonte** e sobre o **byteco
 **O contrato exposto em produção.** Da mesma natureza é uma escolha registrada em 7.2.4: os artefatos publicam `/openapi` e `/docs` a qualquer requisitante, pois `quarkus.swagger-ui.always-include=true` mantém a interface disponível fora do modo de desenvolvimento (QUARKUS, 2026e). Um artefato cuja tese é a supressão de pontos de entrada oferece, assim, o mapa completo dos que restaram. Isso **não contradiz** a propriedade aferida — a rota suprimida continua ausente do documento e do artefato, e os endpoints de infraestrutura são excluídos da contagem de 7.3.1 por serem alheios à variabilidade —, mas amplia a superfície de reconhecimento de um atacante. A exposição é, como o coringa de CORS, deliberada em um projeto-referência, cuja finalidade é permitir que terceiros inspecionem as variantes; e é, como ele, o que uma implantação real deve reconsiderar. Registre-se que `always-include` é propriedade de tempo de compilação (QUARKUS, 2026e): também essa decisão se toma no *build*, e não em produção.
 
 > **Nota de reprodutibilidade.** Os valores das seções 7.2, 7.3 e 7.4 foram produzidos pelos três programas reproduzidos no **Apêndice A**, executados sobre o ambiente descrito na seção 5.5.4. Cada um imprime a versão das ferramentas que emprega, e o apêndice registra, para cada qual, o propósito, os pré-requisitos, a invocação exata e a leitura da saída.
+
+## Conclusão e Trabalhos Futuros
+
+Este capítulo retoma os objetivos enunciados no início do trabalho, confronta-os com o que a Avaliação estabeleceu, delimita o que ficou fora do alcance da pesquisa e aponta as continuações que dela decorrem.
+
+### 8.1 Retomada dos objetivos
+
+O **objetivo geral** propunha uma arquitetura de projeto que gerasse múltiplas aplicações a partir de um mesmo código-fonte, mais seguras e de melhor manutenibilidade ao suprimirem os trechos que não lhes competem, com ganho esperado de resiliência decorrente da menor exposição.
+
+Os **objetivos específicos** eram dois, e ambos foram cumpridos:
+
+**Apresentar conceitualmente a Arquitetura Metamórfica.** O capítulo *Proposta* formula a arquitetura e o *Referencial Teórico* a ancora em campos consolidados: a derivação de produtos das Linhas de Produto de Software (HORCAS; PINTO; FUENTES, 2023), a variabilidade por anotação resolvida em tempo de compilação (HUNSEN et al., 2016; BAUM et al., 2019), a superfície de ataque definida pelo conjunto de pontos de entrada (MANADHATA; WING, 2011) e o isolamento das regras de negócio frente aos detalhes de *framework* (MARTIN, 2017). O capítulo *Trabalhos Relacionados* a posiciona frente a quatro alternativas e delimita a lacuna que ela ocupa.
+
+**Apresentar um protótipo conceito.** O `modular-bff` foi implementado, e dele derivaram-se quatro artefatos — três variantes e uma linha de base — sem qualquer alteração de código entre os *builds*. O capítulo *Desenvolvimento* descreve a implementação e o procedimento de reprodução.
+
+---
+
+### 8.2 O que a pesquisa estabeleceu
+
+As quatro perguntas de pesquisa receberam resposta, e convém enunciá-las com a precisão que a Avaliação impôs.
+
+**A supressão do ponto de entrada é verificável e não reversível (PP2).** O artefato de um modo não contém o *bean* CDI, o invocador REST nem a rota da operação do outro modo. A rota não consta do contrato publicado pela variante, e uma requisição a ela não alcança manipulador algum. Nenhuma variável de ambiente, nenhum parâmetro de execução e nenhuma reconfiguração em tempo de implantação reintroduzem o que não foi registrado no *build* (seção 7.2).
+
+**A supressão não alcança a classe compilada.** O bytecode do *controller* permanece no JAR da aplicação, inerte e inalcançável (seção 7.2.1). A tese original — "o endpoint não existe no binário" — era falsa ao pé da letra e foi reformulada em termos de **ponto de entrada**, unidade que a métrica de superfície de ataque adotada de fato contabiliza (MANADHATA; WING, 2011). A reformulação não enfraqueceu o argumento: tornou-o mais aderente à métrica que o funda.
+
+**A superfície de ataque diminui, e a lógica atrás dela deixa de ter caminho (PP3).** Cada variante de escrita expõe três rotas de negócio, contra quatro da linha de base. Mais que isso: suprimir o *controller* de um modo torna inalcançáveis, a partir da rede, os cinco métodos que estavam atrás daquela rota; a variante sem modos ativos torna inalcançáveis onze dos dezoito métodos próprios da linha de base (seção 7.3).
+
+**O reuso é quantificável e a duplicação não existe no código examinado (PP1).** A especialização de um BFF inteiro custou menos de noventa linhas: 94,82% e 95,17% do código de cada variante é comum às demais. As regras de negócio residem em uma única classe de serviço, os repositórios e o domínio são únicos, e nenhuma validação, cálculo ou fluxo é reescrito por variante (seção 7.4).
+
+**O custo é a rigidez em tempo de execução (PP4).** Alterar o modo de um artefato exige recompilá-lo e reimplantá-lo. É o preço exato da propriedade aferida pela PP2: a mesma resolução em tempo de compilação que impede uma configuração de ressuscitar o ponto de entrada impede que ela o restitua quando isso for desejado. Somam-se a multiplicação de *pipelines* e artefatos, o crescimento combinatório das variantes e o custo de verificar cada uma (seção 7.5).
+
+**Uma propriedade não reivindicada foi observada.** O contrato que cada variante publica é derivado dos *endpoints* nela registrados, e a interface de documentação é projeção daquele contrato. A metamorfose atinge, assim, também aquilo que o artefato **diz de si**: nenhum esforço de manutenção documental é exigido, e nenhuma divergência entre documento e comportamento é possível (seção 7.2.4).
+
+---
+
+### 8.3 O que a pesquisa não estabeleceu
+
+A delimitação a seguir não é concessão feita ao final: é parte do resultado.
+
+**Manutenibilidade não foi medida.** O objetivo geral a reivindica; o trabalho afere o **reuso**, que é seu antecedente. Concentrar o código comum em um único ponto reduz o esforço de manutenção (TAIBI; LENARDUZZI; PAHL, 2018), relação que Chen, Usman e Badampudi (2024) observam em casos industriais — com evidência mista. Não se mediu esforço de alteração nem densidade de defeitos.
+
+**Resiliência não foi aferida.** O objetivo geral a enuncia como decorrência esperada da menor exposição, e é assim que deve ser lida — nunca como resultado.
+
+**A ausência de duplicação foi estabelecida por inspeção, não por instrumento.** Nenhuma medida deste trabalho detecta clones: duas cópias de uma mesma regra em classes distintas escapariam ao *reuse percent* e ao grafo de chamadas. Afirma-se que a duplicação não existe no código examinado, não que a arquitetura a impeça (seção 7.4.2).
+
+**A generalização não é sustentada pelos dados.** Um protótipo, um domínio, um *framework*. A proporção de rotas suprimidas é propriedade deste protótipo, não da arquitetura.
+
+**A segurança por ausência é a primeira linha de defesa, não a única.** Não substitui autenticação, autorização por posse de recurso, limitação de abuso nem mascaramento de dados sensíveis.
+
+---
+
+### 8.4 Trabalhos futuros
+
+As continuações abaixo decorrem diretamente do que ficou por fazer, e não de especulação.
+
+**Verificar a forma forte da tese no *build* nativo.** A *dead code elimination* do GraalVM possivelmente elimina o bytecode da classe inalcançável. Se o fizer, a afirmação "o endpoint não existe no binário" torna-se literalmente verdadeira para o artefato nativo, e o trabalho passaria a distinguir uma forma fraca (JVM: ponto de entrada ausente) de uma forma forte (nativo: classe ausente). A hipótese não foi testada (seção 7.2.5).
+
+**Exercitar a suíte de testes contra cada variante entregue.** A integração contínua do protótipo compila com ambas as propriedades ativas, isto é, exercita a linha de base — que não é nenhum dos artefatos entregues. Uma abordagem que promete ausência verificável deveria verificar o que entrega (seção 7.5.1).
+
+**Domar o crescimento combinatório.** `k` propriedades booleanas independentes admitem até `2^k` variantes. Restringir as combinações admissíveis a um subconjunto declarado é problema conhecido das Linhas de Produto de Software — modelos de *features* com restrições —, e não foi enfrentado aqui.
+
+**Levar a metamorfose às camadas inferiores.** Neste trabalho a variabilidade vive apenas nos adaptadores de entrada. Suprimir também serviços e repositórios privativos de um modo exigiria granularidade mais grossa ou variabilidade por composição, e ampliaria a redução da lógica alcançável medida pela PP3.
+
+**Medir a manutenibilidade que o trabalho apenas infere.** Esforço de alteração e densidade de defeitos, aferidos ao longo da evolução de uma linha de produto real, converteriam em resultado o que hoje é antecedente.
+
+**Aplicar a arquitetura a outro domínio e a outro mecanismo de variabilidade**, para separar o que é propriedade da arquitetura do que é propriedade do Quarkus.
+
+**Construir as camadas complementares de segurança** — autenticação, autorização por posse de recurso, limitação de abuso — sobre a base que a supressão do ponto de entrada estabelece, e avaliar sua interação.
+
+---
+
+### 8.5 Considerações finais
+
+O trabalho parte de uma tensão prática: quanto mais *frontends*, mais projetos BFF a manter, com estruturas duplicadas. Propõe resolvê-la deslocando a decisão sobre *o que cada aplicação contém* do tempo de execução para o tempo de compilação, e demonstra, sobre um protótipo, que a decisão assim tomada não é reversível pelas vias que a superfície de ataque contabiliza.
+
+O percurso obrigou a corrigir a própria tese. A formulação inicial afirmava que o endpoint não existiria no binário; a inspeção dos artefatos mostrou que a classe permanece, e que o que desaparece é o ponto de entrada. A distinção entre as duas coisas — entre a classe presente e inerte e a via de entrada ausente — é o tipo de precisão que um capítulo de avaliação existe para produzir. O contraste com a *feature flag* em tempo de execução sobrevive intacto: lá, o ponto de entrada existe e responde.
+
+Resta o que a arquitetura cobra. Ela troca flexibilidade por ausência, e essa troca não é gratuita: exige um artefato por modo, um *pipeline* por artefato, e a renúncia a reconfigurar em produção o que se decidiu no *build*. Onde a *feature flag* compra flexibilidade ao preço da exposição, a metamorfose compra ausência ao preço da flexibilidade. Qual das duas serve depende da pergunta que se faz — e este trabalho procurou deixar as duas perguntas distinguíveis.
 
 ## Referências
 
