@@ -29,6 +29,16 @@ A armadilha é concreta. Um script é transposto; semanas depois, corrige-se nel
 
 **Corolário — congelamento.** A partir do início da transposição de um capítulo, os scripts que ele publica ficam **congelados**: só se editam por defeito que invalide um número, e nunca por conveniência ou estilo. Melhoria que não muda resultado algum espera o trabalho ser entregue.
 
+**Scripts congelados até aqui** — todos no Apêndice A, publicados com o capítulo de Avaliação:
+
+| Script | Apêndice | Alimenta |
+|---|---|---|
+| `metrica-reuso.py` | A.1 | PP1 — seção 7.4.1 |
+| `grafo-metodos.py` | A.2 | PP3 — seção 7.3.2 |
+| `evidencia-rotas.py` | A.3 | PP2 — seções 7.2.3 e 7.2.4 |
+
+**Scripts novos não nascem congelados.** Um programa criado depois desta data é livremente editável **até ser transposto**; ao sê-lo, entra na tabela acima e passa a obedecer à regra. Acrescentar um script à tabela é parte do passo 2 do procedimento de implementação.
+
 **Por que a regra existe.** Durante a coleta da Avaliação, três scripts foram editados após a primeira execução — por defeitos de contagem, por critério de conferência errado e por dado de teste inconsistente. Cada edição mudou números que já haviam sido escritos no capítulo. Enquanto o capítulo era rascunho, o custo foi baixo; depois de transposto, seria a publicação de um código que não corresponde ao resultado.
 
 ---
@@ -79,7 +89,7 @@ O que **falta** para transformar a proposta num TCC completo:
 - ~~Proposta: Arquitetura Metamórfica (capítulo redigido)~~ → **implementado no TCC** (seções 4.1–4.6), substituindo a redação preliminar. Rascunho de trabalho mantido em `PROPOSTA-ARQUITETURA-METAMORFICA.md`.
 - ~~Metodologia~~ → **implementado no TCC** (seções 5.1–5.7), absorvendo o método de reuso de `METRICA-REUSO.md` na seção 5.5.2. Rascunhos mantidos como registro de trabalho.
 - ~~Desenvolvimento / Implementação do Protótipo~~ → **implementado no TCC** (seções 6.1–6.8), com as afirmações técnicas ancoradas na documentação oficial do Quarkus. Rascunho mantido como registro de trabalho.
-- ~~Avaliação, Resultados e Discussão~~ → **rascunho iniciado** em `AVALIACAO.md`, com os resultados de PP2 e PP3 já coletados e os demais marcados como `[A PREENCHER]`.
+- ~~Avaliação, Resultados e Discussão~~ → **implementado no TCC** (seções 7.1–7.8), com todas as medições executadas e os três programas de coleta reproduzidos no **Apêndice A**. Rascunho mantido como registro de trabalho.
 - Conclusão e Trabalhos Futuros.
 
 ---
@@ -208,7 +218,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 4. ✅ Proposta: Arquitetura Metamórfica — **implementado no TCC** (seções 4.1–4.6); rascunho de trabalho em `PROPOSTA-ARQUITETURA-METAMORFICA.md`
 5. ✅ Metodologia — **implementado no TCC** (seções 5.1–5.7); rascunho de trabalho em `METODOLOGIA.md` e `METRICA-REUSO.md`
 6. ✅ Desenvolvimento / Implementação do Protótipo — **implementado no TCC** (seções 6.1–6.8); rascunho de trabalho em `DESENVOLVIMENTO.md`
-7. 🟡 Avaliação, Resultados e Discussão — rascunho em `AVALIACAO.md`
+7. ✅ Avaliação, Resultados e Discussão — **implementado no TCC** (seções 7.1–7.8) + **Apêndice A**; rascunho de trabalho em `AVALIACAO.md`
 8. ⬜ Conclusão e Trabalhos Futuros
 9. ✅ Referências
 
@@ -332,10 +342,12 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 4. [x] **Redigir o Desenvolvimento** com trechos de código, `application.properties` e comandos de *build* — **implementado no TCC** (seções 6.1–6.8), com citação da documentação oficial do Quarkus e cinco marcadores de figura pendentes.
 5. [x] **Executar a Avaliação** — experimento 1 (inspeção do artefato) executado nas três variantes de produção; resultados em `AVALIACAO.md` (seções 7.2 e 7.3). O achado obrigou a reformular a tese: ver a seção 1.1.
 5b. [x] **Propagar a reformulação da tese** ao TCC e ao `CASE_STUDY.md` — ver a tabela *Onde a correção foi aplicada* (seção 1.1).
-6. [ ] **Coletar métricas** de reuso e de superfície de ataque (experimentos 2 e 3). **Em curso.** O *reuse percent* em LOC já foi coletado (`scripts/metrica-reuso.py`).
-6b. [ ] ⚠️ **Reescrever a seção 5.5.2 do TCC.** A primeira coleta mostrou que o *reuse level* **não serve** a este objeto: o `IRL` é nulo por construção, o `ERL` é redundante com o *reuse percent* e quase insensível à duplicação que deveria detectar, e o par *external/internal* da métrica é homônimo — sem relação — dos modos interno/externo do protótipo. A métrica foi **abandonada** e substituída por contagem em **granularidade de método**, por alcançabilidade a partir dos pontos de entrada. Método novo em `METRICA-REUSO.md`, seção 6. Consequências para as *Referências*: sai Frakes e Kang (2005); Chen, Usman e Badampudi (2024) deixa de sustentar a vigência do *reuse level* e permanece apenas na seção 5.6.1; Frakes e Terry (1996) permanece.
-7. [ ] **Escrever Resultados/Discussão e Ameaças à Validade** e **implementar a Avaliação no TCC** (capítulo 7).
-7b. [ ] ⚠️ **Transpor os scripts para dentro do TCC, como blocos de código.** Ao implementar a Avaliação, os scripts de `docs/case-study/scripts/` (`metrica-reuso.py` e `grafo-metodos.py`) devem ser **integrados por inteiro ao documento** — em apêndice, se longos —, e não apenas referenciados por caminho de arquivo. O TCC é autocontido: quem o lê sem acesso ao repositório precisa poder reconstruir cada medição. Os blocos reproduzem os scripts **tal como executados** para produzir os números publicados; se um script mudar após a coleta, ou os números são refeitos, ou o texto exibirá código que não gerou o que afirma. Regra detalhada no `README.md` daquele diretório.
+6. [x] **Coletar métricas** de reuso e de superfície de ataque — **feito**. *Reuse percent* em LOC (`metrica-reuso.py`), *Reuse per Method* por grafo de chamadas (`grafo-metodos.py`) e evidência primária da PP2 por OpenAPI e HTTP (`evidencia-rotas.py`). Resultados nas seções 7.2, 7.3 e 7.4 do TCC.
+6b. [x] ⚠️ **Reescrever a seção 5.5.2 do TCC** — **feito**. O *reuse level* foi abandonado e substituído pelo **Reuse per Method** (nova seção 5.5.3, com a de ambiente renumerada para 5.5.4). A primeira coleta mostrou que o *reuse level* **não serve** a este objeto: o `IRL` é nulo por construção, o `ERL` é redundante com o *reuse percent* e quase insensível à duplicação que deveria detectar, e o par *external/internal* da métrica é homônimo — sem relação — dos modos interno/externo do protótipo. A métrica foi **abandonada** e substituída por contagem em **granularidade de método**, por alcançabilidade a partir dos pontos de entrada. Método novo em `METRICA-REUSO.md`, seção 6. Consequências para as *Referências*: sai Frakes e Kang (2005); Chen, Usman e Badampudi (2024) deixa de sustentar a vigência do *reuse level* e permanece apenas na seção 5.6.1; Frakes e Terry (1996) permanece.
+7. [x] **Escrever Resultados/Discussão e Ameaças à Validade** e **implementar a Avaliação no TCC** — feito (seções 7.1–7.8). A seção 7.9 do rascunho (*Evidências pendentes*) não foi transposta: era nota de trabalho.
+7b. [x] ⚠️ **Transpor os scripts para dentro do TCC, como blocos de código** — feito, no **Apêndice A**; os três estão congelados.
+7c. [ ] **Revisar o capítulo 7 no arquivo final** (passo 3 do *modus operandi*): conferir duplicações com o Desenvolvimento, coesão das transições e numeração das remissões internas.
+7d. [ ] **Numerar e legendar as figuras** conforme a ABNT ("Figura N — …" + fonte) — vale para as nove `[FIGURA A INSERIR]` e as duas `[Trocar imagem]` da Introdução. Ao implementar a Avaliação, os scripts de `docs/case-study/scripts/` (`metrica-reuso.py` e `grafo-metodos.py`) devem ser **integrados por inteiro ao documento** — em apêndice, se longos —, e não apenas referenciados por caminho de arquivo. O TCC é autocontido: quem o lê sem acesso ao repositório precisa poder reconstruir cada medição. Os blocos reproduzem os scripts **tal como executados** para produzir os números publicados; se um script mudar após a coleta, ou os números são refeitos, ou o texto exibirá código que não gerou o que afirma. Regra detalhada no `README.md` daquele diretório.
 8. [ ] **Concluir** com trabalhos futuros.
 9. [ ] **Produzir as figuras** (o `CASE_STUDY.md` traz os textos; faltam os diagramas — inclusive substituir os placeholders `[Trocar imagem]` da proposta e os cinco `[FIGURA A INSERIR]` do Desenvolvimento). **Acrescentar legenda e numeração ABNT** ("Figura N — …" + fonte) às sete imagens, hoje inseridas sem legenda.
 10. [ ] **Corrigir as glosas** de `REFERENCIAS_CIENTIFICAS.md` (5.1) e `CITACOES_ABNT.md` (Eixo 3), que ainda repetem "não existe no binário".
@@ -343,7 +355,7 @@ Sugestão de sumário completo (✅ existe · 🟡 existe parcialmente · ⬜ a 
 
 > **Progresso (9 jul. 2026):** capítulos 1 a 6 **implementados no TCC** — Introdução, Referencial Teórico, Trabalhos Relacionados, Proposta, Metodologia e Desenvolvimento. O experimento 1 foi executado sobre as três variantes de produção e a reformulação da tese daí decorrente já está propagada ao TCC e ao `CASE_STUDY.md`. A **Avaliação** existe como rascunho (`AVALIACAO.md`) com PP2 e PP3 respondidas; PP1 e PP4 aguardam coleta. A **Conclusão** não foi iniciada.
 >
-> **Próximo alvo:** item 6 — executar a coleta de PP1 (reuso) e PP4 (tamanho de imagem), preenchendo os marcadores `[A PREENCHER]` de `AVALIACAO.md`. Em seguida, item 7: fechar Resultados/Discussão e transpor o capítulo para o TCC.
+> **Próximo alvo:** item 8 — a **Conclusão e Trabalhos Futuros**, único capítulo ainda ausente. Em paralelo, itens 7c/7d e 9 (revisão do capítulo 7 no arquivo final e produção das figuras).
 
 ---
 

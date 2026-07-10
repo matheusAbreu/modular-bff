@@ -2,6 +2,16 @@
 
 Este diretório reúne **todo script executado para produzir evidência do estudo**. Nenhuma medição entra no capítulo de Avaliação sem um script versionado aqui.
 
+> 🧊 **Scripts congelados desde 10 jul. 2026.** Os listados abaixo foram transpostos para o **Apêndice A** do TCC e são, agora, o código publicado ao lado dos números do capítulo de Avaliação. **Só se editam por defeito que invalide um número**, nunca por conveniência ou estilo, e qualquer edição dispara o procedimento da seção *Regra: editar um script já transposto obriga a revisar o TCC*.
+>
+> | Script | Apêndice | Alimenta | Estado |
+> |---|---|---|---|
+> | `metrica-reuso.py` | A.1 | PP1 — seção 7.4.1 | 🧊 congelado |
+> | `grafo-metodos.py` | A.2 | PP3 — seção 7.3.2 | 🧊 congelado |
+> | `evidencia-rotas.py` | A.3 | PP2 — seções 7.2.3 e 7.2.4 | 🧊 congelado |
+>
+> **Scripts novos não nascem congelados.** Um programa criado a partir de agora é livremente editável **até ser transposto** para o TCC; a partir daí, entra nesta tabela e passa a obedecer à mesma regra. Ao acrescentar um script, documente-o na seção própria abaixo e, se e quando ele for publicado, registre-o aqui.
+
 ## Convenção
 
 Todo script deste diretório é documentado, neste `README.md`, com quatro informações:

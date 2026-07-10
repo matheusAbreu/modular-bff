@@ -1,10 +1,10 @@
 # Avaliação, Resultados e Discussão
 
-> 🟡 **Rascunho** — documento de trabalho, no mesmo estágio de `METODOLOGIA.md`, `DESENVOLVIMENTO.md` e `METRICA-REUSO.md`.
+> ✅ **Implementado no TCC** — transposto para o arquivo `Proposta TCC …md` como capítulo *Avaliação, Resultados e Discussão* (seções 7.1–7.8), entre o *Desenvolvimento* e as *Referências*. **A fonte da verdade passa a ser o TCC**; este documento é mantido apenas como registro de trabalho.
 >
-> **Situação no TCC:** capítulo que apresenta as **evidências** coletadas sobre o artefato e as confronta com as afirmações da Proposta. Corresponde à atividade 5 do método DSR (ver capítulo *Metodologia*).
+> Diferenças aplicadas na transposição: a seção 7.9 (*Evidências pendentes*) **não foi transposta** — era nota de trabalho, e seu conteúdo se distribuiu entre os marcadores de figura e a nota de reprodutibilidade; os três scripts passaram a ser reproduzidos por inteiro no **Apêndice A**, e as remissões a `docs/case-study/scripts/` viraram remissões ao apêndice; os cabeçalhos foram rebaixados um nível; e a *Organização do Trabalho* passou a descrever **dez partes** mais o apêndice.
 >
-> **Separação de responsabilidades.** Este capítulo **não define método**: o desenho experimental, as métricas e os procedimentos estão na *Metodologia* (seção 5) e, no caso da métrica de reuso, em `METRICA-REUSO.md`, que será absorvido por ela. Aqui registram-se **os dados obtidos**, sua leitura e seus limites. Toda vez que este capítulo precisar explicar *como* algo foi medido, ele **remete** à Metodologia em vez de reexpor o procedimento.
+> 🧊 **Scripts congelados.** São o código publicado no Apêndice A, ao lado dos números deste capítulo: **`metrica-reuso.py`** (A.1, seção 7.4.1), **`grafo-metodos.py`** (A.2, seção 7.3.2) e **`evidencia-rotas.py`** (A.3, seções 7.2.3 e 7.2.4). Editar qualquer um obriga a reexecutá-lo, confrontar com os números do capítulo e atualizar o apêndice — ver a regra no *modus operandi* de `docs/ROADMAP-CAPITULOS-TCC.md`. Scripts **novos** só entram nesse regime ao serem transpostos.
 >
 > **Convenções:** citações no sistema autor-data (ABNT NBR 10520); 3ª pessoa acadêmica. **Todas as medições previstas foram executadas**; não restam marcadores de pendência. Dois itens foram deliberadamente postos fora de escopo e assim declarados no texto: o *build* nativo (seção 7.2.5) e a reprodução da alternativa em runtime (seção 7.6).
 
