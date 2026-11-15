@@ -1,12 +1,13 @@
 package edu.uerj.adapters.infrastructure.repository
 
+import edu.uerj.config.ConfigRepository
 import edu.uerj.domain.Product
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.persistence.NoResultException
 import java.time.LocalDateTime
 
 @ApplicationScoped
-class ProductRepository : BaseRepository() {
+class ProductRepository : ConfigRepository() {
     companion object {
         private const val SELECT_BY_SKU = "SELECT p FROM Product p WHERE p.sku = :sku"
     }
