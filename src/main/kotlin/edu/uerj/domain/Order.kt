@@ -71,7 +71,7 @@ class Order {
             }
         }
 
-        if (autoCheckStatus < OrderStatus.DELIVERED.id) {
+        if (autoCheckStatus <= OrderStatus.DELIVERED.id) {
             this.status = OrderStatus.getById(autoCheckStatus).description
         }
     }
