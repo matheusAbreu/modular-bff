@@ -36,7 +36,7 @@ class OrderTest {
     @EnumSource(
         OrderStatus::class,
         names = ["WAITING_PAYMENT", "NEW_ORDER"],
-        mode = EnumSource.Mode.EXCLUDE
+        mode = EnumSource.Mode.EXCLUDE,
     )
     fun `checkOrderStatus should update status to the lowest delivery status when lower than DELIVERED`(statusToUpdated: OrderStatus) {
         val order = OrderBuilder(status = OrderStatus.DELIVERED.description).build()
