@@ -193,10 +193,6 @@ Como discutido na *Justificativa*, a literatura de padrões de microsserviços r
 
 Diante desse problema, este trabalho propõe uma junção de três ideias: a robustez de um projeto único que concentra a lógica de negócio, como um API Gateway; o foco de desempenho que o BFF oferece a cada cliente; e a capacidade de o próprio projeto **identificar qual cliente servir**. Para conciliá-las, propõe-se uma **configuração resolvida em tempo de compilação**: a partir dela, o projeto assume a forma adequada a cada cliente, incluindo somente as operações que lhe competem.
 
-![][image6]
-
-![][image7]
-
 O termo *metamórfica* descreve essa propriedade: o artefato final **muda de forma** conforme a configuração escolhida no *build* — e não conforme uma decisão avaliada em tempo de execução. A operação que não pertence a um dado cliente não é ignorada em runtime; ela **não chega a ter ponto de entrada** no artefato correspondente, pois nenhum *bean*, invocador ou rota é gerado para ela. Cada configuração produz, portanto, uma variante distinta do sistema, derivada de uma base comum.
 
 ### 4.3 Concretização no protótipo
