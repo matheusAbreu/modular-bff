@@ -1,4 +1,4 @@
-package edu.uerj.adapters.infrastructure.repository
+package edu.uerj.config
 
 import io.quarkus.hibernate.orm.PersistenceUnit
 import jakarta.enterprise.context.ApplicationScoped
@@ -7,7 +7,7 @@ import jakarta.inject.Inject
 import jakarta.persistence.EntityManager
 
 @ApplicationScoped
-class BaseRepository {
+class ConfigRepository {
     @Inject
     @PersistenceUnit("bff")
     private lateinit var entityManager: Instance<EntityManager>

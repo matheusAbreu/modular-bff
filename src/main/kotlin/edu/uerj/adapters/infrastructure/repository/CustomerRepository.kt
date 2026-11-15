@@ -1,12 +1,13 @@
 package edu.uerj.adapters.infrastructure.repository
 
+import edu.uerj.config.ConfigRepository
 import edu.uerj.domain.Customer
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.persistence.NoResultException
 import java.time.LocalDateTime
 
 @ApplicationScoped
-class CustomerRepository : BaseRepository() {
+class CustomerRepository : ConfigRepository() {
     companion object {
         private const val SELECT_BY_ID = "SELECT c FROM Customer c WHERE c.id = :customerId"
     }
