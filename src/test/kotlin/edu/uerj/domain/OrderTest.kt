@@ -8,6 +8,8 @@ import io.quarkus.test.junit.QuarkusTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 import java.math.BigDecimal
 
 @QuarkusTest
@@ -30,11 +32,16 @@ class OrderTest {
         assertEquals(customer, order.customer)
     }
 
-    @Test
-    fun `checkOrderStatus should update status to the lowest delivery status when lower than DELIVERED`() {
+    @ParameterizedTest
+    @EnumSource(
+        OrderStatus::class,
+        names = ["WAITING_PAYMENT", "NEW_ORDER"],
+        mode = EnumSource.Mode.EXCLUDE,
+    )
+    fun `checkOrderStatus should update status to the lowest delivery status when lower than DELIVERED`(statusToUpdated: OrderStatus) {
         val order = OrderBuilder(status = OrderStatus.DELIVERED.description).build()
 
-        val delivery1 = DeliveryBuilder(status = OrderStatus.PAID.description).build()
+        val delivery1 = DeliveryBuilder(status = statusToUpdated.description).build()
         val delivery2 = DeliveryBuilder(status = OrderStatus.WAITING_PAYMENT.description).build()
 
         order.deliverys.addAll(listOf(delivery1, delivery2))
@@ -44,17 +51,18 @@ class OrderTest {
         assertEquals(OrderStatus.WAITING_PAYMENT.description, order.status)
     }
 
-    @Test
-    fun `checkOrderStatus should not update status when lowest delivery status is DELIVERED`() {
+    @ParameterizedTest
+    @EnumSource(OrderStatus::class)
+    fun `checkOrderStatus should update status when upper status is informed`(statusToUpdated: OrderStatus) {
         val initialStatus = OrderStatus.NEW_ORDER.description
         val order = OrderBuilder(status = initialStatus).build()
 
-        val delivery = DeliveryBuilder(status = OrderStatus.DELIVERED.description).build()
+        val delivery = DeliveryBuilder(status = statusToUpdated.description).build()
         order.deliverys.add(delivery)
 
         order.checkOrderStatus()
 
-        assertEquals(initialStatus, order.status)
+        assertEquals(statusToUpdated.description, order.status)
     }
 
     @Test

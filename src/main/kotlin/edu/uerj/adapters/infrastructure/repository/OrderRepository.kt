@@ -1,12 +1,13 @@
 package edu.uerj.adapters.infrastructure.repository
 
+import edu.uerj.config.ConfigRepository
 import edu.uerj.domain.Order
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.persistence.NoResultException
 import java.time.LocalDateTime
 
 @ApplicationScoped
-class OrderRepository : BaseRepository() {
+class OrderRepository : ConfigRepository() {
     companion object {
         private const val NATIVE_ORDERS_COUNT = "SELECT COUNT(p.id) FROM Pedidos p"
         private const val SELECT_BASE = "SELECT o FROM Order o"
