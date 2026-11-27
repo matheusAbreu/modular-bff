@@ -186,7 +186,7 @@ E o registro de que a superfície de ataque permanece método corrente de verifi
 
 ---
 
-## Eixo 5 — Isolamento de regras de negócio e frameworks como detalhe (Arquitetura Hexagonal)
+## Eixo 5 — Isolamento de regras de negócio e frameworks como detalhe (Arquitetura Hexagonal) e integração contínua
 
 **MARTIN (2017)** — colocar detalhes atrás de fronteiras, longe do núcleo:
 
@@ -215,6 +215,30 @@ E o respaldo à **separação do build em entregáveis independentes** (ressoa c
 > *Tradução livre:* "queremos particionar o sistema de modo que uma mudança em um ator não afete nenhum dos outros atores."
 
 > *Glosa:* legitima a arquitetura hexagonal do projeto — regras de negócio isoladas de framework/IO — e, crucialmente, **valida colocar as anotações do Quarkus nos controllers (adaptadores), não no domínio**. A ideia de quebrar o build em entregáveis independentes por ator dialoga com os artefatos interno/externo gerados do mesmo código.
+
+### SHAHIN; ALI BABAR; ZHU (2017) — definições de CI, entrega e implantação contínuas (pipeline de build por artefato)
+
+> Trechos conferidos no PDF `docs/refs/6.3`. A paginação do arXiv não coincide com a do periódico; a localização é dada por seção.
+
+> "Continuous Integration (CI) is a widely established development practice in software development industry, in which members of a team integrate and merge development work (e.g., code) frequently, for example multiple times per day. […] This practice includes automated software building and testing." (SHAHIN; ALI BABAR; ZHU, 2017, seção II-A).
+>
+> *Tradução livre:* "A Integração Contínua (CI) é uma prática de desenvolvimento amplamente estabelecida na indústria de software, na qual os membros de uma equipe integram e mesclam o trabalho de desenvolvimento (por exemplo, código) com frequência, por exemplo várias vezes por dia. […] Essa prática inclui *build* e testes automatizados do software."
+
+> "Continuous DElivery (CDE) is aimed at ensuring an application is always at production-ready state after successfully passing automated tests and quality checks." (SHAHIN; ALI BABAR; ZHU, 2017, seção II-A).
+>
+> *Tradução livre:* "A Entrega Contínua (CDE) visa garantir que uma aplicação esteja sempre em estado pronto para produção após passar com sucesso por testes automatizados e verificações de qualidade."
+
+> "Whilst the final deployment in CDE is a manual step, there should be no manual steps in CD, in which as soon as developers commit a change, the change is deployed to production through a deployment pipeline." (SHAHIN; ALI BABAR; ZHU, 2017, seção II-A).
+>
+> *Tradução livre:* "Enquanto a implantação final na CDE é um passo manual, não deve haver passos manuais na CD, na qual, assim que os desenvolvedores fazem *commit* de uma mudança, ela é implantada em produção por meio de um *pipeline* de implantação."
+
+> "We have also determined a list of critical factors such as 'testing (effort and time)' […] that should be carefully considered when introducing continuous practices in a given organization." (SHAHIN; ALI BABAR; ZHU, 2017, resumo).
+>
+> *Tradução livre:* "Determinamos também uma lista de fatores críticos, como 'teste (esforço e tempo)' […], que devem ser cuidadosamente considerados ao introduzir práticas contínuas em uma organização."
+
+*Glosa:* as três primeiras passagens dão a definição revisada por pares do vocabulário usado nas seções 6.6 e 6.7 — o *job* de integração contínua e o *pipeline* que gera cada artefato. A quarta sustenta a leitura de custo da PP4 (seção 7.5): se teste e *build* já são fatores críticos com **um** artefato, a abordagem metamórfica, que produz **um artefato por variante** e deveria verificar cada um (seção 7.5.1), multiplica esse custo.
+
+⚠️ **Limite de atribuição.** O artigo não trata de variabilidade em tempo de compilação nem de múltiplos artefatos por código-fonte, e não formula o princípio *build once, deploy many* (HUMBLE; FARLEY, 2010, fora do acervo). A inferência de que o custo se multiplica por variante é do autor, e não da fonte.
 
 ---
 
@@ -469,6 +493,7 @@ E a afirmação decisiva para a tese — a irreversibilidade em tempo de execuç
 | Segurança por ausência = reduzir superfície de ataque | MANADHATA; WING (2005, p. 1–5); HANNOUSSE; YAHIOUCHE (2020, p. 1–2) |
 | Separação interno/externo (método/ameaça) | MANADHATA; WING (2005, p. 5); HANNOUSSE; YAHIOUCHE (2020, p. 2) |
 | Hexagonal: isolar negócio; framework é detalhe | MARTIN (2017, cap. 31–33) |
+| Definições de CI, entrega e implantação contínuas; custo de *build*/teste (PP4) | SHAHIN; ALI BABAR; ZHU (2017, seção II-A, resumo) |
 | Medição de reuso (PP1): *reuse percent* e *reuse level* | FRAKES; TERRY (1996, p. 8, 15–16); FRAKES; KANG (2005, p. 529, 531) |
 | Comportamento do `@IfBuildProperty`; irreversibilidade em runtime | QUARKUS (2026a) |
 | Fase de *augmentation*; bytecode gerado no *build* | QUARKUS (2026b) |
@@ -519,5 +544,7 @@ QUARKUS. **Writing your own extension**. Seção 2.6, *Generating Bytecode*. [*S
 QUARKUS. **Using Kotlin**. Seção *Important Maven configuration points*. [*S. l.*]: Red Hat, 2026c. Documentação oficial, versão 3.x. Disponível em: https://quarkus.io/guides/kotlin. Acesso em: 9 jul. 2026.
 
 QUARKUS. **Building applications with Gradle**. Seção *Using fast-jar*. [*S. l.*]: Red Hat, 2026d. Documentação oficial, versão 3.x. Guia de Gradle — o sistema de *build* do protótipo —, e não o de Maven. Disponível em: https://quarkus.io/guides/gradle-tooling. Acesso em: 9 jul. 2026.
+
+SHAHIN, Mojtaba; ALI BABAR, Muhammad; ZHU, Liming. Continuous integration, delivery and deployment: a systematic review on approaches, tools, challenges and practices. **IEEE Access**, [*s. l.*], v. 5, p. 3909-3943, 2017. DOI: 10.1109/ACCESS.2017.2685629. Versão de autor disponível em: arXiv:1703.07019.
 
 TAIBI, Davide; LENARDUZZI, Valentina; PAHL, Claus. Architectural patterns for microservices: a systematic mapping study. In: INTERNATIONAL CONFERENCE ON CLOUD COMPUTING AND SERVICES SCIENCE, 8., 2018. **Proceedings** [...]. Setúbal: SciTePress, 2018. p. 221-232. DOI: 10.5220/0006798302210232.

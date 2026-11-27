@@ -152,9 +152,9 @@ Fundamenta o Capítulo 11 do estudo de caso: *"A forma mais segura de proteger u
 
 ---
 
-## 6. Arquitetura Hexagonal / Clean Architecture (organização do código)
+## 6. Arquitetura Hexagonal / Clean Architecture e Integração Contínua (organização e entrega do código)
 
-Fundamenta a decisão de estruturar o projeto em Ports & Adapters, isolando o domínio.
+Fundamenta a decisão de estruturar o projeto em Ports & Adapters, isolando o domínio (6.1, 6.2), e o *pipeline* de integração contínua e de *build* por artefato que entrega o protótipo (6.3).
 
 ### 6.1 Cockburn, A. — *Hexagonal Architecture (Ports and Adapters)*
 
@@ -168,6 +168,16 @@ Fundamenta a decisão de estruturar o projeto em Ports & Adapters, isolando o do
 - **Fonte:** Prentice Hall / Pearson, 2017. ISBN: 978-0134494166.
 - **Resumo:** Sistematiza a separação entre regras de negócio e detalhes de infraestrutura por meio da **Regra de Dependência** (dependências apontam para dentro, do detalhe para a política), unificando os princípios das arquiteturas hexagonal e onion em anéis concêntricos.
 - **Relação com o TCC:** Sustenta a decisão arquitetural de isolar `domain`/`services` dos `adapters`, que é o que torna possível o **reuso sem duplicação** — pré-requisito para o compartilhamento das camadas inferiores entre os controllers metamórficos.
+
+### 6.3 Shahin, M.; Ali Babar, M.; Zhu, L. — *Continuous Integration, Delivery and Deployment: A Systematic Review on Approaches, Tools, Challenges and Practices* (IEEE Access, 2017) — ✅ VERIFICADO
+
+- **Escopo no capítulo:** ancora o vocabulário de CI/CD usado nas seções 6.6 (build por artefato), 6.7 (integração contínua) e 7.5 (PP4, custo de verificação por variante).
+- **Fonte:** IEEE Access, v. 5, p. 3909–3943, 2017. DOI: 10.1109/ACCESS.2017.2685629 (metadados confirmados no Crossref).
+- **Link (versão de autor, aberta):** https://arxiv.org/abs/1703.07019
+- **Acesso:** 🟢 Público — periódico *open access*; versão de autor no arXiv, identificada no cabeçalho do próprio PDF como o artigo da IEEE Access. **PDF no acervo:** `docs/refs/6.3 - Continuous Integration, Delivery and Deployment - A Systematic Review.pdf`. ⚠️ A paginação do PDF do arXiv (1–32) **não** coincide com a do periódico; citar por seção.
+- **Resumo (verificado no texto integral):** Revisão sistemática de 69 artigos revisados por pares (2004 a jun. 2016) sobre as "práticas contínuas". Define e distingue as três: **CI**, integração frequente do trabalho da equipe, com *build* e testes automatizados; **CDE** (*Continuous DElivery*), manter a aplicação sempre em estado pronto para produção após passar por testes e verificações automatizados, com a implantação final manual; **CD** (*Continuous Deployment*), implantar automaticamente cada mudança em produção por meio de um *deployment pipeline*. Identifica trinta abordagens e ferramentas — entre elas, reduzir o tempo de *build* e teste em CI — e fatores críticos de adoção, com destaque para **teste (esforço e tempo)**.
+- **Relação com o TCC:** fornece as **definições revisadas por pares** de CI, entrega e implantação contínuas, hoje usadas sem citação no TCC (seções 6.7 e 7.5.1, `CASE_STUDY.md`). Sustenta ainda o argumento de custo da PP4: a abordagem metamórfica multiplica os artefatos a construir e verificar, e o artigo registra **tempo de *build* e esforço de teste** como desafios centrais dessas práticas.
+- ⚠️ **Ressalva de escopo.** O artigo **não** trata de variabilidade em tempo de compilação nem de múltiplos artefatos derivados de um mesmo código-fonte, e não formula o princípio *build once, deploy many* (que é de Humble e Farley, 2010, fora do acervo). A corroboração é das **definições** e dos **desafios gerais**, não da estratégia de *build* por variante.
 
 ---
 
@@ -319,6 +329,7 @@ Fundamentam a escolha da **Design Science Research** como método condutor — a
 | Compilação condicional vs. feature flag em runtime | 4.1 Rahman et al.; 4.2 Mahdavi-Hezaveh et al. (2021); 4.3 Mahdavi-Hezaveh et al. (2022) |
 | Segurança por redução de superfície de ataque | 5.1 Manadhata & Wing; 5.2 SMS Securing Microservices; 5.3 SoK Microservice Security |
 | Arquitetura Hexagonal / Clean Architecture | 6.1 Cockburn; 6.2 Martin |
+| Integração e entrega contínua; custo de *build*/teste por variante (PP4) | 6.3 Shahin, Ali Babar & Zhu (2017) |
 | Medição de reuso (PP1) e vigência do método | 8.1 Frakes & Terry (fórmulas); 8.2 Frakes & Kang; 8.4 Irshad et al. (`RSI`); 8.3 Chen, Usman & Badampudi (`reuse level`, manutenibilidade) |
 
 ---
