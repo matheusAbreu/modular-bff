@@ -80,25 +80,45 @@ Newman caracteriza o BFF como um serviço de borda (*edge service*) de propósit
 
 ## Eixo 3 — Linhas de produto, variabilidade e derivação de produtos (fundamento da "Metamorfose")
 
-**HORCAS; PINTO; FUENTES (2023)** — SPL como derivação de múltiplos produtos de uma base comum:
+**APEL; BATORY; KÄSTNER; SAAKE (2013)** — fundamento de SPL: variabilidade, processos de engenharia, anotação × composição e tempo de ligação:
 
-> "An increasing number of software application domains are adopting Software Product Line (SPL) approaches to cope with the high variability they present." (HORCAS; PINTO; FUENTES, 2023, p. 377).
+> Trechos conferidos no PDF `docs/refs/3.5`. As páginas são as **impressas** no livro.
+
+> "The software product line approach provides a form of mass customization by constructing individual solutions based on a portfolio of reusable software components." (APEL et al., 2013, p. 8).
 >
-> *Tradução livre:* "Um número crescente de domínios de aplicação de software vem adotando abordagens de Linha de Produto de Software (SPL) para lidar com a alta variabilidade que apresentam."
+> *Tradução livre:* "A abordagem de linha de produto de software oferece uma forma de customização em massa, construindo soluções individuais a partir de um portfólio de componentes de software reutilizáveis."
 
-A distinção formal entre as duas famílias de implementação de variabilidade — a base teórica para classificar o `@IfBuildProperty`:
-
-> "There are different approaches to implement the variability of the reusable artifacts of an SPL. Mainly, they can be divided in composition-based approaches and annotation-based approaches or a combination of both approaches. Composition-based approaches include component and service composition, design patterns, feature-orientation, aspect-orientation, etc., while annotation-based approaches include configuration parameters, preprocessors, and virtual separation of concerns, among others." (HORCAS; PINTO; FUENTES, 2023, p. 381).
+> "Variability is the ability to derive different products from a common set of artifacts." (APEL et al., 2013, p. 48, Definição 3.1).
 >
-> *Tradução livre:* "Existem diferentes abordagens para implementar a variabilidade dos artefatos reutilizáveis de uma SPL. Basicamente, elas podem ser divididas em abordagens baseadas em composição e abordagens baseadas em anotação, ou uma combinação das duas. As abordagens baseadas em composição incluem composição de componentes e serviços, padrões de projeto, orientação a features, orientação a aspectos etc., enquanto as abordagens baseadas em anotação incluem parâmetros de configuração, pré-processadores e separação virtual de interesses, entre outras."
+> *Tradução livre:* "Variabilidade é a capacidade de derivar produtos diferentes a partir de um conjunto comum de artefatos."
 
-E a definição da fase de **derivação do produto**:
-
-> "The product derivation phase is in charge of generating or deriving the final product by resolving the variability specified in the product configuration. […] This includes the derivation of the product, by resolving the variability of each variation point in the artifacts of the SPL according to the selected configuration of the feature model." (HORCAS; PINTO; FUENTES, 2023, p. 381).
+> "Domain engineering targets development for reuse. In contrast, application engineering […] has the goal of developing a specific product for the needs of a particular customer (or other stakeholder). […] It targets development with reuse. Application engineering is repeated for every product of the product line that is to be derived." (APEL et al., 2013, p. 21).
 >
-> *Tradução livre:* "A fase de derivação do produto é responsável por gerar ou derivar o produto final resolvendo a variabilidade especificada na configuração do produto. […] Isso inclui a derivação do produto, resolvendo a variabilidade de cada ponto de variação nos artefatos da SPL de acordo com a configuração selecionada do modelo de features."
+> *Tradução livre:* "A engenharia de domínio visa o desenvolvimento para reuso. Em contraste, a engenharia de aplicação […] tem o objetivo de desenvolver um produto específico para as necessidades de um cliente (ou outra parte interessada) em particular. […] Ela visa o desenvolvimento com reuso. A engenharia de aplicação é repetida para cada produto da linha de produto a ser derivado."
 
-> *Glosa:* posiciona a Arquitetura Metamórfica no campo de SPL: cada artefato (interno/externo) é um **produto derivado** do mesmo código pela seleção de features; o `@IfBuildProperty` é uma técnica **baseada em anotação** (categoria "configuration parameters").
+> "Annotation-based approaches annotate a common code base, such that code that belongs to a certain feature is marked accordingly. During product derivation, all code that belongs to deselected features or invalid feature combinations is removed (at compile time) or ignored (at run time) to form the final product." (APEL et al., 2013, p. 51, Definição 3.4).
+>
+> *Tradução livre:* "As abordagens baseadas em anotação anotam uma base de código comum, de modo que o código pertencente a uma determinada *feature* seja marcado como tal. Durante a derivação do produto, todo o código que pertence a *features* não selecionadas ou a combinações inválidas de *features* é removido (em tempo de compilação) ou ignorado (em tempo de execução) para formar o produto final."
+
+> "Composition-based approaches implement features in the form of composable units, ideally one unit per feature. During product derivation, all units of all selected features and valid feature combinations are composed to form the final product." (APEL et al., 2013, p. 51, Definição 3.5).
+>
+> *Tradução livre:* "As abordagens baseadas em composição implementam *features* na forma de unidades combináveis, idealmente uma unidade por *feature*. Durante a derivação do produto, todas as unidades de todas as *features* selecionadas e das combinações válidas são compostas para formar o produto final."
+
+> "Compile-time variability is decided before or at compile time. Load-time variability is decided after compilation when the program is started. With run-time variability, decisions can be made and changed during program execution." (APEL et al., 2013, p. 49, Definição 3.2).
+>
+> *Tradução livre:* "A variabilidade em tempo de compilação é decidida antes ou durante a compilação. A variabilidade em tempo de carga é decidida após a compilação, quando o programa é iniciado. Com a variabilidade em tempo de execução, as decisões podem ser tomadas e alteradas durante a execução do programa."
+
+> "Typically, compile-time binding leaves room for more optimizations. All unnecessary code can be removed from the product […]. However, once the product has been generated and deployed, it is not variable any more […]." (APEL et al., 2013, p. 49).
+>
+> *Tradução livre:* "Tipicamente, a ligação em tempo de compilação abre espaço para mais otimizações. Todo o código desnecessário pode ser removido do produto […]. No entanto, uma vez gerado e implantado, o produto deixa de ser variável […]."
+
+> "The extractive approach starts with a collection of existing products and incrementally refactors them to form a product line." (APEL et al., 2013, p. 40).
+>
+> *Tradução livre:* "A abordagem extrativa parte de uma coleção de produtos existentes e os refatora incrementalmente para formar uma linha de produto."
+
+*Glosa:* o `@IfBuildProperty` é **variabilidade por anotação** (Def. 3.4) com **ligação em tempo de compilação** (Def. 3.2): os *controllers* anotados formam a base de código comum marcada, e o *build* de cada variante é a **derivação do produto**. A divisão domínio × aplicação enquadra a base compartilhada (domínio, serviços, repositórios) e os *builds* por variante. A ressalva da p. 49 — o produto implantado deixa de ser variável — é o custo registrado na PP4. A abordagem extrativa descreve o cenário de partida: múltiplos BFFs já separados.
+
+⚠️ **Limite de atribuição.** A Def. 3.4 fala em código "removido" na compilação; no protótipo, a **classe compilada permanece** no `app/*.jar` e o que deixa de existir é o ponto de entrada (*bean*, invocador e rota — seção 7.2). Ao citar a definição, não afirmar que o Quarkus remove o código-fonte da *feature* do artefato.
 
 **HUNSEN et al. (2016)** — evidência empírica de que a variabilidade por anotação/compilação condicional é mainstream:
 
@@ -183,6 +203,20 @@ E o registro de que a superfície de ataque permanece método corrente de verifi
 > *Tradução livre:* "Análise baseada em metodologia: usar metodologias predefinidas e bem conhecidas, tais como a classificação de risco da OWASP, a superfície de ataque ou a comparação de riscos de segurança."
 
 *Glosa:* cumpre a função de **redundância de fonte** para MANADHATA; WING (2011), anterior a 2014. Um mapeamento sistemático posterior arrola a superfície de ataque entre as metodologias "bem conhecidas" de verificação e validação de segurança em arquiteturas de microsserviços — o que atesta a vigência da métrica adotada, sem substituir a fonte que a formaliza.
+
+**APEL; BATORY; KÄSTNER; SAAKE (2013)** — código não usado como alvo de ataque, na perspectiva de SPL:
+
+> "[…] mechanisms for load-time and run-time binding often incur a memory and performance overhead, since all variations are compiled into a single binary and consistency conditions must be checked at run time. Including unnecessary functionality in a shipped product may also be considered as potential security threat." (APEL et al., 2013, p. 49).
+>
+> *Tradução livre:* "[…] os mecanismos de ligação em tempo de carga e de execução frequentemente acarretam sobrecarga de memória e de desempenho, pois todas as variações são compiladas em um único binário e as condições de consistência precisam ser verificadas em tempo de execução. Incluir funcionalidade desnecessária em um produto entregue também pode ser considerado uma potencial ameaça à segurança."
+
+> "All functionality is included in all deployed products, even if it is statically known that a feature will never be selected. This has potentially negative implications for resource consumption, performance, and security: First, deactivated functionality is still delivered. […] Finally, shipping unused code opens unnecessary potential targets for attacks, such as buffer-overflow attacks." (APEL et al., 2013, p. 66–67).
+>
+> *Tradução livre:* "Toda a funcionalidade é incluída em todos os produtos implantados, mesmo quando se sabe estaticamente que uma *feature* nunca será selecionada. Isso tem implicações potencialmente negativas para o consumo de recursos, o desempenho e a segurança: primeiro, a funcionalidade desativada continua sendo entregue. […] Por fim, entregar código não utilizado abre alvos potenciais desnecessários para ataques, como os de *buffer overflow*."
+
+*Glosa:* é a ponte entre SPL e segurança que faltava ao acervo. A segunda passagem descreve a variabilidade por **parâmetros em runtime** — a mesma categoria das *feature flags* —, e sustenta o contraste da seção 7.6: com a decisão em runtime, a funcionalidade desativada continua entregue; com a ligação em compilação, ela pode ficar de fora do produto. Somada a MANADHATA; WING (ponto de entrada = ponto de ataque), fundamenta a *segurança por ausência*.
+
+⚠️ **Limite de atribuição.** O livro argumenta, não mede; o exemplo é de *buffer overflow* em código nativo, e o termo "superfície de ataque" não é usado. Não atribuir à fonte a métrica nem o termo *segurança por ausência*, que é formulação deste trabalho.
 
 ---
 
@@ -488,9 +522,10 @@ E a afirmação decisiva para a tese — a irreversibilidade em tempo de execuç
 | Microsserviços descentralizados exigem agregação | PAHL; JAMSHIDI (2016, p. 137–140); TAIBI; LENARDUZZI; PAHL (2018, p. 221) |
 | API Gateway/BFF: API sob medida por frontend | TAIBI; LENARDUZZI; PAHL (2018, p. 223–224); PAHL; JAMSHIDI (2016, p. 140); NEWMAN (2015) |
 | Duplicação/custo com múltiplos BFFs; valor do reuso | TAIBI; LENARDUZZI; PAHL (2018, p. 224, 227) |
-| Metamorfose = variabilidade/derivação de produtos (SPL) | HORCAS; PINTO; FUENTES (2023, p. 377–381) |
-| `@IfBuildProperty` = variabilidade por anotação em build-time | HORCAS; PINTO; FUENTES (2023, p. 381); HUNSEN et al. (2016, p. 1, 6); BAUM et al. (2019, p. 1) |
-| Segurança por ausência = reduzir superfície de ataque | MANADHATA; WING (2005, p. 1–5); HANNOUSSE; YAHIOUCHE (2020, p. 1–2) |
+| Metamorfose = variabilidade/derivação de produtos (SPL) | APEL et al. (2013, p. 8, 21, 48) |
+| `@IfBuildProperty` = variabilidade por anotação em build-time | APEL et al. (2013, p. 49, 51); HUNSEN et al. (2016, p. 1, 6); BAUM et al. (2019, p. 1) |
+| Segurança por ausência = reduzir superfície de ataque | MANADHATA; WING (2005, p. 1–5); HANNOUSSE; YAHIOUCHE (2020, p. 1–2); APEL et al. (2013, p. 49, 66–67) |
+| Ligação em compilação × *feature flag* em runtime; custo da PP4 | APEL et al. (2013, p. 49, 66–67) |
 | Separação interno/externo (método/ameaça) | MANADHATA; WING (2005, p. 5); HANNOUSSE; YAHIOUCHE (2020, p. 2) |
 | Hexagonal: isolar negócio; framework é detalhe | MARTIN (2017, cap. 31–33) |
 | Definições de CI, entrega e implantação contínuas; custo de *build*/teste (PP4) | SHAHIN; ALI BABAR; ZHU (2017, seção II-A, resumo) |
@@ -507,6 +542,8 @@ E a afirmação decisiva para a tese — a irreversibilidade em tempo de execuç
 
 ## Referências (ABNT NBR 6023)
 
+APEL, Sven; BATORY, Don; KÄSTNER, Christian; SAAKE, Gunter. **Feature-oriented software product lines**: concepts and implementation. Berlin; Heidelberg: Springer, 2013. DOI: 10.1007/978-3-642-37521-7.
+
 BASKERVILLE, Richard; BAIYERE, Abayomi; GREGOR, Shirley; HEVNER, Alan; ROSSI, Matti. Design science research contributions: finding a balance between artifact and theory. **Journal of the Association for Information Systems**, [*s. l.*], v. 19, n. 5, p. 358-376, 2018. DOI: 10.17705/1jais.00495.
 
 BAUM, David; SIXTUS, Christina; VOGELSBERG, Lisa; EISENECKER, Ulrich. Understanding conditional compilation through integrated representation of variability and source code. In: INTERNATIONAL SYSTEMS AND SOFTWARE PRODUCT LINE CONFERENCE, 23., 2019, Paris. **Proceedings** [...]. New York: ACM, 2019. p. 1-4. DOI: 10.1145/3307630.3342387.
@@ -520,8 +557,6 @@ FRAKES, William B.; KANG, Kyo. Software reuse research: status and future. **IEE
 FRAKES, William; TERRY, Carol. Software reuse: metrics and models. **ACM Computing Surveys**, [*s. l.*], v. 28, n. 2, p. 415-435, 1996. DOI: 10.1145/234528.234531. Versão de autor: **Software reuse and reusability metrics and models**. Blacksburg: Department of Computer Science, Virginia Tech, 1995. (Technical Report TR-95-07).
 
 HANNOUSSE, Abdelhakim; YAHIOUCHE, Salima. Securing microservices and microservice architectures: a systematic mapping study. **Computer Science Review**, [*s. l.*], v. 41, art. 100415, 2021. DOI: 10.1016/j.cosrev.2021.100415. Preprint disponível em: arXiv:2003.07262, 2020.
-
-HORCAS, José Miguel; PINTO, Mónica; FUENTES, Lidia. Empirical analysis of the tool support for software product lines. **Software and Systems Modeling**, [*s. l.*], v. 22, p. 377-414, 2023. DOI: 10.1007/s10270-022-01011-2.
 
 HUNSEN, Claus; ZHANG, Bo; SIEGMUND, Janet; KÄSTNER, Christian; LESSENICH, Olaf; BECKER, Martin; APEL, Sven. Preprocessor-based variability in open-source and industrial software systems: an empirical study. **Empirical Software Engineering**, [*s. l.*], v. 21, n. 2, p. 449-482, 2016. DOI: 10.1007/s10664-015-9360-1.
 

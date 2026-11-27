@@ -58,7 +58,12 @@ O conceito central do trabalho. A literatura **peer-reviewed** especificamente s
 
 **Este é o núcleo teórico do TCC.** A ideia de "gerar múltiplos produtos a partir de um mesmo código-fonte, ativando/desativando partes por configuração" é exatamente o campo de **Software Product Lines (SPL)** e **Feature-Oriented Software Development (FOSD)**. A "Metamorfose" proposta é uma forma de **variabilidade em tempo de compilação**.
 
-### 3.1a Horcas, J. M.; Pinto, M.; Fuentes, L. — *Empirical Analysis of the Tool Support for Software Product Lines* (Software and Systems Modeling, 2023)
+### 3.1a Horcas, J. M.; Pinto, M.; Fuentes, L. — *Empirical Analysis of the Tool Support for Software Product Lines* (Software and Systems Modeling, 2023) — ❌ DESCARTADO / NÃO CITADO
+
+- ⛔ **Revisão (27 nov. 2026).** Referência **considerada sem valia** para o trabalho: o artigo avalia o **suporte ferramental** às SPL, e não a **aplicabilidade** da abordagem — que é o que o TCC precisa sustentar. Foi **substituída** por 3.5 em todos os documentos e removida das listas de referências do TCC e de `CITACOES_ABNT.md` (27 nov. 2026; ROADMAP, item 12).
+- **Candidatos descartados** (27 nov. 2026): BERGER et al. (2020, *Empirical Software Engineering*, DOI 10.1007/s10664-019-09787-6) e KRÜGER; BERGER (2020, ESEC/FSE, DOI 10.1145/3368089.3409684) — **nenhum dos dois aborda SPL** como objeto de estudo (tratam da adoção de gestão de variabilidade e dos custos de estratégias de reuso).
+- ✅ **Substituto adotado:** APEL et al. (2013), *Feature-oriented software product lines* — ver **3.5**.
+- O registro original segue abaixo, como histórico.
 
 - **Fonte:** Software and Systems Modeling (SoSyM), v. 22, p. 377–414, 2023. DOI: 10.1007/s10270-022-01011-2
 - **Link:** https://link.springer.com/article/10.1007/s10270-022-01011-2
@@ -93,6 +98,22 @@ O conceito central do trabalho. A literatura **peer-reviewed** especificamente s
 - **Link:** https://www.researchgate.net/publication/220030972
 - **Resumo:** Estudo de caso comparando a implementação de variabilidade via **compilação condicional** com alternativas modulares (aspectos), discutindo as vantagens e limitações de cada técnica para manter uma linha de produtos.
 - **Relação com o TCC:** Útil para a seção de **comparação de alternativas** do estudo de caso (repositórios separados vs. feature flag em runtime vs. compilação condicional), evidenciando que a escolha do ponto de variabilidade é um problema de engenharia bem estudado.
+
+### 3.5 Apel, S.; Batory, D.; Kästner, C.; Saake, G. — *Feature-Oriented Software Product Lines: Concepts and Implementation* (Springer, 2013) — ✅ ADOTADO (substitui 3.1a)
+
+- **Fonte:** Berlin; Heidelberg: Springer, 2013. ISBN 978-3-642-37520-0 (impresso); 978-3-642-37521-7 (e-book). DOI: 10.1007/978-3-642-37521-7 (conferidos na página de créditos do PDF).
+- **Link (registro):** https://doi.org/10.1007/978-3-642-37521-7
+- **Acesso:** 🟡 Livro impresso (exemplar do autor). **PDF no acervo** (para consulta): `docs/refs/3.5 - Feature-Oriented Software Product Lines - Concepts and Implementation (Apel et al. 2013).pdf`. As páginas registradas são as **impressas** no livro.
+- **Resumo (verificado no texto integral):** Livro-texto de SPL orientadas a *features*. Parte I (cap. 1–2): o que são SPL, suas promessas e o processo de desenvolvimento em **engenharia de domínio** (*development for reuse*) e **engenharia de aplicação** (*development with reuse*), além dos caminhos de adoção (proativo, extrativo, reativo). Cap. 3: dimensões da implementação de variabilidade — **tempo de ligação** (compilação, carga, execução), tecnologia (linguagem × ferramenta) e representação (**anotação × composição**). Cap. 4–5: mecanismos clássicos, incluindo **parâmetros em runtime**, sistemas de *build* e **pré-processadores** (compilação condicional).
+- **Relação com o TCC:** é a **fonte principal do fundamento de SPL** e substitui Horcas, Pinto e Fuentes (3.1a, descartado) em todas as suas funções. Aplicado no TCC nas seções 2.3, 2.5, 2.7, 3.4, 3.6, 4.4, 4.5, 7.6 e 8:
+  1. **definição de variabilidade** como derivação de produtos de uma base comum (Def. 3.1, p. 48) e de produto como seleção válida de *features* (Def. 2.2, p. 19);
+  2. **processos de engenharia** de domínio e de aplicação (p. 21–22);
+  3. **variabilidade por anotação** (Def. 3.4, p. 51) — a categoria do `@IfBuildProperty` —, em contraste com a composição (Def. 3.5);
+  4. **tempo de compilação** (Def. 3.2, p. 49): o código desnecessário pode ser removido do produto, ao custo de o produto deixar de ser variável depois de implantado — sustenta a PP4;
+  5. **segurança**: incluir funcionalidade desnecessária no produto entregue "*may also be considered as potential security threat*" (p. 49), e, na variabilidade por parâmetros em runtime, a funcionalidade desativada continua sendo entregue e "*shipping unused code opens unnecessary potential targets for attacks*" (p. 66–67) — **primeira fonte de SPL do acervo a ligar a variabilidade em compilação à redução de alvos de ataque** (complementa 5.1) e a sustentar o **contraste com *feature flags*** (seção 4);
+  6. **adoção extrativa** (p. 40): partir de produtos existentes e refatorá-los em uma linha de produto — o cenário de múltiplos BFFs já separados.
+- **Status:** obra de 2013, **fora da janela de dez anos**; aceita pelo **mérito** (livro-texto de referência da área, citado por Berger et al. (2020) entre os "*textbook SPLE methods*"), no mesmo regime do Peffers et al. (7.2). A **redundância recente** para a compilação condicional é dada por Hunsen et al. (2016, 3.1b) e Baum et al. (2019, 3.3).
+- ⚠️ **Ressalva de escopo.** O exemplo de segurança do livro é de *buffer overflow* em código C nativo, e a passagem é argumentativa, não uma medição. O livro **não** trata de BFF, de Quarkus nem de superfície de ataque no sentido de Manadhata e Wing; a métrica continua ancorada em 5.1. Não atribuir ao livro mais do que ele afirma.
 
 ---
 
@@ -325,9 +346,9 @@ Fundamentam a escolha da **Design Science Research** como método condutor — a
 |---|---|
 | Microsserviços e API Gateway | 1.1 Pahl & Jamshidi; 1.2 Taibi, Lenarduzzi & Pahl |
 | Backend for Frontend (BFF) | 2.2 Newman (artigo 2015, verificado) — fonte única adotada; 2.1 Newman (livro 2021) descartado |
-| Arquitetura Metamórfica (variabilidade em build-time) | 3.1a Horcas, Pinto & Fuentes (2023); 3.1b Hunsen et al. (2016); 3.2 Apel & Kästner; 3.3 Kästner et al.; 3.4 Adkins et al. |
+| Arquitetura Metamórfica (variabilidade em build-time) | 3.5 Apel et al. (2013); 3.1b Hunsen et al. (2016); 3.2 Apel & Kästner; 3.3 Kästner et al.; 3.4 Adkins et al. |
 | Compilação condicional vs. feature flag em runtime | 4.1 Rahman et al.; 4.2 Mahdavi-Hezaveh et al. (2021); 4.3 Mahdavi-Hezaveh et al. (2022) |
-| Segurança por redução de superfície de ataque | 5.1 Manadhata & Wing; 5.2 SMS Securing Microservices; 5.3 SoK Microservice Security |
+| Segurança por redução de superfície de ataque | 5.1 Manadhata & Wing; 3.5 Apel et al. (código não usado como alvo de ataque); 5.2 SMS Securing Microservices; 5.3 SoK Microservice Security |
 | Arquitetura Hexagonal / Clean Architecture | 6.1 Cockburn; 6.2 Martin |
 | Integração e entrega contínua; custo de *build*/teste por variante (PP4) | 6.3 Shahin, Ali Babar & Zhu (2017) |
 | Medição de reuso (PP1) e vigência do método | 8.1 Frakes & Terry (fórmulas); 8.2 Frakes & Kang; 8.4 Irshad et al. (`RSI`); 8.3 Chen, Usman & Badampudi (`reuse level`, manutenibilidade) |
@@ -336,6 +357,6 @@ Fundamentam a escolha da **Design Science Research** como método condutor — a
 
 ## Como refinar esta lista
 
-- **Priorize** as referências 1.1, 1.2, 2.2, 3.1a, 3.1b, 3.3, 5.1, 5.2 e 6.2 — são as que dão fundamentação teórica mais direta e de maior peso (venues consolidados) à contribuição original do trabalho.
+- **Priorize** as referências 1.1, 1.2, 2.2, 3.5, 3.1b, 3.3, 5.1, 5.2 e 6.2 — são as que dão fundamentação teórica mais direta e de maior peso (venues consolidados) à contribuição original do trabalho.
 - Para os itens em **arXiv** e **ResearchGate**, procure a versão publicada em conferência/periódico (use o DOI ou o Google Scholar) antes de citar, para garantir a versão *peer-reviewed*.
-- Ferramentas úteis para expandir: **Connected Papers** (mapa de citações a partir de Horcas et al. 2023, El-Sharkawy et al. 2019 e Manadhata & Wing 2011) e **Semantic Scholar** (para achar trabalhos recentes que citam essas obras).
+- Ferramentas úteis para expandir: **Connected Papers** (mapa de citações a partir de Apel et al. 2013, El-Sharkawy et al. 2019 e Manadhata & Wing 2011) e **Semantic Scholar** (para achar trabalhos recentes que citam essas obras).

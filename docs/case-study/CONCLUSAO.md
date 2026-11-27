@@ -18,7 +18,7 @@ O **objetivo geral** propunha uma arquitetura de projeto que gerasse múltiplas 
 
 Os **objetivos específicos** eram dois, e ambos foram cumpridos:
 
-**Apresentar conceitualmente a Arquitetura Metamórfica.** O capítulo *Proposta* formula a arquitetura e o *Referencial Teórico* a ancora em campos consolidados: a derivação de produtos das Linhas de Produto de Software (HORCAS; PINTO; FUENTES, 2023), a variabilidade por anotação resolvida em tempo de compilação (HUNSEN et al., 2016; BAUM et al., 2019), a superfície de ataque definida pelo conjunto de pontos de entrada (MANADHATA; WING, 2011) e o isolamento das regras de negócio frente aos detalhes de *framework* (MARTIN, 2017). O capítulo *Trabalhos Relacionados* a posiciona frente a quatro alternativas e delimita a lacuna que ela ocupa.
+**Apresentar conceitualmente a Arquitetura Metamórfica.** O capítulo *Proposta* formula a arquitetura e o *Referencial Teórico* a ancora em campos consolidados: a derivação de produtos das Linhas de Produto de Software (APEL et al., 2013), a variabilidade por anotação resolvida em tempo de compilação (HUNSEN et al., 2016; BAUM et al., 2019), a superfície de ataque definida pelo conjunto de pontos de entrada (MANADHATA; WING, 2011) e o isolamento das regras de negócio frente aos detalhes de *framework* (MARTIN, 2017). O capítulo *Trabalhos Relacionados* a posiciona frente a quatro alternativas e delimita a lacuna que ela ocupa.
 
 **Apresentar um protótipo conceito.** O `modular-bff` foi implementado, e dele derivaram-se quatro artefatos — três variantes e uma linha de base — sem qualquer alteração de código entre os *builds*. O capítulo *Desenvolvimento* descreve a implementação e o procedimento de reprodução.
 
@@ -89,6 +89,6 @@ Resta o que a arquitetura cobra. Ela troca flexibilidade por ausência, e essa t
 ---
 
 > **Pendências de redação:**
-> - **Cross-check de citações:** o capítulo cita HORCAS; PINTO; FUENTES (2023), HUNSEN et al. (2016), BAUM et al. (2019), MANADHATA; WING (2011), MARTIN (2017), TAIBI; LENARDUZZI; PAHL (2018) e CHEN; USMAN; BADAMPUDI (2024) — todas já presentes nas Referências do TCC. Nenhuma fonte nova é introduzida.
+> - **Cross-check de citações:** o capítulo cita APEL et al. (2013), HUNSEN et al. (2016), BAUM et al. (2019), MANADHATA; WING (2011), MARTIN (2017), TAIBI; LENARDUZZI; PAHL (2018) e CHEN; USMAN; BADAMPUDI (2024) — todas já presentes nas Referências do TCC. Nenhuma fonte nova é introduzida.
 > - **Ao transpor:** rebaixar cabeçalhos (`##` → `###`), remover este bloco de meta, atualizar a *Organização do Trabalho* de dez para **onze partes** e descrever o capítulo no sumário narrativo.
 > - **Verificar** se a seção 8.2 não duplica a 7.7 (*Discussão*): a 7.7 confronta afirmação por afirmação com os dados; a 8.2 retoma o resultado consolidado. A fronteira é tênue e deve ser revista no arquivo final.
